@@ -1,0 +1,174 @@
+<?php
+include 'settings/system.php';
+include 'session.php';
+include 'settings/header.php';
+include "settings/sidebar.php";
+include 'settings/topbar.php';
+?>
+
+<div class="container-fluid">
+    <!-- (B) PERIOD SELECTOR -->
+    <br />
+    <div id="calPeriod">
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-2">
+                    <?php
+                    // (B1) MONTH SELECTOR
+                    // NOTE: DEFAULT TO CURRENT SERVER MONTH YEAR
+                    $months = [
+                        1 => "January", 2 => "Febuary", 3 => "March", 4 => "April",
+                        5 => "May", 6 => "June", 7 => "July", 8 => "August",
+                        9 => "September", 10 => "October", 11 => "November", 12 => "December"
+                    ];
+                    $monthNow = date("m");
+                    echo "<select id='calmonth' class='form-control'>";
+                    foreach ($months as $m => $mth) {
+                        printf(
+                            "<option value='%s'%s>%s</option>",
+                            $m,
+                            $m == $monthNow ? " selected" : "",
+                            $mth
+                        );
+                    }
+                    echo "</select>";
+                    ?>
+                </div>
+                <div class="col-md-2">
+                    <?php
+                    // (B2) YEAR SELECTOR
+                    echo "<input type='number' min='0' id='calyear' class='form-control form-sm' value='" . date("Y") . "'/>";
+                    ?>
+                </div>
+                <div class="col-md-2">
+                    <select name="calvenue" id="calvenue" class="form-control" required>
+                        <option value="0">All</option>
+                        <?php
+                        $getVenues = $db->query("SELECT * FROM venues ORDER BY name ASC");
+                        $res = $getVenues->fetchAll(PDO::FETCH_OBJ);
+                        foreach ($res as $v) { ?>
+                            <option value="<?php echo $v->id; ?>" ?><?php echo $v->name; ?></option>
+                        <?php
+                        }
+                        ?>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <button class="btn btn-primary " id='clear' name='clear'>Clear </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+</div>
+<!-- (C) CALENDAR WRAPPER -->
+<div id="calwrap"></div>
+
+<!-- (D) EVENT FORM -->
+<div id="calblock">
+    <div class="col-lg-18">
+        <form id="calform">
+            <input type="hidden" id="evtid" />
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="evtstart">Date Start</label>
+                        <input type="hidden" id="RID" value="0" class="form-control" required />
+                        <input type="hidden" id="reservationID" value="0" class="form-control" required />
+                        <input type="date" id="evtstart" class="form-control" readonly />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="evtend">Date End</label>
+                        <input type="date" id="evtend" class="form-control" readonly />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-12">
+                        <label for="evtname">Event Name</label>
+                        <input type="text" id="evtname" class="form-control" readonly />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-12">
+                        <label for="evtvenue">Venue</label>
+                        <select name="evtvenue" id="evtvenue" class="form-control" disabled readonly>
+                            <option value=""></option>
+                            <?php
+                            $getVenues = $db->query("SELECT * FROM venues ORDER BY name ASC");
+                            $res = $getVenues->fetchAll(PDO::FETCH_OBJ);
+                            foreach ($res as $v) { ?>
+                                <option value="<?php echo $v->id; ?>" ?><?php echo $v->name; ?></option>
+                            <?php
+                            }
+                            ?>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <!-- <label for="evtcontact">Contact No</label> -->
+                                <input type="hidden" id="evtcontact" class="form-control" minlength="11" maxlength="11" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <!-- <label for="evtcolor">Tag Color</label> -->
+                                <input type="hidden" id="evtcolor" class="form-control" value="#e4edff" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-12">
+                        <label for="evttxt">Purpose</label>
+                        <textarea id="evttxt" class="form-control" rows="5" readonly></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <!-- <button type="submit" id="calformsave" class="btn btn-sn btn-success" value="Save"><i class="fa fa-save"></i> Save</button> 
+                <button type="button" id="calformdel" class="btn btn-sn btn-danger w3-right" value="Delete"><i class="fa fa-trash"></i> Delete</button>  -->
+                <button type="button" id="calformcx" class="btn btn-sm btn-secondary w3-right" value="Cancel">Close</button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+<script>
+    const numInputs = document.querySelectorAll('input[type=number]')
+
+    numInputs.forEach(function(input) {
+        input.addEventListener('change', function(e) {
+            if (e.target.value == '') {
+                e.target.value = new Date().getFullYear()
+            }
+        })
+    })
+
+    $("#clear").on("click", function() {
+        var month = new Date().getMonth();
+        var year = new Date().getFullYear();
+
+        $("#calvenue").select().val(0).trigger("change");
+        $("#calmonth").select().val(month + 1).trigger("change");
+        $("#calyear").select().val(year).trigger("change");
+    });
+
+    var sequence = <?php echo json_encode($newID); ?>;
+</script>
+
+<?php include 'settings/footer.php'; ?>

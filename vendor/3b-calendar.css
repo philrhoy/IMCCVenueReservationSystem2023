@@ -1,0 +1,150 @@
+/* (A) FONT */
+html,
+body {
+  font-family: arial, sans-serif;
+}
+
+/* (B) PERIOD SELECTOR */
+/*#calPeriod input, #calPeriod select {
+  padding: 10px;
+  font-size: 1.5em;
+  border: 0;
+  outline: none;
+  cursor: pointer;
+}
+#calmonth { width: 180px; }
+#calyear { margin-left: 30px; width: 100px; text-align: center; height:50px !important; }
+
+/* (C) CALENDAR */
+#calwrap {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.calsq {
+  box-sizing: border-box;
+  width: 14.28%;
+  padding: 5px;
+}
+
+.calsq.head {
+  color: #fff;
+  background: rgb(42, 62, 92) !important;
+  font-weight: bold;
+  text-align: center;
+  border: 1px solid black;
+}
+
+.calsq.blank,
+.calsq.day {
+  height: 120px;
+  overflow-y: auto;
+  border: 1px solid #EEE;
+}
+
+.calsq.blank {
+  background: #f2f2f2;
+}
+
+.calsq.today {
+  background: #eee;
+  border: 2px solid #a92167;
+}
+
+.calnum {
+  color: #888;
+}
+
+.calevt {
+  height: auto;
+  font-size: 0.7em;
+  cursor: pointer;
+}
+
+.calevt .tooltipText {
+  visibility: hidden;
+  width: auto;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  padding: 5px 5px;
+  border-radius: 6px;
+
+  /* Position the tooltip text - see examples below! */
+  position: absolute;
+  z-index: 1;
+
+}
+
+.calevt .tooltipText::after {
+  content: " ";
+  position: absolute;
+  top: 100%;
+  /* At the bottom of the tooltip */
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: black transparent transparent transparent;
+}
+
+.calevt:hover .tooltipText {
+  visibility: visible;
+}
+
+.calninja {
+  display: none;
+}
+
+/* (D) EVENT FORM */
+#calblock {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 998;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  transition: opacity 0.2s;
+  opacity: 0;
+  visibility: hidden;
+}
+
+#calblock.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+#calform {
+  z-index: 999;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 300px;
+  max-width: 1000px;
+  background: #fafafa;
+  border: 1px solid #ccc;
+  padding: 20px;
+  width: 400px;
+}
+
+/*#calform label, #calform input, #calform textarea {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 5px;
+  resize: none;
+}
+#calform label { margin-top: 10px; }
+
+#calformsave, #calformdel, #calformcx {
+  border: 0;
+  color: #fff;
+  cursor: pointer;
+  padding: 10px 0 !important;
+  margin-top: 10px;
+}
+#calformsave { background: #007bff; }
+#calformdel, #calformcx { background: #a22a2a; }
+*/
