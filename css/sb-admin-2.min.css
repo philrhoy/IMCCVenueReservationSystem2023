@@ -8584,7 +8584,8 @@ button.bg-dark:hover {
 }
 
 .my-imcc {
-    margin-top: 30% !important;
+    margin-bottom: 5rem !important;
+    margin-top: 15rem !important;
     background: rgba(255, 255, 255, 0.6);
 }
 
@@ -10689,6 +10690,10 @@ button.bg-dark:hover {
     .text-md-center {
         text-align: center !important
     }
+    .my-imcc {
+        margin-top: 2rem !important;
+        margin-bottom: 0rem !important;
+    }
 }
 
 @media (min-width:992px) {
@@ -10702,6 +10707,9 @@ button.bg-dark:hover {
 
     .text-lg-center {
         text-align: center !important
+    }
+    .my-imcc {
+        margin-top:4rem !important;
     }
 }
 
@@ -10717,8 +10725,26 @@ button.bg-dark:hover {
     .text-xl-center {
         text-align: center !important
     }
-}
 
+    .my-imcc {
+        margin-top: 7rem !important;
+    }
+}
+@media (min-width:1500px) {
+    .my-imcc {
+        margin-top: 11rem !important;
+    }
+}
+@media (min-width:1700px) {
+    .my-imcc {
+        margin-top: 14rem !important;
+    }
+}
+@media (min-width:1900px) {
+    .my-imcc {
+        margin-top: 17rem !important;
+    }
+}
 .text-lowercase {
     text-transform: lowercase !important
 }
@@ -11156,10 +11182,15 @@ a:focus {
     background-image: linear-gradient(360deg, #e72489 20%, #373840 100%);
     background-size: cover
 }
+
 .login-bg-gradient-imcc {
     background-image: url('../img/bg2.jpg');
-    background-size: cover
+    height: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
 }
+
 .bg-gray-100 {
     background-color: #f8f9fc !important
 }
