@@ -4,7 +4,6 @@ include 'session.php';
 include 'settings/header.php';
 include "settings/sidebar.php";
 include 'settings/topbar.php';
-include 'settings/modals.php';
 ?>
 <div class="container-fluid">
 
