@@ -40,17 +40,17 @@ include 'settings/topbar.php';
                                 foreach ($row_donor as $row) {
                                 ?>
                                     <tr>
-                                        <td><?= '<a href="404.php?id='.$row->id.'">' . $row->programID. '</a>'; ?></td>
+                                        <td><?= '<a href="program_edit.php?id='.$row->id.'">' . $row->programID. '</a>'; ?></td>
                                         <td><?= $row->name; ?></td>
                                         <td align="center"><i class="fas fa-circle" style="font-size:2rem;color:<?= $row->color; ?>"></i></td>
                                         <td align="center">
-                                            <a href="404.php?id=<?php echo $row->id; ?>" class="btn btn-primary btn-icon-split btn-sm keychainify-checked">
+                                            <a href="program_edit.php?id=<?php echo $row->id; ?>" class="btn btn-primary btn-icon-split btn-sm keychainify-checked">
                                                 <span class="icon text-white-50">
                                                     <i class="fas fa-edit"></i>
                                                 </span>
                                                 <span class="text">Edit</span>
                                             </a>
-                                            <a href="404.php?id=<?php echo $row->id; ?>" onclick="return confirm('Are you sure you want to delete this?')" class="btn btn-danger btn-icon-split btn-sm keychainify-checked">
+                                            <a href="program_delete.php?id=<?php echo $row->id; ?>" onclick="return confirm('Are you sure you want to delete this?')" class="btn btn-danger btn-icon-split btn-sm keychainify-checked">
                                                 <span class="icon text-white-50">
                                                     <i class="fas fa-trash"></i>
                                                 </span>
