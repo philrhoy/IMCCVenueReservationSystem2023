@@ -53,7 +53,7 @@ include 'settings/header.php';
                                                 if ($row_admin->change_pass == 1) {
                                                     $_SESSION['id'] = $row_admin->id;
                                                     $_SESSION['position'] = $row_admin->position;
-                                                    $_SESSION['name'] = $row_admin->name;
+                                                    $_SESSION['name'] = $row_admin->first_name.' '.$row_admin->middle_name.' '.$row_admin->last_name;
                                                     header('location: calendar.php');
                                                 } else {
                                                     header('location: change_password.php');

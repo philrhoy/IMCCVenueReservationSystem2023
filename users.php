@@ -26,31 +26,41 @@ include 'settings/topbar.php';
                         <table class="table table-bordered table-hovered" id="dataTable" width="100%" cellspacing="0">
                             <thead>
                                 <tr>
-                                    <th>Name</th>
+                                    <th>User ID</th>
+                                    <th>Full Name</th>
                                     <th>Username</th>
                                     <th>Position</th>
+                                    <th>Program</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
-                                $donor = $db->query("SELECT * FROM `users` ORDER BY name ASC");
+                                $donor = $db->query("SELECT A.*,B.name as prg_name FROM `users` as A LEFT JOIN `program` as B ON A.programID = B.id ORDER BY A.last_name ASC");
 
                                 $row_donor = $donor->fetchAll(PDO::FETCH_OBJ);
                                 foreach ($row_donor as $row) {
                                 ?>
                                     <tr>
-                                        <td><?= '<a href="404.php?id='.$row->id.'">' . $row->name. '</a>'; ?></td>
+                                        <td><?= '<a href="404.php?id='.$row->id.'">' . $row->userID. '</a>'; ?></td>
+                                        <td><?= $row->last_name.', '.$row->first_name.' '.$row->middle_name ?></td>
                                         <td><?= $row->username; ?></td>
                                         <td><?= $row->position; ?></td>
+                                        <td><?= $row->prg_name; ?></td>
                                         <td align="center">
+                                        <a href="404.php?id=<?php echo $row->id; ?>" onclick="return confirm('Are you sure you want to reset the password for this user?')" class="btn btn-secondary btn-icon-split btn-sm keychainify-checked">
+                                                <span class="icon text-white-50">
+                                                    <i class="fas fa-edit"></i>
+                                                </span>
+                                                <span class="text">Reset Password</span>
+                                            </a>
                                             <a href="404.php?id=<?php echo $row->id; ?>" class="btn btn-primary btn-icon-split btn-sm keychainify-checked">
                                                 <span class="icon text-white-50">
                                                     <i class="fas fa-edit"></i>
                                                 </span>
                                                 <span class="text">Edit</span>
                                             </a>
-                                            <a href="404.php?id=<?php echo $row->id; ?>" onclick="return confirm('Are you sure you want to delete this?')" class="btn btn-danger btn-icon-split btn-sm keychainify-checked">
+                                            <a href="user_delete.php?id=<?php echo $row->id; ?>" onclick="return confirm('Are you sure you want to delete this user?')" class="btn btn-danger btn-icon-split btn-sm keychainify-checked">
                                                 <span class="icon text-white-50">
                                                     <i class="fas fa-trash"></i>
                                                 </span>

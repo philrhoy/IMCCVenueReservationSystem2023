@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Sep 10, 2023 at 01:20 AM
+-- Generation Time: Sep 11, 2023 at 08:15 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -53,7 +53,7 @@ CREATE TABLE `number_sequence` (
 
 INSERT INTO `number_sequence` (`id`, `page_name`, `last_number`, `CreatedDateTime`) VALUES
 (1, 'venues', 4, '2022-05-18 14:52:45'),
-(2, 'users', 2, '2022-05-18 14:52:58'),
+(2, 'users', 3, '2022-05-18 14:52:58'),
 (3, 'programs', 6, '2022-07-16 13:20:28'),
 (4, 'reservations', 6, '2022-08-21 14:42:40');
 
@@ -68,21 +68,21 @@ CREATE TABLE `program` (
   `programID` varchar(15) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
   `color` varchar(15) DEFAULT NULL,
-  `dateAdded` date NOT NULL DEFAULT current_timestamp(),
-  `dateUpdated` date DEFAULT NULL
+  `incharge_organization` varchar(255) DEFAULT NULL,
+  `dateAdded` datetime NOT NULL DEFAULT current_timestamp(),
+  `dateUpdated` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `program`
 --
 
-INSERT INTO `program` (`id`, `programID`, `name`, `color`, `dateAdded`, `dateUpdated`) VALUES
-(1, 'PRG0001', 'College of Criminology', '#91280d', '2023-09-03', NULL),
-(2, 'PRG0002', 'College of Education', '#3dccf0', '2023-09-03', NULL),
-(3, 'PRG0003', 'College of Medical Technology', '#34df3f', '2023-09-10', NULL),
-(4, 'PRG0004', 'College of Education', '#21b9d4', '2023-09-10', NULL),
-(5, 'PRG0005', 'College of Art and Sciences', '#df1111', '2023-09-10', NULL),
-(6, 'PRG0006', 'College of Computer Studies', '#888686', '2023-09-10', NULL);
+INSERT INTO `program` (`id`, `programID`, `name`, `color`, `incharge_organization`, `dateAdded`, `dateUpdated`) VALUES
+(1, 'PRG0001', 'College of Education', '#1acedb', 'IMCC', '2023-09-03 00:00:00', '2023-09-11 13:36:45'),
+(2, 'PRG0002', 'College of Business Administration', '#eba40a', 'IMCC', '2023-09-03 00:00:00', '2023-09-11 13:37:27'),
+(3, 'PRG0003', 'College of Medical Technology', '#33d738', 'IMCC', '2023-09-10 00:00:00', '2023-09-11 13:37:33'),
+(5, 'PRG0005', 'College of Art and Sciences', '#ec0909', 'IMCC', '2023-09-10 00:00:00', '2023-09-11 13:37:50'),
+(6, 'PRG0006', 'College of Computer Studies', '#7d7d7d', 'IMCC', '2023-09-10 00:00:00', '2023-09-11 13:37:54');
 
 -- --------------------------------------------------------
 
@@ -127,21 +127,26 @@ INSERT INTO `schedules` (`id`, `reservationID`, `venueID`, `date_start`, `date_e
 CREATE TABLE `users` (
   `id` int(11) NOT NULL,
   `userID` varchar(25) NOT NULL,
-  `name` varchar(255) NOT NULL,
+  `first_name` varchar(255) NOT NULL,
+  `middle_name` varchar(255) DEFAULT NULL,
+  `last_name` varchar(255) DEFAULT NULL,
+  `contact` varchar(15) DEFAULT NULL,
   `username` varchar(255) CHARACTER SET latin1 COLLATE latin1_general_cs NOT NULL,
   `password` varchar(255) NOT NULL,
   `change_pass` tinyint(1) NOT NULL DEFAULT 0,
   `position` varchar(50) NOT NULL,
-  `dateAdded` datetime NOT NULL DEFAULT current_timestamp()
+  `programID` int(11) DEFAULT NULL,
+  `dateAdded` datetime NOT NULL DEFAULT current_timestamp(),
+  `dateUpdated` datetime DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `userID`, `name`, `username`, `password`, `change_pass`, `position`, `dateAdded`) VALUES
-(4, 'USR0002', 'Administrator', 'admin', '21232f297a57a5a743894a0e4a801fc3', 1, 'DSA', '2023-09-10 06:08:09'),
-(3, 'USR0001', 'Student Officer', 'stud_officer', 'cd73502828457d15655bbd7a63fb0bc8', 1, 'STO', '2023-09-10 06:06:58');
+INSERT INTO `users` (`id`, `userID`, `first_name`, `middle_name`, `last_name`, `contact`, `username`, `password`, `change_pass`, `position`, `programID`, `dateAdded`, `dateUpdated`) VALUES
+(4, 'USR0002', 'Administrator', NULL, NULL, NULL, 'admin', '21232f297a57a5a743894a0e4a801fc3', 1, 'DSA', NULL, '2023-09-10 06:08:09', NULL),
+(3, 'USR0001', 'Student Officer', NULL, NULL, NULL, 'stud_officer', 'cd73502828457d15655bbd7a63fb0bc8', 1, 'STO', 2, '2023-09-10 06:06:58', NULL);
 
 -- --------------------------------------------------------
 
@@ -242,7 +247,7 @@ ALTER TABLE `schedules`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `venues`

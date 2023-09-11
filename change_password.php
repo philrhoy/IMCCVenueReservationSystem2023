@@ -43,8 +43,7 @@ include 'settings/header.php';
 
                                             $hash = md5($npassword);
 
-                                            $update_password = $db->query("UPDATE `users` SET password = '$hash', change_pass=1 WHERE username='" . $_SESSION['user'] . "'");
-                                            // $count = $update_password->rowCount();
+                                            $update_password = $db->query("UPDATE `users` SET password = '$hash', change_pass=1, dateUpdated = NOW() WHERE username='" . $_SESSION['user'] . "'");
 
                                             if ($update_password) {
                                                 $q = $db->query("SELECT * FROM `users` WHERE `username` = '" . $_SESSION['user'] . "' AND `password` = '$hash' LIMIT 1 ");
