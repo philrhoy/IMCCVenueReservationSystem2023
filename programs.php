@@ -28,6 +28,7 @@ include 'settings/topbar.php';
                                 <tr>
                                     <th>Program ID</th>
                                     <th>Name</th>
+                                    <th>In-charge Organization</th>
                                     <th>Color</th>
                                     <th>Actions</th>
                                 </tr>
@@ -42,6 +43,7 @@ include 'settings/topbar.php';
                                     <tr>
                                         <td><?= '<a href="program_edit.php?id='.$row->id.'">' . $row->programID. '</a>'; ?></td>
                                         <td><?= $row->name; ?></td>
+                                        <td><?= $row->incharge_organization; ?></td>
                                         <td align="center"><i class="fas fa-circle" style="font-size:2rem;color:<?= $row->color; ?>"></i></td>
                                         <td align="center">
                                             <a href="program_edit.php?id=<?php echo $row->id; ?>" class="btn btn-primary btn-icon-split btn-sm keychainify-checked">

@@ -23,15 +23,23 @@ include 'settings/topbar.php';
 
                 <div class="card-body">
                     <?php
-                    if (isset($_POST['name'])) {
-                        $name = $_POST["name"];
+                    if (isset($_POST['uname'])) {
+                        $fname = $_POST["fname"];
+                        $mname = $_POST["mname"];
+                        $lname = $_POST["lname"];
+                        $contact = $_POST["contact"];
                         $userID = $_POST["userID"];
                         $uname = $_POST["uname"];
                         $password = md5($_POST["uname"]);
                         $type = $_POST["type"];
+                        $program = "";
                         $id = $_POST["id"];
 
-                        $add_venue = $db->query("INSERT INTO `users` (userID,name,username,password,position,dateAdded) values ('$userID','$name','$uname','$password','$type',NOW())") or die($db->error);
+                        if ($type == 'STO') {
+                            $program = $_POST["program"];
+                        }
+
+                        $add_venue = $db->query("INSERT INTO `users` (userID,first_name,middle_name,last_name,contact,username,password,position,programID,dateAdded) values ('$userID','$fname','$mname','$lname','$contact','$uname','$password','$type','$program',NOW())") or die($db->error);
                         $update_sequence = $db->query("UPDATE number_sequence SET last_number = '$id' WHERE page_name='users'");
 
                         if (!$add_venue) {
@@ -65,19 +73,45 @@ include 'settings/topbar.php';
                                 <input class="form-control" type="text" name="userID" value="<?= 'USR' . $ID ?>" readonly>
                             </div>
                             <div class="form-group">
-                                <label>Full Name</label>
-                                <input class="form-control" type="text" placeholder="Full Name" name="name" required>
+                                <label>First Name</label>
+                                <input class="form-control" type="text" name="fname" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Middle Name (optional)</label>
+                                <input class="form-control" type="text" name="mname">
+                            </div>
+                            <div class="form-group">
+                                <label>Last Name</label>
+                                <input class="form-control" type="text" name="lname">
+                            </div>
+                            <div class="form-group">
+                                <label>Contact</label>
+                                <input class="form-control" type="text" name="contact" required>
                             </div>
                             <div class="form-group">
                                 <label>Username</label>
-                                <input class="form-control" type="text" placeholder="Username" name="uname" required>
+                                <input class="form-control" type="text" name="uname" minlength="5" required>
                             </div>
                             <div class="form-group">
                                 <label>Type</label>
-                                <select class="form-control" name="type" required>
-                                <option value="STO">Student Officer</option>
-                                <option value="DSA">Department of Student Affairs</option>
-                                <option value="PTC">Property Custodian</option>
+                                <select class="form-control" name="type" id="type" required>
+                                    <option value="STO">Student Officer</option>
+                                    <option value="DSA">Department of Student Affairs</option>
+                                    <option value="PTC">Property Custodian</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label id="program_name">Program</label>
+                                <select class="form-control" name="program" id="program">
+                                    <?php
+                                    $getProgram = $db->query("SELECT * FROM program ORDER BY name ASC");
+                                    $res = $getProgram->fetchAll(PDO::FETCH_OBJ);
+                                    foreach ($res as $v) { ?>
+                                        <option value="<?php echo $v->id; ?>" ?><?php echo $v->name; ?></option>
+                                    <?php
+                                    }
+                                    ?>
                                 </select>
                             </div>
                             <button type="submit" class="btn btn-success btn-icon-split btn-sm keychainify-checked">
@@ -93,3 +127,29 @@ include 'settings/topbar.php';
         </div>
     </div>
     <?php include 'settings/footer.php'; ?>
+    <script>
+        $(document).ready(function() {
+
+            if ($('#type').val() != 'STO') {
+                $('#program').hide('slow')
+                $('#program_name').hide('slow')
+                $('#program').attr('required', false)
+            } else {
+                $('#program').show('slow')
+                $('#program_name').show('slow')
+                $('#program').attr('required', true)
+            }
+
+            $('#type').change(function() {
+                if ($('#type').val() != 'STO') {
+                    $('#program').hide('slow')
+                    $('#program_name').hide('slow')
+                    $('#program').attr('required', false)
+                } else {
+                    $('#program').show('slow')
+                    $('#program_name').show('slow')
+                    $('#program').attr('required', true)
+                }
+            })
+        });
+    </script>

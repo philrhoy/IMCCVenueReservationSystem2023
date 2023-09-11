@@ -27,9 +27,10 @@ include 'settings/topbar.php';
                         $name = $_POST["name"];
                         $programID = $_POST["programID"];
                         $color = $_POST["color"];
+                        $org = $_POST["org"];
                         $id = $_POST["id"];
 
-                        $add_venue = $db->query("INSERT INTO program (programID,name,color,dateAdded) values ('$programID','$name','$color',NOW())") or die($db->error);
+                        $add_venue = $db->query("INSERT INTO program (programID,name,color,incharge_organization,dateAdded) values ('$programID','$name','$color',$org,NOW())") or die($db->error);
                         $update_sequence = $db->query("UPDATE number_sequence SET last_number = '$id' WHERE page_name='programs'");
 
                         if (!$add_venue) {
@@ -64,7 +65,11 @@ include 'settings/topbar.php';
                             </div>
                             <div class="form-group">
                                 <label>Name</label>
-                                <input class="form-control" type="text" placeholder="Name" name="name" required>
+                                <input class="form-control" type="text"  name="name" required autofocus>
+                            </div>
+                            <div class="form-group">
+                                <label>In-charge Organization</label>
+                                <input class="form-control" type="text"  name="org" required>
                             </div>
                             <div class="form-group">
                                 <label>Color</label>

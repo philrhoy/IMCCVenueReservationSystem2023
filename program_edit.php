@@ -27,8 +27,9 @@ include 'settings/topbar.php';
                         $name = $_POST["name"];
                         $color = $_POST["color"];
                         $id = $_POST["id"];
+                        $org = $_POST["org"];
 
-                        $update_program = $db->query("UPDATE program SET name = '$name', color = '$color', dateUpdated = NOW() WHERE id ='$id'") or die($db->error);
+                        $update_program = $db->query("UPDATE program SET name = '$name', color = '$color', incharge_organization = '$org', dateUpdated = NOW() WHERE id ='$id'") or die($db->error);
 
                         if (!$update_program) {
                             echo '<script>
@@ -51,6 +52,7 @@ include 'settings/topbar.php';
                             $e_programID = $obj->programID;
                             $e_name = $obj->name;
                             $e_color = $obj->color;
+                            $e_org = $obj->incharge_organization;
                         }
                     }
                     ?>
@@ -65,6 +67,10 @@ include 'settings/topbar.php';
                             <div class="form-group">
                                 <label>Name</label>
                                 <input class="form-control" type="text" placeholder="Name" name="name" value="<?= $e_name ?>" required>
+                            </div>  
+                            <div class="form-group">
+                                <label>In-charge Organization</label>
+                                <input class="form-control" type="text"  name="org" value="<?= $e_org ?>" required>
                             </div>
                             <div class="form-group">
                                 <label>Color</label>
