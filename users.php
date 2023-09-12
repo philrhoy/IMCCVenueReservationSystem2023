@@ -48,7 +48,7 @@ include 'settings/topbar.php';
                                         <td><?= $row->position; ?></td>
                                         <td><?= $row->prg_name; ?></td>
                                         <td align="center">
-                                        <a href="404.php?id=<?php echo $row->id; ?>" onclick="return confirm('Are you sure you want to reset the password for this user?')" class="btn btn-secondary btn-icon-split btn-sm keychainify-checked">
+                                        <a href="user_resetpassword.php?id=<?php echo $row->id; ?>" onclick="return confirm('Are you sure you want to reset the password for this user?')" class="btn btn-secondary btn-icon-split btn-sm keychainify-checked">
                                                 <span class="icon text-white-50">
                                                     <i class="fas fa-edit"></i>
                                                 </span>

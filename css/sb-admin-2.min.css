@@ -10691,7 +10691,7 @@ button.bg-dark:hover {
         text-align: center !important
     }
     .my-imcc {
-        margin-top: 2rem !important;
+        margin-top: 1rem !important;
         margin-bottom: 0rem !important;
     }
 }
@@ -10709,7 +10709,7 @@ button.bg-dark:hover {
         text-align: center !important
     }
     .my-imcc {
-        margin-top:4rem !important;
+        margin-top:3rem !important;
     }
 }
 
@@ -10727,22 +10727,22 @@ button.bg-dark:hover {
     }
 
     .my-imcc {
-        margin-top: 7rem !important;
+        margin-top: 6rem !important;
     }
 }
 @media (min-width:1500px) {
     .my-imcc {
-        margin-top: 11rem !important;
+        margin-top: 10rem !important;
     }
 }
 @media (min-width:1700px) {
     .my-imcc {
-        margin-top: 14rem !important;
+        margin-top: 12rem !important;
     }
 }
 @media (min-width:1900px) {
     .my-imcc {
-        margin-top: 17rem !important;
+        margin-top: 15rem !important;
     }
 }
 .text-lowercase {
@@ -11703,7 +11703,8 @@ a:focus {
     padding: 1.5rem 1rem;
     text-align: center;
     letter-spacing: .05rem;
-    z-index: 1
+    z-index: 1;
+    line-height: initial;
 }
 
 .sidebar .sidebar-brand .sidebar-brand-icon i {
@@ -12652,4 +12653,7 @@ footer.sticky-footer .copyright {
 
 body.sidebar-toggled footer.sticky-footer {
     width: 100%
+}
+.password {
+    cursor: pointer;
 }

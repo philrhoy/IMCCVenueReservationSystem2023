@@ -29,6 +29,11 @@ include 'settings/header.php';
                                         <div class="form-group">
                                             <input type="password" class="form-control form-control-user" id="password" name="password" required placeholder="Password">
                                         </div>
+                                        <div class="form-group" style="text-align:right">
+                                            <label for="show" class="password">
+                                                <input type="checkbox" class="form-control-user password" id="show" value="" name="show">
+                                                Show password</label>
+                                        </div>
                                         <button type="submit" name="submit" id="submit" class="btn btn-primary  btn-user btn-block">
                                             Login
                                         </button>
@@ -53,7 +58,7 @@ include 'settings/header.php';
                                                 if ($row_admin->change_pass == 1) {
                                                     $_SESSION['id'] = $row_admin->id;
                                                     $_SESSION['position'] = $row_admin->position;
-                                                    $_SESSION['name'] = $row_admin->first_name.' '.$row_admin->middle_name.' '.$row_admin->last_name;
+                                                    $_SESSION['name'] = $row_admin->first_name . ' ' . $row_admin->middle_name . ' ' . $row_admin->last_name;
                                                     header('location: calendar.php');
                                                 } else {
                                                     header('location: change_password.php');
@@ -93,7 +98,18 @@ include 'settings/header.php';
 
     <!-- Custom scripts for all pages-->
     <script src="js/sb-admin-2.min.js"></script>
-
+    <script>
+        $(document).ready(function() {
+            let showpass = document.getElementById("show");
+            $('#show').change(function() {
+                if (showpass.checked) {
+                    $('#password').attr('type', 'text')
+                } else {
+                    $('#password').attr('type', 'password')
+                }
+            })
+        });
+    </script>
 </body>
 
 </html>
