@@ -3,7 +3,7 @@ include 'settings/system.php';
 include 'settings/header.php';
 ?>
 
-<body class="bg-gradient-imcc">
+<body class="login-bg-gradient-imcc">
 
     <div class="container">
 
@@ -25,10 +25,20 @@ include 'settings/header.php';
                                     </div>
                                     <form class="user" method="post">
                                         <div class="form-group">
-                                            <input type="password" class="form-control form-control-user" id="npassword" name="npassword" aria-describedby="emailHelp" required placeholder="New Password" autofocus>
+                                            <input type="password" class="form-control form-control-user" id="npassword" name="npassword" aria-describedby="emailHelp" required placeholder="New Password" autofocus minlength="5">
                                         </div>
                                         <div class="form-group">
-                                            <input type="password" class="form-control form-control-user" id="cpassword" name="cpassword" required placeholder="Confirm Password">
+                                            <input type="password" class="form-control form-control-user" id="cpassword" name="cpassword" required placeholder="Confirm Password" minlength="5">
+                                        </div>
+                                        <div class="form-group" style="text-align:right">
+                                            <label for="show" class="password">
+                                                <input type="checkbox" class="form-control-user password" id="show" value="" name="show">
+                                                Show password</label>
+                                        </div>
+                                        <div class="form-group" style="text-align:center;">
+                                            <small class="btn-outline-danger fail"><i>Password don't match.</i></small>
+
+                                            <small class="btn-outline-success success"><i>Password match.</i></small>
                                         </div>
                                         <button type="submit" name="submit" id="submit" class="btn btn-primary  btn-user btn-block">
                                             Update Password
@@ -90,7 +100,62 @@ include 'settings/header.php';
 
     <!-- Custom scripts for all pages-->
     <script src="js/sb-admin-2.min.js"></script>
+    <script>
+        $(document).ready(function() {
 
+            if ($('#npassword').val() == '' && $('#cpassword').val() == '') {
+                $('.fail').hide()
+                $('.success').hide()
+                $('#submit').attr('disabled', true)
+            }
+            if ($('#npassword').val() == $('#cpassword').val() && ($('#npassword').val() != '' || $('#cpassword').val() != '')) {
+                $('.fail').hide()
+                $('.success').show()
+                $('#submit').attr('disabled', false)
+            }
+            if ($('#npassword').val() != $('#cpassword').val() && ($('#npassword').val() != '' || $('#cpassword').val() != '')) {
+                $('.fail').show()
+                $('.success').hide()
+                $('#submit').attr('disabled', true)
+            }
+
+            $('#npassword').change(function() {
+                if ($('#npassword').val() == $('#cpassword').val()) {
+
+                    $('.fail').hide()
+                    $('.success').show()
+                    $('#submit').attr('disabled', false)
+                } else {
+                    $('.fail').show()
+                    $('.success').hide()
+                    $('#submit').attr('disabled', true)
+                }
+            })
+            $('#cpassword').change(function() {
+                if ($('#npassword').val() == $('#cpassword').val()) {
+
+                    $('.fail').hide()
+                    $('.success').show()
+                    $('#submit').attr('disabled', false)
+                } else {
+                    $('.fail').show()
+                    $('.success').hide()
+                    $('#submit').attr('disabled', true)
+                }
+            })
+
+            let showpass = document.getElementById("show");
+            $('#show').change(function() {
+                if (showpass.checked) {
+                    $('#npassword').attr('type', 'text')
+                    $('#cpassword').attr('type', 'text')
+                } else {
+                    $('#npassword').attr('type', 'password')
+                    $('#cpassword').attr('type', 'password')
+                }
+            })
+        });
+    </script>
 </body>
 
 </html>
