@@ -15,8 +15,8 @@
             <!-- Topbar Search -->
             <div class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                 <div class="input-group">
-                     <!-- Page Heading -->
-    <h5 class="form-control  border-0 text-gray-800"><?= NAME_; ?></h5>
+                    <!-- Page Heading -->
+                    <h5 class="form-control  border-0 text-gray-800"><?= NAME_; ?></h5>
                 </div>
             </div>
 
@@ -103,15 +103,15 @@
                     </a>
                     <!-- Dropdown - User Information -->
                     <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                        <a class="dropdown-item" href="#">
+                        <a class="dropdown-item" href="user_profile.php">
                             <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                             Profile
                         </a>
-                        <!-- <a class="dropdown-item" href="#">
-                            <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                            Settings
+                        <a class="dropdown-item" href="404.php">
+                            <i class="fas fa-lock fa-sm fa-fw mr-2 text-gray-400"></i>
+                            Change Password
                         </a>
-                        <a class="dropdown-item" href="#">
+                        <!-- <a class="dropdown-item" href="#">
                             <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
                             Activity Log
                         </a> -->

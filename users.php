@@ -36,14 +36,14 @@ include 'settings/topbar.php';
                             </thead>
                             <tbody>
                                 <?php
-                                $donor = $db->query("SELECT A.*,B.name as prg_name FROM `users` as A LEFT JOIN `program` as B ON A.programID = B.id ORDER BY A.last_name ASC");
+                                $users = $db->query("SELECT A.*,B.name as prg_name FROM `users` as A LEFT JOIN `program` as B ON A.programID = B.id ORDER BY A.last_name ASC");
 
-                                $row_donor = $donor->fetchAll(PDO::FETCH_OBJ);
-                                foreach ($row_donor as $row) {
+                                $row_users = $users->fetchAll(PDO::FETCH_OBJ);
+                                foreach ($row_users as $row) {
                                 ?>
                                     <tr>
-                                        <td><?= '<a href="404.php?id='.$row->id.'">' . $row->userID. '</a>'; ?></td>
-                                        <td><?= $row->last_name.', '.$row->first_name.' '.$row->middle_name ?></td>
+                                        <td><?= '<a href="user_edit.php?id='.$row->id.'">' . $row->userID. '</a>'; ?></td>
+                                        <td><?= $row->first_name.' '.$row->middle_name.' '.$row->last_name ?></td>
                                         <td><?= $row->username; ?></td>
                                         <td><?= $row->position; ?></td>
                                         <td><?= $row->prg_name; ?></td>
@@ -54,7 +54,7 @@ include 'settings/topbar.php';
                                                 </span>
                                                 <span class="text">Reset Password</span>
                                             </a>
-                                            <a href="404.php?id=<?php echo $row->id; ?>" class="btn btn-primary btn-icon-split btn-sm keychainify-checked">
+                                            <a href="user_edit.php?id=<?php echo $row->id; ?>" class="btn btn-primary btn-icon-split btn-sm keychainify-checked">
                                                 <span class="icon text-white-50">
                                                     <i class="fas fa-edit"></i>
                                                 </span>

@@ -11,12 +11,12 @@ include 'settings/topbar.php';
 
         <div class="container-fluid">
             <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                <h1 class="h3 mb-2 text-gray-800">College Program List</h1>
+                <h1 class="h3 mb-2 text-gray-800">Program List</h1>
                 <a href="program_add.php" class="btn btn-success btn-icon-split btn-sm keychainify-checked">
                     <span class="icon text-white-50">
                         <i class="fas fa-fw fa-plus"></i>
                     </span>
-                    <span class="text">Add College Program</span>
+                    <span class="text">Add Program</span>
                 </a>
             </div>
             <div class="card shadow mb-4">
@@ -52,7 +52,7 @@ include 'settings/topbar.php';
                                                 </span>
                                                 <span class="text">Edit</span>
                                             </a>
-                                            <a href="program_delete.php?id=<?php echo $row->id; ?>" onclick="return confirm('Are you sure you want to delete this?')" class="btn btn-danger btn-icon-split btn-sm keychainify-checked">
+                                            <a href="program_delete.php?id=<?php echo $row->id; ?>" onclick="return confirm('Are you sure you want to delete <?= $row->name; ?>?')" class="btn btn-danger btn-icon-split btn-sm keychainify-checked">
                                                 <span class="icon text-white-50">
                                                     <i class="fas fa-trash"></i>
                                                 </span>

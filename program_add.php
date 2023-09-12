@@ -11,12 +11,12 @@ include 'settings/topbar.php';
 
         <div class="container-fluid">
             <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                <h1 class="h3 mb-2 text-gray-800"> Add College Program</h1>
-                <a href="programs.php" class="btn btn-info btn-icon-split btn-sm keychainify-checked">
+                <h1 class="h3 mb-2 text-gray-800"> Add Program</h1>
+                <a href="programs.php" class="btn btn-dark btn-icon-split btn-sm keychainify-checked">
                     <span class="icon text-white-50">
                         <i class="fas fa-arrow-left"></i>
                     </span>
-                    <span class="text">List of College Programs</span>
+                    <span class="text">List of Programs</span>
                 </a>
             </div>
             <div class="card shadow mb-4 col-xl-5 col-md-6">
@@ -79,7 +79,7 @@ include 'settings/topbar.php';
                                 <span class="icon text-white-50">
                                     <i class="fas fa-plus"></i>
                                 </span>
-                                <span class="text">Add College Program</span>
+                                <span class="text">Add Program</span>
                             </button>
                         </form>
                     </div>
