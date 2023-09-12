@@ -62,7 +62,9 @@ include 'settings/header.php';
 
                                                     $_SESSION['id'] = $row_user->id;
                                                     $_SESSION['position'] = $row_user->position;
-                                                    $_SESSION['name'] = $row_user->name;
+                                                    $_SESSION['userID'] = $row_user->userID;
+                                                    $_SESSION['username'] = $row_user->username;
+                                                    $_SESSION['name'] = $row_user->first_name . ' ' . $row_user->middle_name . ' ' . $row_user->last_name;
                                                     echo "<script type='text/javascript'>
                                                     alert('Password successfully updated.'); ";
                                                     echo "window.location= 'calendar.php';";

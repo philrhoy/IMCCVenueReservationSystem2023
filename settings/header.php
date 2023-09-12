@@ -1,5 +1,6 @@
 <?php
 $filename = basename($_SERVER['PHP_SELF'], '.php');
+$filename = str_replace("_"," ", $filename);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -12,7 +13,7 @@ $filename = basename($_SERVER['PHP_SELF'], '.php');
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title><?= ucfirst($filename); ?> - <?= NAME_; ?></title>
+    <title><?= ucwords($filename); ?> - <?= NAME_; ?></title>
 
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">

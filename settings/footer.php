@@ -24,7 +24,11 @@
             </div>
             <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
             <div class="modal-footer">
-                <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-dark btn-icon-split btn-sm" type="button" data-dismiss="modal">
+                <span class="icon text-white-50">
+                        <i class="fas fa-times"></i>
+                    </span>
+                    <span class="text">Cancel</span></a>
                 <a href="logout.php" class="btn btn-danger btn-icon-split btn-sm keychainify-checked">
                     <span class="icon text-white-50">
                         <i class="fas fa-power-off"></i>
