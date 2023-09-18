@@ -11,7 +11,7 @@ include 'settings/topbar.php';
 
         <div class="container-fluid">
             <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                <h1 class="h3 mb-2 text-gray-800"> Add User</h1>
+                <h1 class="h3 mb-2 text-gray-800"> Edit User</h1>
                 <a href="users.php" class="btn btn-dark btn-icon-split btn-sm keychainify-checked">
                     <span class="icon text-white-50">
                         <i class="fas fa-arrow-left"></i>

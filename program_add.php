@@ -30,7 +30,7 @@ include 'settings/topbar.php';
                         $org = $_POST["org"];
                         $id = $_POST["id"];
 
-                        $add_venue = $db->query("INSERT INTO program (programID,name,color,incharge_organization,dateAdded) values ('$programID','$name','$color',$org,NOW())") or die($db->error);
+                        $add_venue = $db->query("INSERT INTO program (programID,name,color,incharge_organization,dateAdded) values ('$programID','$name','$color','$org',NOW())") or die($db->error);
                         $update_sequence = $db->query("UPDATE number_sequence SET last_number = '$id' WHERE page_name='programs'");
 
                         if (!$add_venue) {
