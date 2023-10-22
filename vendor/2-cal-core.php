@@ -141,6 +141,21 @@ class Calendar
     }
     return $events;
   }
+
+  function getProgram($programID)
+  {
+    $returnProgram = null;
+    try{
+      $this->stmt = $this->pdo->prepare('SELECT * FROM program WHERE id = ?');
+      $this->stmt->execute([$programID]);
+      while($row = $this->stmt->fetch()) { $returnProgram = $row; }
+    }catch(Exception $ex){
+      $this->error = $ex->getMessage();
+      echo $this->error;
+    }
+
+    return $returnProgram;
+  }
 }
 
 // (F) DATABASE SETTINGS - CHANGE TO YOUR OWN!

@@ -53,24 +53,33 @@
             <?php
             if ($_SESSION['position'] == 'STO') { ?>
                 <li class="nav-item <?= $reservation; ?>">
-                    <a class="nav-link" href="404.php">
+                    <a class="nav-link" href="">
                         <i class="fas fa-fw fa-bars"></i>
                         <span>Submitted Reservations</span></a>
+                </li>
+                <li class="nav-item <?= $reservation; ?>">
+                    <a class="nav-link" href="add_reservation.php">
+                        <i class="fas fa-fw fa-bars"></i>
+                        <span>Create Reservation</span></a>
                 </li>
             <?php
             } else {
             ?>
                 <li class="nav-item <?= $reservation; ?>">
-                    <a class="nav-link" href="404.php">
+                    <a class="nav-link" href="add_reservation.php">
                         <i class="fas fa-fw fa-bars"></i>
-                        <span>Pending Reservations</span></a>
+                        <span>Create Reservation</span></a>
                 </li>
             <?php
             }
 
             if ($_SESSION['position'] == 'DSA') {
             ?>
-
+            <li class="nav-item <?= $reservation; ?>">
+                    <a class="nav-link" href="monthly_report.php">
+                        <i class="fas fa-fw fa-bars"></i>
+                        <span>Monthly Report</span></a>
+                </li>   
             <hr class="sidebar-divider">
 
             <!-- Heading -->
