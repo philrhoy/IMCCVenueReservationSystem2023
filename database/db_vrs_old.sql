@@ -2,8 +2,8 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Oct 16, 2023 at 05:12 PM
+-- Host: localhost
+-- Generation Time: Sep 11, 2023 at 08:15 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -53,9 +53,9 @@ CREATE TABLE `number_sequence` (
 
 INSERT INTO `number_sequence` (`id`, `page_name`, `last_number`, `CreatedDateTime`) VALUES
 (1, 'venues', 4, '2022-05-18 14:52:45'),
-(2, 'users', 7, '2022-05-18 14:52:58'),
+(2, 'users', 3, '2022-05-18 14:52:58'),
 (3, 'programs', 6, '2022-07-16 13:20:28'),
-(4, 'reservations', 10, '2022-08-21 14:42:40');
+(4, 'reservations', 6, '2022-08-21 14:42:40');
 
 -- --------------------------------------------------------
 
@@ -94,40 +94,29 @@ CREATE TABLE `schedules` (
   `id` bigint(11) NOT NULL,
   `reservationID` varchar(255) NOT NULL,
   `venueID` int(15) DEFAULT NULL,
-  `programID` int(11) NOT NULL,
   `date_start` date NOT NULL,
   `date_end` date NOT NULL,
-  `time_start` varchar(50) NOT NULL,
-  `time_end` varchar(50) NOT NULL,
   `name` varchar(255) DEFAULT NULL,
   `address` varchar(255) DEFAULT NULL,
   `contact` varchar(11) DEFAULT NULL,
   `description` text DEFAULT NULL,
-  `num_participants` int(11) NOT NULL,
   `tag_color` varchar(7) DEFAULT '#ffffff',
   `notified` tinyint(1) NOT NULL DEFAULT 0,
   `last_notified` date DEFAULT NULL,
   `cancelled` tinyint(1) NOT NULL DEFAULT 0,
   `deleted` tinyint(1) NOT NULL DEFAULT 0,
-  `approved` tinyint(1) NOT NULL DEFAULT 0,
-  `act_form_file` varchar(255) NOT NULL,
-  `letter_approve_file` varchar(255) NOT NULL
+  `approved` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `schedules`
 --
 
-INSERT INTO `schedules` (`id`, `reservationID`, `venueID`, `programID`, `date_start`, `date_end`, `time_start`, `time_end`, `name`, `address`, `contact`, `description`, `num_participants`, `tag_color`, `notified`, `last_notified`, `cancelled`, `deleted`, `approved`, `act_form_file`, `letter_approve_file`) VALUES
-(2, 'RES000001', 1, 3, '2023-09-07', '2023-09-07', '', '', 'fgf', 'fg', '34343353535', 'er', 0, '#164dbb', 0, NULL, 0, 0, 0, '', ''),
-(3, 'RES000002', 1, 1, '2023-09-06', '2023-09-08', '', '', 'Sample', 'sample', '21212212121', 'resr', 0, '#ee1b1b', 0, NULL, 0, 0, 0, '', ''),
-(4, 'RES000003', 5, 6, '2023-09-07', '2023-09-07', '', '', 'Sample', 'dd', '21212212121', 're', 0, '#1aff34', 0, NULL, 0, 0, 0, '', ''),
-(5, 'RES000004', 4, 5, '2023-09-09', '2023-09-09', '', '', 'Sample', NULL, NULL, 'ss', 0, '#ffffff', 0, NULL, 0, 0, 0, '', ''),
-(8, 'RES000005', 2, 3, '2023-10-11', '2023-10-11', '', '', 'SSG ELECTION', NULL, NULL, 'SSG Elections for grade 6 students', 125, '#ffffff', 0, NULL, 0, 0, 0, '6527e9bc2f12c.png', '6527e9bc2f23c.png'),
-(9, 'RES000007', 3, 2, '2023-10-13', '2023-10-13', '', '', 'PE 2 Final Performance', NULL, NULL, 'Final Requirement for P2 ', 30, '#ffffff', 0, NULL, 0, 0, 0, '6527ebe506660.png', '6527ebe506740.png'),
-(10, 'RES000008', 4, 5, '2023-10-13', '2023-10-13', '', '', 'Sumbaganay lang sa', NULL, NULL, 'Sumbagay w/ executives', 10, '#ffffff', 0, NULL, 0, 0, 0, '6527eda766fe4.png', '6527eda7670c5.png'),
-(11, 'RES000009', 4, 1, '2023-10-16', '2023-10-16', '', '', 'HIV Awareness Orientation', NULL, NULL, 'To raise awareness on HIV', 50, '#7d7d7d', 0, NULL, 0, 0, 0, '65282783e35c1.png', '65282783e3ee5.png'),
-(13, 'RES000010', 1, 2, '2023-10-17', '2023-10-18', '08:00', '09:00', 'Sumbagay Dev vs HR', NULL, NULL, 'sumbagay nlng sa kay gahi kayog ulo ang HR', 25, '#ffffff', 0, NULL, 0, 0, 0, '652898b1f3b60.png', '652898b1f3cb8.png');
+INSERT INTO `schedules` (`id`, `reservationID`, `venueID`, `date_start`, `date_end`, `name`, `address`, `contact`, `description`, `tag_color`, `notified`, `last_notified`, `cancelled`, `deleted`, `approved`) VALUES
+(2, 'RES000001', 1, '2023-09-07', '2023-09-07', 'fgf', 'fg', '34343353535', 'er', '#164dbb', 0, NULL, 0, 0, 0),
+(3, 'RES000002', 1, '2023-09-06', '2023-09-08', 'Sample', 'sample', '21212212121', 'resr', '#ee1b1b', 0, NULL, 0, 0, 0),
+(4, 'RES000003', 5, '2023-09-07', '2023-09-07', 'Sample', 'dd', '21212212121', 're', '#1aff34', 0, NULL, 0, 0, 0),
+(5, 'RES000004', 4, '2023-09-09', '2023-09-09', 'Sample', NULL, NULL, 'ss', '#ffffff', 0, NULL, 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -157,8 +146,7 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `userID`, `first_name`, `middle_name`, `last_name`, `contact`, `username`, `password`, `change_pass`, `position`, `programID`, `dateAdded`, `dateUpdated`) VALUES
 (4, 'USR0002', 'Administrator', NULL, NULL, NULL, 'admin', '21232f297a57a5a743894a0e4a801fc3', 1, 'DSA', NULL, '2023-09-10 06:08:09', NULL),
-(3, 'USR0001', 'Student Officer', NULL, NULL, NULL, 'stud_officer', 'cd73502828457d15655bbd7a63fb0bc8', 1, 'STO', 2, '2023-09-10 06:06:58', NULL),
-(6, 'USR0004', 'Dimple', 'Grace', 'Normadination', '09090909090', 'admin1', 'e00cf25ad42683b3df678c61f42c6bda', 1, 'STO', 6, '2023-10-10 22:38:21', '2023-10-10 22:40:11');
+(3, 'USR0001', 'Student Officer', NULL, NULL, NULL, 'stud_officer', 'cd73502828457d15655bbd7a63fb0bc8', 1, 'STO', 2, '2023-09-10 06:06:58', NULL);
 
 -- --------------------------------------------------------
 
@@ -253,13 +241,13 @@ ALTER TABLE `program`
 -- AUTO_INCREMENT for table `schedules`
 --
 ALTER TABLE `schedules`
-  MODIFY `id` bigint(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` bigint(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `venues`
