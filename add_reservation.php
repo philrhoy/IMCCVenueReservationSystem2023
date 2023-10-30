@@ -1,10 +1,10 @@
 <?php
-error_reporting(E_ALL);
 include 'settings/system.php';
 include 'session.php';
 include 'settings/header.php';
 include "settings/sidebar.php";
 include 'settings/topbar.php';
+// error_reporting(E_ALL);
 
 ?>
 <div class="container-fluid">
@@ -68,7 +68,6 @@ include 'settings/topbar.php';
                                         //activityFormImg
                                         //letterApprovalImg
                                         $fileerror = $file['error'];
-									    $message = $upload_errors[$fileerror];
 
                                         $image_extension = explode(".",$file_name);
                                         $image_extension = strtolower(end($image_extension));
