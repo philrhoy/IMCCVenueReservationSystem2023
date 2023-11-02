@@ -73,11 +73,11 @@ $donor = null;
                                                             `program`.name AS 'PROGRAM_NAME',
                                                             `schedules`.date_start AS 'START_DATE',
                                                             `schedules`.date_end AS 'END_DATE' FROM `schedules` 
-                                                    INNER JOIN `venues` 
-                                                    ON `schedules`.venueID = `venues`.id
-                                                    INNER JOIN `program` 
-                                                    ON `schedules`.programID = `program`.id
-                                                    WHERE `schedules`.date_start BETWEEN '$filterStart' AND '$filterEnd'");
+                                                        INNER JOIN `venues` 
+                                                        ON `schedules`.venueID = `venues`.id
+                                                        INNER JOIN `program` 
+                                                        ON `schedules`.programID = `program`.id
+                                                        WHERE `schedules`.date_start BETWEEN '$filterStart' AND '$filterEnd'");
                                     $row_donor = $donor->fetchAll(PDO::FETCH_OBJ);
                                     foreach ($row_donor as $row) {
                                         ?>
