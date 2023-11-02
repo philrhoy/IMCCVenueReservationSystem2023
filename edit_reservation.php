@@ -11,13 +11,12 @@ include 'settings/topbar.php';
 
         <div class="container-fluid">
             <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                <h1 class="h3 mb-2 text-gray-800"> Reservation Form</h1>
+                <h1 class="h3 mb-2 text-gray-800">Update Reservation</h1>
             </div>
             <div class="card shadow">
 
                 <div class="card-body">
                     <?php
-            
                         if(isset($_GET['reservation_id']))
                         {
                             $res_id = $_GET['reservation_id'];
@@ -31,7 +30,6 @@ include 'settings/topbar.php';
                             $start_time = "";
                             $end_date = "";
                             $end_time = "";
-                            $notes = "";
                             $act_form_file = "";
                             $letter_approve_file = "";
 
@@ -55,10 +53,9 @@ include 'settings/topbar.php';
                             }
                            
                         }
-                        elseif(isset($_POST['submit']))
+                        if(isset($_POST['submit']))
                         {
-                            $id = $_POST['id'];
-                            $res_id = $_POST['resID'];
+                            $res_id = $_POST['id'];
                             $activity = $_POST['activity'];
                             $participants = $_POST['participants'];
                             $description = $_POST['description'];
@@ -68,77 +65,23 @@ include 'settings/topbar.php';
                             $endDate = $_POST['end_date'];
                             $startTime = $_POST['start_time'];
                             $endTime = $_POST['end_time'];
-                            $imgForms = array();
+                            $notes = $_POST['notes'];
+                 
+                            $update_reservation = $db->query("UPDATE `schedules` 
+                            SET venueID = '$venueID', programID = '$programID', date_start = '$startDate', date_end = '$endDate',
+                                time_start = '$startTime', time_end = '$endTime', name = '$activity', description = '$description',
+                                num_participants = '$participants', notes = '$notes'
+                            WHERE id = '$res_id'");
 
-                            if($_FILES["activityFormImg"]["error"]){
-                                echo"<script> alert('Image does not exist')</script>";
-                            }else{
-                                //CHECK FOR IMAGE ERRORS:
-                                $valid_extensions = ['jpeg', 'jpg', 'png'];
-                                $check_error = 0;
-
-                                foreach($_FILES as $file){
-                                    $file_name = $file["name"];
-                                    $file_size = $file["size"];
-
-                                    $image_extension = explode(".",$file_name);
-                                    $image_extension = strtolower(end($image_extension));
-
-                                    if(!in_array($image_extension, $valid_extensions)){
-                                        $check_error++;
-                                        echo"<script> alert('Invalid image extension')</script>";
-                                    }elseif($file_size > 10000000){
-                                        $check_error++;
-                                        echo"<script> alert('Image size is too big')</script>";
-                                    }
-                                }
-
-                                //Upload image 
-                                if ($check_error == 0){
-                              
-                                    foreach($_FILES as $file){
-                                        $file_name = $file["name"];
-                                        $tmp_name = $file["tmp_name"];
-                                        //$tmp_name = $_FILES['photo']['tmp_name'];
-                                        //activityFormImg
-                                        //letterApprovalImg
-                                        $fileerror = $file['error'];
-
-                                        $image_extension = explode(".",$file_name);
-                                        $image_extension = strtolower(end($image_extension));
-
-                                        $unique_img_name = uniqid();
-                                        // $unique_img_name = $unique_img_name . ($index == 0 ? "ACT_FORM" : "APPROVAL");
-                                        $unique_img_name .= '.' .$image_extension;
-                                        $path = 'uploads/';
-                                        move_uploaded_file($tmp_name, $path.$unique_img_name);
-                                      
-                                        array_push($imgForms,$unique_img_name);
-                                    }
-
-                                    $activity_form = $imgForms[0];
-                                    $letter_approval = $imgForms[1];
-
-                                    //Execute DB Insert
-                                    $add_res = $db->query("INSERT INTO `schedules` 
-                                    (reservationID,venueID,programID,date_start,date_end,time_start,time_end,name,description,num_participants,act_form_file,letter_approve_file) values
-                                    ('$res_id','$venueID','$programID','$startDate','$endDate','$startTime','$endTime','$activity','$description','$participants','$activity_form','$letter_approval')") 
-                                    or die($db->error);
-                                    $update_sequence = $db->query("UPDATE number_sequence SET last_number = '$id' WHERE page_name='reservations'");
-
-                                    if (!$add_res) {
-                                        echo '<script>
-                                                alert("Error saving reservation.");
-                                            </script>';
-                                    } else {
-                                        echo '<script>
-                                                alert("Successfully created reservation.");
-                                            </script>';
-                                    }
-                                }
-                                
+                            if (!$update_reservation) {
+                                echo '<script>
+                                        alert("Error updating reservation.");
+                                    </script>';
+                            } else {
+                                echo '<script>
+                                        alert("Successfully updated reservation.");
+                                    </script>';
                             }
-
                         }
                     ?>
                     <div class="table-responsive-lg">
@@ -147,24 +90,26 @@ include 'settings/topbar.php';
                                 <div class="col-4">   
                                     <div class="form-group">
                                         <label>ID</label>
-                                        <input class="form-control" type="text" name="resID" value="<?= $res_id_text ?>" readonly>
+                                        <input class="form-control" type="hidden" name="id" value="<?= $res_id ?>" readonly>
+                                        <input class="form-control" type="text" name="resID" value="<?= $res_id_text ?>">
                                     </div>
                                     <div class="form-group">
                                         <label>Activity</label>
-                                        <input class="form-control" type="text" name="activity" value="<?= $activity ?>" readonly>
+                                        <input class="form-control" type="text" name="activity" value="<?= $activity ?>" >
+                                
                                     </div>
                                     <div class="form-group">
                                         <label>Approximate No. of Participants</label>
-                                        <input class="form-control" type="number" placeholder="No. of participants" value="<?= $participants ?>" readonly>
+                                        <input class="form-control" type="number" name="participants" placeholder="No. of participants" value="<?= $participants ?>" >
                                     </div>
                                     <div class="form-group">
                                         <label>Objectives</label>
-                                        <textarea class="form-control" id="exampleFormControlTextarea1" placeholder="Please specify the objectives" rows="3" readonly><?= $objectives ?></textarea>
+                                        <textarea class="form-control" id="exampleFormControlTextarea1" name="description" placeholder="Please specify the objectives" rows="3" ><?= $objectives ?></textarea>
                                         <!-- <input class="form-control" type="number" placeholder="No. of participants" name="participants" required> -->
                                     </div>
                                     <div class="form-group">
                                         <label>Program</label>
-                                        <select class="form-control" disabled>
+                                        <select class="form-control" name="program">
                                             <?php  
                                             $fetchPrograms = $db->query("SELECT * FROM `program` ORDER BY name ASC");
 
@@ -189,7 +134,7 @@ include 'settings/topbar.php';
                                     </div>
                                     <div class="form-group">
                                         <label>Choose Venue</label>
-                                        <select class="form-control" disabled>
+                                        <select class="form-control" name="venue">
                                             <?php  
                                             $fetchVenues = $db->query("SELECT * FROM `venues` ORDER BY name ASC");
 
@@ -215,23 +160,23 @@ include 'settings/topbar.php';
                                     <div class="form-group row">
                                         <div class="col-6">   
                                             <label>Start Date</label>
-                                            <input class="form-control" type="date" value="<?= $start_date ?>" readonly>
+                                            <input class="form-control" type="date" name='start_date' value="<?= $start_date ?>" >
                                         </div>
 
                                         <div class="col-6">   
                                             <label>Start Time</label>
-                                            <input class="form-control" type="time" value="<?= $start_time ?>" readonly>
+                                            <input class="form-control" type="time" name='start_time' value="<?= $start_time ?>" >
                                         </div>
                                     </div>
 
                                     <div class="form-group row">
                                         <div class="col-6">   
                                             <label>End Date</label>
-                                            <input class="form-control" type="date" value="<?= $end_date ?>" readonly >
+                                            <input class="form-control" type="date" name='end_date' value="<?= $end_date ?>"  >
                                         </div>
                                         <div class="col-6">   
                                             <label>End Time</label>
-                                            <input class="form-control" type="time" value="<?= $end_time ?>" readonly >
+                                            <input class="form-control" type="time" name='end_time' value="<?= $end_time ?>"  >
                                         </div>
                                         
                                     </div>
@@ -240,18 +185,27 @@ include 'settings/topbar.php';
                                 <div class="col-4">   
                                     <div class="form-group">
                                         <div class="imgUp">
-                                            <label><b>Upload Fully Signed Student Activity Form:</b></label>
-                                            <img class="imagePreview" data-enlargeable src="uploads/<?= $act_form_file ?>">
+                                            <label><b>Uploaded Fully Signed Student Activity Form:</b></label>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="imgUp">
+                                            <img data-enlargeable class="imagePreview" src="uploads/<?= $act_form_file ?>">
                                         </div>
                                     </div>
 
                                     <div class="form-group">
                                         <div class="imgUp">   
-                                            <label><b>Upload Letter of Approval:</b></label>
-                                            <img class="imagePreview" data-enlargeable src="uploads/<?= $letter_approve_file ?>">
+                                            <label><b>Uploaded Letter of Approval:</b></label>
                                         </div>
                                     </div>
-                                    
+
+                                    <div class="form-group">
+                                        <div class="imgUp">   
+                                             <img data-enlargeable class="imagePreview" src="uploads/<?= $letter_approve_file ?>">
+                                        </div>
+                                    </div> 
                                 </div>
 
                                 <div class="col-4">
@@ -260,19 +214,30 @@ include 'settings/topbar.php';
                                         <textarea class="form-control" id="exampleFormControlTextarea1" name='notes' placeholder="Notes will be provided by Property Custodian or Admin" rows="3"
                                             <?= (($_SESSION['position'] == 'STO' ? 'disabled': ''));?> ><?= $notes ?></textarea>
                                     </div>      
-                                <div> 
+                                <div>  
 
                             </div>
+
+                            <button type="submit" name='submit' class="btn btn-success btn-icon-split btn-sm keychainify-checked">
+                                <span class="icon text-white-50">
+                                    <i class="fas fa-plus"></i>
+                                </span>
+                                <span class="text">APPLY UPDATES</span>
+                            </button>
                             
                         </form>
 
                         <script>
                             $(function() {
+                                // var imageContainer = $(".imgUp").css("height", "30%");
+
                                 $(document).on("change",".uploadFile", function()
                                 {
                                     var uploadFile = $(this);
                                     var files = !!this.files ? this.files : [];
+                                    var getCurrentUpload = $(".imagePreview");
                                     if (!files.length || !window.FileReader) return; // no file selected, or no FileReader support
+                                    
                             
                                     if (/^image/.test( files[0].type)){ // only image file
                                         var reader = new FileReader(); // instance of the FileReader
@@ -280,9 +245,12 @@ include 'settings/topbar.php';
                             
                                         reader.onloadend = function(){ // set image data as background of div
                                             //alert(uploadFile.closest(".upimage").find('.imagePreview').length);
-                                        uploadFile.closest(".imgUp").find('.imagePreview').css("background-image", "url("+this.result+")");
+                                        uploadFile.closest(".imgUp")
+                                            .find('.imagePreview').css("background-image", "url("+this.result+")")
+                                            .prop("src","");
                                         }
                                     }
+                                
                                 });
 
                                 $('img[data-enlargeable]').addClass('img-enlargeable').click(function() {

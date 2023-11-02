@@ -53,7 +53,7 @@
             <?php
             if ($_SESSION['position'] == 'STO') { ?>
                 <li class="nav-item <?= $reservation; ?>">
-                    <a class="nav-link" href="">
+                    <a class="nav-link" href="reservation_list.php">
                         <i class="fas fa-fw fa-bars"></i>
                         <span>Submitted Reservations</span></a>
                 </li>
@@ -63,18 +63,23 @@
                         <span>Create Reservation</span></a>
                 </li>
             <?php
-            } else {
+            } else if($_SESSION['position'] == 'PTC') {
             ?>
                 <li class="nav-item <?= $reservation; ?>">
-                    <a class="nav-link" href="add_reservation.php">
+                    <a class="nav-link" href="reservation_list.php">
                         <i class="fas fa-fw fa-bars"></i>
-                        <span>Create Reservation</span></a>
+                        <span>Submitted Reservations</span></a>
                 </li>
             <?php
             }
 
             if ($_SESSION['position'] == 'DSA') {
             ?>
+            <li class="nav-item <?= $reservation; ?>">
+                    <a class="nav-link" href="add_reservation.php">
+                        <i class="fas fa-fw fa-bars"></i>
+                        <span>Create Reservation</span></a>
+            </li>
             <li class="nav-item <?= $reservation; ?>">
                     <a class="nav-link" href="monthly_report.php">
                         <i class="fas fa-fw fa-bars"></i>

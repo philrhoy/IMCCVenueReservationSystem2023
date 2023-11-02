@@ -24,6 +24,7 @@ include 'settings/topbar.php';
                         {
                             $id = $_POST['id'];
                             $res_id = $_POST['resID'];
+                            $user_id = $_SESSION['id'];
                             $activity = $_POST['activity'];
                             $participants = $_POST['participants'];
                             $description = $_POST['description'];
@@ -68,7 +69,6 @@ include 'settings/topbar.php';
                                         //activityFormImg
                                         //letterApprovalImg
                                         $fileerror = $file['error'];
-									    $message = $upload_errors[$fileerror];
 
                                         $image_extension = explode(".",$file_name);
                                         $image_extension = strtolower(end($image_extension));
@@ -87,8 +87,8 @@ include 'settings/topbar.php';
 
                                     //Execute DB Insert
                                     $add_res = $db->query("INSERT INTO `schedules` 
-                                    (reservationID,venueID,programID,date_start,date_end,time_start,time_end,name,description,num_participants,act_form_file,letter_approve_file) values
-                                    ('$res_id','$venueID','$programID','$startDate','$endDate','$startTime','$endTime','$activity','$description','$participants','$activity_form','$letter_approval')") 
+                                    (reservationID,userID,venueID,programID,date_start,date_end,time_start,time_end,name,description,num_participants,act_form_file,letter_approve_file) values
+                                    ('$res_id','$user_id','$venueID','$programID','$startDate','$endDate','$startTime','$endTime','$activity','$description','$participants','$activity_form','$letter_approval')") 
                                     or die($db->error);
                                     $update_sequence = $db->query("UPDATE number_sequence SET last_number = '$id' WHERE page_name='reservations'");
 
@@ -107,17 +107,17 @@ include 'settings/topbar.php';
 
                         }
 
-                    $sequence = $db->query("SELECT * FROM number_sequence WHERE page_name = 'reservations'");
-                    $fetch = $sequence->fetchAll(PDO::FETCH_OBJ);
-                    foreach ($fetch as $data) {
-                        $newID = $data->last_number + 1;
-                        $lengthID = strlen((string)$newID);
-                        if ($lengthID == 1) $ID = "00000" . $newID;
-                        elseif ($lengthID == 2) $ID = "0000" . $newID;
-                        elseif ($lengthID == 3) $ID = "000" . $newID;
-                        elseif ($lengthID == 4) $ID = "00" . $newID;
-                        elseif ($lengthID == 5) $ID = "0" . $newID;
-                        else $ID = $newID;
+                        $sequence = $db->query("SELECT * FROM number_sequence WHERE page_name = 'reservations'");
+                        $fetch = $sequence->fetchAll(PDO::FETCH_OBJ);
+                        foreach ($fetch as $data) {
+                            $newID = $data->last_number + 1;
+                            $lengthID = strlen((string)$newID);
+                            if ($lengthID == 1) $ID = "00000" . $newID;
+                            elseif ($lengthID == 2) $ID = "0000" . $newID;
+                            elseif ($lengthID == 3) $ID = "000" . $newID;
+                            elseif ($lengthID == 4) $ID = "00" . $newID;
+                            elseif ($lengthID == 5) $ID = "0" . $newID;
+                            else $ID = $newID;
                     }
                     ?>
                     <div class="table-responsive-lg">
@@ -132,7 +132,6 @@ include 'settings/topbar.php';
                                     <div class="form-group">
                                         <label>Activity</label>
                                         <input class="form-control" type="text" name="activity" value="" required>
-                                        <!-- <input class="form-control" type="text" name="venueID" value="<?= 'VN' . $ID ?>" readonly> -->
                                     </div>
                                     <div class="form-group">
                                         <label>Approximate No. of Participants</label>
@@ -211,7 +210,7 @@ include 'settings/topbar.php';
                                         <div class="imgUp">
                                             <label><b>Upload Fully Signed Student Activity Form:</b></label>
                                             <input type="file" class="form-control uploadFile img" name="activityFormImg" required>
-                                            <div class="imagePreview"></div>
+                                            <img class="imagePreview" data-enlargeable></img>
                                         </div>
                                     </div>
 
@@ -219,7 +218,7 @@ include 'settings/topbar.php';
                                         <div class="imgUp">   
                                             <label><b>Upload Letter of Approval:</b></label>
                                             <input type="file" class="form-control uploadFile img" name="letterApprovalImg" >
-                                            <div class="imagePreview"></div>
+                                            <img class="imagePreview" data-enlargeable ></img>
                                         </div>
                                     </div>
                                     
@@ -250,11 +249,43 @@ include 'settings/topbar.php';
                             
                                         reader.onloadend = function(){ // set image data as background of div
                                             //alert(uploadFile.closest(".upimage").find('.imagePreview').length);
-                                        uploadFile.closest(".imgUp").find('.imagePreview').css("background-image", "url("+this.result+")");
+                                            // css("src", "url("+this.result+")");
+                                        uploadFile.closest(".imgUp").find('.imagePreview').attr('src',this.result);
                                         }
                                     }
                                 
                                 });
+
+                                $('img[data-enlargeable]').addClass('img-enlargeable').click(function() {
+                                var src = $(this).attr('src');
+                                var modal;
+
+                                function removeModal() {
+                                    modal.remove();
+                                    $('body').off('keyup.modal-close');
+                                }
+
+                                modal = $('<div>').css({
+                                    background: 'RGBA(0,0,0,.5) url(' + src + ') no-repeat center',
+                                    backgroundSize: 'contain',
+                                    width: '100%',
+                                    height: '100%',
+                                    position: 'fixed',
+                                    zIndex: '10000',
+                                    top: '0',
+                                    left: '0',
+                                    cursor: 'zoom-out'
+                                }).click(function() {
+                                    removeModal();
+                                }).appendTo('body');
+                                //handling ESC
+                                $('body').on('keyup.modal-close', function(e) {
+                                    if (e.key === 'Escape') {
+                                    removeModal();
+                                    }
+                                    });
+                                });
+                                    
                             });
                         </script>
                     </div>
