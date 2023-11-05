@@ -98,7 +98,7 @@ include 'settings/topbar.php';
                                     <div class="form-group">
                                         <label>ID</label>
                                         <input class="form-control" type="hidden" name="id" value="<?= $res_id ?>" readonly>
-                                        <input class="form-control" type="text" name="resID" value="<?= $res_id_text ?>">
+                                        <input class="form-control" type="text" name="resID" value="<?= $res_id_text ?>" readonly>
                                     </div>
                                     <div class="form-group">
                                         <label>Activity</label>
