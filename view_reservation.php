@@ -55,91 +55,7 @@ include 'settings/topbar.php';
                             }
                            
                         }
-                        elseif(isset($_POST['submit']))
-                        {
-                            $id = $_POST['id'];
-                            $res_id = $_POST['resID'];
-                            $activity = $_POST['activity'];
-                            $participants = $_POST['participants'];
-                            $description = $_POST['description'];
-                            $venueID = $_POST['venue'];
-                            $programID = $_POST['program'];
-                            $startDate = $_POST['start_date'];
-                            $endDate = $_POST['end_date'];
-                            $startTime = $_POST['start_time'];
-                            $endTime = $_POST['end_time'];
-                            $imgForms = array();
-
-                            if($_FILES["activityFormImg"]["error"]){
-                                echo"<script> alert('Image does not exist')</script>";
-                            }else{
-                                //CHECK FOR IMAGE ERRORS:
-                                $valid_extensions = ['jpeg', 'jpg', 'png'];
-                                $check_error = 0;
-
-                                foreach($_FILES as $file){
-                                    $file_name = $file["name"];
-                                    $file_size = $file["size"];
-
-                                    $image_extension = explode(".",$file_name);
-                                    $image_extension = strtolower(end($image_extension));
-
-                                    if(!in_array($image_extension, $valid_extensions)){
-                                        $check_error++;
-                                        echo"<script> alert('Invalid image extension')</script>";
-                                    }elseif($file_size > 10000000){
-                                        $check_error++;
-                                        echo"<script> alert('Image size is too big')</script>";
-                                    }
-                                }
-
-                                //Upload image 
-                                if ($check_error == 0){
-                              
-                                    foreach($_FILES as $file){
-                                        $file_name = $file["name"];
-                                        $tmp_name = $file["tmp_name"];
-                                        //$tmp_name = $_FILES['photo']['tmp_name'];
-                                        //activityFormImg
-                                        //letterApprovalImg
-                                        $fileerror = $file['error'];
-
-                                        $image_extension = explode(".",$file_name);
-                                        $image_extension = strtolower(end($image_extension));
-
-                                        $unique_img_name = uniqid();
-                                        // $unique_img_name = $unique_img_name . ($index == 0 ? "ACT_FORM" : "APPROVAL");
-                                        $unique_img_name .= '.' .$image_extension;
-                                        $path = 'uploads/';
-                                        move_uploaded_file($tmp_name, $path.$unique_img_name);
-                                      
-                                        array_push($imgForms,$unique_img_name);
-                                    }
-
-                                    $activity_form = $imgForms[0];
-                                    $letter_approval = $imgForms[1];
-
-                                    //Execute DB Insert
-                                    $add_res = $db->query("INSERT INTO `schedules` 
-                                    (reservationID,venueID,programID,date_start,date_end,time_start,time_end,name,description,num_participants,act_form_file,letter_approve_file) values
-                                    ('$res_id','$venueID','$programID','$startDate','$endDate','$startTime','$endTime','$activity','$description','$participants','$activity_form','$letter_approval')") 
-                                    or die($db->error);
-                                    $update_sequence = $db->query("UPDATE number_sequence SET last_number = '$id' WHERE page_name='reservations'");
-
-                                    if (!$add_res) {
-                                        echo '<script>
-                                                alert("Error saving reservation.");
-                                            </script>';
-                                    } else {
-                                        echo '<script>
-                                                alert("Successfully created reservation.");
-                                            </script>';
-                                    }
-                                }
-                                
-                            }
-
-                        }
+                    
                     ?>
                     <div class="table-responsive-lg">
                         <form role="form" method="post" enctype="multipart/form-data">
@@ -258,7 +174,7 @@ include 'settings/topbar.php';
                                     <div class="form-group">
                                         <label>Notes</label>
                                         <textarea class="form-control" id="exampleFormControlTextarea1" name='notes' placeholder="Notes will be provided by Property Custodian or Admin" rows="3"
-                                            <?= (($_SESSION['position'] == 'STO' ? 'disabled': ''));?> ><?= $notes ?></textarea>
+                                            <?= (($_SESSION['position'] == 'STO' ? 'disabled': ''));?> readonly><?= $notes ?></textarea>
                                     </div>      
                                 <div> 
 
