@@ -17,6 +17,66 @@ include 'settings/topbar.php';
 
                 <div class="card-body">
                     <?php
+                        if(isset($_POST['submit']))
+                        {
+                            $adminID = $_SESSION['id'];
+                            $action = $_POST['action'];
+                            $res_id = $_POST['id'];
+                            $activity = $_POST['activity'];
+                            $participants = $_POST['participants'];
+                            $description = $_POST['description'];
+                            $venueID = $_POST['venue'];
+                            $programID = $_POST['program'];
+                            $startDate = $_POST['start_date'];
+                            $endDate = $_POST['end_date'];
+                            $startTime = $_POST['start_time'];
+                            $endTime = $_POST['end_time'];
+                            $notes = $_POST['notes'];
+                            $status = $_POST['status'];
+
+                            if($status != "A"){
+                                $query = "UPDATE `schedules` 
+                                SET venueID = '$venueID', programID = '$programID', date_start = '$startDate', date_end = '$endDate',
+                                    time_start = '$startTime', time_end = '$endTime', name = '$activity', description = '$description',
+                                    num_participants = '$participants'";
+
+                                //Check if approved or rejected
+                                if($_SESSION["position"] == "DSA"){
+                                    if($action == "APPROVE"){
+                                        $query .= ", notes = '$notes',
+                                                    status = 'A',
+                                                    approvedByAdmin = '$adminID'
+                                                    WHERE id = '$res_id'";
+                                    }elseif($action == "REJECT"){
+                                        $query .= ", notes = '$notes',
+                                                    status = 'R',
+                                                    rejectedByAdmin = '$adminID'
+                                                    WHERE id = '$res_id'";
+                                    }else{
+                                        $query .= ", notes = '$notes'
+                                                    WHERE id = '$res_id'";
+                                    }
+                                }else{
+                                    //Prevent Student Officer from updating notes
+                                    $query .= ($_SESSION['position'] != 'STO' ?  
+                                    ", notes = '$notes' WHERE id = '$res_id'":
+                                    " WHERE id = '$res_id'");
+                                }
+                            
+                                $update_reservation = $db->query($query);
+
+                                if (!$update_reservation) {
+                                    echo '<script>
+                                            alert("Error updating reservation.");
+                                        </script>';
+                                } else {
+                                    //Alert message must correspond to action performed
+                                    echo '<script>
+                                            alert("Successfully updated reservation.");
+                                        </script>';
+                                }
+                            }
+                        }
                         if(isset($_GET['reservation_id']))
                         {
                             $res_id = $_GET['reservation_id'];
@@ -32,13 +92,27 @@ include 'settings/topbar.php';
                             $end_time = "";
                             $act_form_file = "";
                             $letter_approve_file = "";
+                            $status = "";
+                            $statusStr = "Pending for Approval";
 
                             $sequence = $db->query("SELECT * FROM schedules WHERE id = '$res_id'");
                             $fetch = $sequence->fetchAll(PDO::FETCH_OBJ);
 
-                            foreach ($fetch as $data) {
+                            foreach ($fetch as $data) {  
+                                switch($data->status){
+                                    case "P":
+                                        $statusStr = "Pending for Approval";
+                                        break;
+                                    case "A":
+                                        $statusStr = "Approved";
+                                        break;
+                                    case "R":
+                                        $statusStr = "Rejected";
+                                        break;
+                                }       
                                 $res_id_text = $data->reservationID;
                                 $activity = $data->name;
+                                $status = $data->status;
                                 $participants = $data->num_participants;
                                 $objectives = $data->description;
                                 $program_id = $data->programID;
@@ -51,45 +125,8 @@ include 'settings/topbar.php';
                                 $act_form_file = $data->act_form_file;
                                 $letter_approve_file = $data->letter_approve_file;
                             }
-                           
                         }
-                        if(isset($_POST['submit']))
-                        {
-                            $res_id = $_POST['id'];
-                            $activity = $_POST['activity'];
-                            $participants = $_POST['participants'];
-                            $description = $_POST['description'];
-                            $venueID = $_POST['venue'];
-                            $programID = $_POST['program'];
-                            $startDate = $_POST['start_date'];
-                            $endDate = $_POST['end_date'];
-                            $startTime = $_POST['start_time'];
-                            $endTime = $_POST['end_time'];
-                            $notes = $_POST['notes'];
-                            // $notes = ($_SESSION['position'] != 'STO' ? $_POST['notes'] : '');
-
-                            $query = "UPDATE `schedules` 
-                            SET venueID = '$venueID', programID = '$programID', date_start = '$startDate', date_end = '$endDate',
-                                time_start = '$startTime', time_end = '$endTime', name = '$activity', description = '$description',
-                                num_participants = '$participants'";
-                            
-                            //Prevent Student Officer from updating notes
-                            $query .= ($_SESSION['position'] != 'STO' ?  
-                                    ", notes = '$notes' WHERE id = '$res_id'":
-                                    " WHERE id = '$res_id'");
-                 
-                            $update_reservation = $db->query($query);
-
-                            if (!$update_reservation) {
-                                echo '<script>
-                                        alert("Error updating reservation.");
-                                    </script>';
-                            } else {
-                                echo '<script>
-                                        alert("Successfully updated reservation.");
-                                    </script>';
-                            }
-                        }
+                       
                     ?>
                     <div class="table-responsive-lg">
                         <form role="form" method="post" enctype="multipart/form-data">
@@ -103,12 +140,12 @@ include 'settings/topbar.php';
                                     <div class="form-group">
                                         <label>Activity</label>
                                         <input class="form-control" type="text" name="activity" value="<?= $activity ?>" >
-                                
                                     </div>
                                     <div class="form-group">
-                                        <label>Approximate No. of Participants</label>
-                                        <input class="form-control" type="number" name="participants" placeholder="No. of participants" value="<?= $participants ?>" >
+                                        <label>Status</label>
+                                        <input class="form-control" type="text" name="status" value="<?= $statusStr ?>" readonly>
                                     </div>
+                                    
                                     <div class="form-group">
                                         <label>Objectives</label>
                                         <textarea class="form-control" id="exampleFormControlTextarea1" name="description" placeholder="Please specify the objectives" rows="3" ><?= $objectives ?></textarea>
@@ -191,6 +228,10 @@ include 'settings/topbar.php';
 
                                 <div class="col-4">   
                                     <div class="form-group">
+                                        <label>Approximate No. of Participants</label>
+                                        <input class="form-control" type="number" name="participants" placeholder="No. of participants" value="<?= $participants ?>" >
+                                    </div>
+                                    <div class="form-group">
                                         <div class="imgUp">
                                             <label><b>Uploaded Fully Signed Student Activity Form:</b></label>
                                         </div>
@@ -216,21 +257,61 @@ include 'settings/topbar.php';
                                 </div>
 
                                 <div class="col-4">
-                                    <div class="form-group">
+                                    <div class="form-group note-form-group">
                                         <label>Notes</label>
-                                        <textarea class="form-control" id="exampleFormControlTextarea1" name='notes' placeholder="Notes will be provided by Property Custodian or Admin" rows="3"
-                                            <?= (($_SESSION['position'] == 'STO' ? 'readonly': ''));?> ><?= $notes ?></textarea>
-                                    </div>      
+                                        <textarea class="form-control" id="noteTextArea" name='notes' placeholder="Notes will be provided by Property Custodian or Admin" rows="3"
+                                            <?= (($_SESSION['position'] != 'PTC' ? 'readonly': ''));?>><?= $notes ?></textarea>
+                                    </div> 
+
+                                    <div class="form-group" <?= (($_SESSION['position'] != 'DSA'? 'hidden': ''));?>>
+                                        <label>Choose action to perform</label>
+                                        <select class="form-control" id="performAction" name="action">
+                                            <option value='UPDATE' selected>Update Record Only</option>
+                                            <option value='APPROVE'>Approve</option>
+                                            <option value='REJECT'>Reject</option>
+                                        </select>
+                                    </div>         
                                 <div>  
 
                             </div>
-
-                            <button type="submit" name='submit' class="btn btn-success btn-icon-split btn-sm keychainify-checked">
+                            <a class="btn btn-success btn-icon-split btn-sm keychainify-checked confirmBtn" href="#" data-toggle="modal" data-target="#confirmModal">
                                 <span class="icon text-white-50">
                                     <i class="fas fa-plus"></i>
                                 </span>
                                 <span class="text">APPLY UPDATES</span>
-                            </button>
+                            </a>
+
+                             <!-- Confirm Update Modal-->
+                            <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                                aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header bg-danger">
+                                            <h5 class="modal-title text-white" id="exampleModalLabel">Confirm Action</h5>
+                                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">×</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body"></div>
+                                        <div class="modal-footer">
+                                        <button type="submit" name='submit' class="btn btn-success btn-icon-split btn-sm keychainify-checked"
+                                            <?= (($status == 'A' ? 'disabled': ''));?>>
+                                            <span class="icon text-white-50">
+                                                <i class="fas fa-plus"></i>
+                                            </span>
+                                            <span class="text">PROCEED</span>
+                                        </button>
+                                        <button class="btn btn-secondary btn-icon-split btn-sm keychainify-checked" type="button" data-dismiss="modal">
+                                             <span class="icon text-white-50">
+                                                <i class="fas fa-window-close"></i>
+                                            </span>
+                                            <span class="text">CANCEL</span>
+                                        </button>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             
                         </form>
 
@@ -269,26 +350,53 @@ include 'settings/topbar.php';
                                     $('body').off('keyup.modal-close');
                                 }
                                 modal = $('<div>').css({
-                                    background: 'RGBA(0,0,0,.5) url(' + src + ') no-repeat center',
-                                    backgroundSize: 'contain',
-                                    width: '100%',
-                                    height: '100%',
-                                    position: 'fixed',
-                                    zIndex: '10000',
-                                    top: '0',
-                                    left: '0',
-                                    cursor: 'zoom-out'
-                                }).click(function() {
-                                    removeModal();
-                                }).appendTo('body');
-                                //handling ESC
-                                $('body').on('keyup.modal-close', function(e) {
-                                    if (e.key === 'Escape') {
-                                    removeModal();
+                                        background: 'RGBA(0,0,0,.5) url(' + src + ') no-repeat center',
+                                        backgroundSize: 'contain',
+                                        width: '100%',
+                                        height: '100%',
+                                        position: 'fixed',
+                                        zIndex: '10000',
+                                        top: '0',
+                                        left: '0',
+                                        cursor: 'zoom-out'
+                                    }).click(function() {
+                                        removeModal();
+                                    }).appendTo('body');
+                                    //handling ESC
+                                    $('body').on('keyup.modal-close', function(e) {
+                                        if (e.key === 'Escape') {
+                                        removeModal();
+                                        }
+                                    });
+                                 });
+
+                                $("#performAction").on("change", function(){
+                                    var statusVal = $(this).val();
+                                    if(statusVal == "REJECT"){
+                                        $("#noteTextArea").prop({
+                                            required: true,
+                                            readonly: false
+                                        });
+                                    }else if(statusVal == "APPROVE"){
+                                        $("#noteTextArea").prop({
+                                            required: false,
+                                            readonly: true
+                                        });
                                     }
                                 });
+
+                                $(".confirmBtn").on("click", function(){
+                                    var confirmMsg = "Press PROCEED to apply updates to this record.";
+                                    var perfActionVal = $("#performAction").val();
+                                   
+                                    if(perfActionVal == "REJECT"){
+                                        confirmMsg = "Are you sure you want to REJECT this reservation?";
+                                    }else if(perfActionVal == "APPROVE"){
+                                        confirmMsg = "Are you sure you want to APPROVE this reservation?";
+                                    }
+                                    $(".modal-body").html(confirmMsg);
+                                });
                             });
-                        });
                         </script>
                     </div>
                 </div>
