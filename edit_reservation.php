@@ -65,7 +65,7 @@ include 'settings/topbar.php';
                             $endDate = $_POST['end_date'];
                             $startTime = $_POST['start_time'];
                             $endTime = $_POST['end_time'];
-                            $notes = $_POST['notes'];
+                            $notes = ($_SESSION['position'] != 'STO' ? $_POST['notes'] : '');
                  
                             $update_reservation = $db->query("UPDATE `schedules` 
                             SET venueID = '$venueID', programID = '$programID', date_start = '$startDate', date_end = '$endDate',
@@ -212,7 +212,7 @@ include 'settings/topbar.php';
                                     <div class="form-group">
                                         <label>Notes</label>
                                         <textarea class="form-control" id="exampleFormControlTextarea1" name='notes' placeholder="Notes will be provided by Property Custodian or Admin" rows="3"
-                                            <?= (($_SESSION['position'] == 'STO' ? 'disabled': ''));?> ><?= $notes ?></textarea>
+                                            <?= (($_SESSION['position'] == 'STO' ? 'readonly': ''));?> ><?= $notes ?></textarea>
                                     </div>      
                                 <div>  
 
