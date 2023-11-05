@@ -65,13 +65,20 @@ include 'settings/topbar.php';
                             $endDate = $_POST['end_date'];
                             $startTime = $_POST['start_time'];
                             $endTime = $_POST['end_time'];
-                            $notes = ($_SESSION['position'] != 'STO' ? $_POST['notes'] : '');
-                 
-                            $update_reservation = $db->query("UPDATE `schedules` 
+                            $notes = $_POST['notes'];
+                            // $notes = ($_SESSION['position'] != 'STO' ? $_POST['notes'] : '');
+
+                            $query = "UPDATE `schedules` 
                             SET venueID = '$venueID', programID = '$programID', date_start = '$startDate', date_end = '$endDate',
                                 time_start = '$startTime', time_end = '$endTime', name = '$activity', description = '$description',
-                                num_participants = '$participants', notes = '$notes'
-                            WHERE id = '$res_id'");
+                                num_participants = '$participants'";
+                            
+                            //Prevent Student Officer from updating notes
+                            $query .= ($_SESSION['position'] != 'STO' ?  
+                                    ", notes = '$notes' WHERE id = '$res_id'":
+                                    " WHERE id = '$res_id'");
+                 
+                            $update_reservation = $db->query($query);
 
                             if (!$update_reservation) {
                                 echo '<script>
