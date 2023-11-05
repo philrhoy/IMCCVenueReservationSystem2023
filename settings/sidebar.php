@@ -81,6 +81,11 @@
                         <span>Create Reservation</span></a>
             </li>
             <li class="nav-item <?= $reservation; ?>">
+                <a class="nav-link" href="reservation_list.php">
+                    <i class="fas fa-fw fa-bars"></i>
+                    <span>Submitted Reservations</span></a>
+            </li>
+            <li class="nav-item <?= $reservation; ?>">
                     <a class="nav-link" href="monthly_report.php">
                         <i class="fas fa-fw fa-bars"></i>
                         <span>Monthly Report</span></a>
