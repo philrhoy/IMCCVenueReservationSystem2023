@@ -12673,3 +12673,14 @@ body.sidebar-toggled footer.sticky-footer {
 {
   margin-bottom:15px;
 }
+
+/* .overlap{
+    position: absolute;
+    background-color: transparent;
+    top: 60px;
+    left: 0px;
+    margin: 10px 10px 10px 10px;
+    padding: 0px 0px 0px 0px;
+    width: 98%;
+    height: 250px;
+} */

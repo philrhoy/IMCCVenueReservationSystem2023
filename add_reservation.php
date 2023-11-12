@@ -40,7 +40,7 @@ include 'settings/topbar.php';
                                 echo"<script> alert('Image does not exist')</script>";
                             }else{
                                 //CHECK FOR IMAGE ERRORS:
-                                $valid_extensions = ['jpeg', 'jpg', 'png'];
+                                $valid_extensions = ['jpeg', 'jpg', 'png', 'pdf'];
                                 $check_error = 0;
 
                                 foreach($_FILES as $file){
@@ -53,7 +53,8 @@ include 'settings/topbar.php';
                                     if(!in_array($image_extension, $valid_extensions)){
                                         $check_error++;
                                         echo"<script> alert('Invalid image extension')</script>";
-                                    }elseif($file_size > 10000000){
+                                    }
+                                    elseif($file_size > 10000000){
                                         $check_error++;
                                         echo"<script> alert('Image size is too big')</script>";
                                     }
@@ -210,7 +211,14 @@ include 'settings/topbar.php';
                                         <div class="imgUp">
                                             <label><b>Upload Fully Signed Student Activity Form:</b></label>
                                             <input type="file" class="form-control uploadFile img" name="activityFormImg" required>
-                                            <img class="imagePreview" data-enlargeable></img>
+                                            <iframe
+                                                src=""
+                                                type=""
+                                                scrolling="auto"
+                                                height="200px"
+                                                width="100%"
+                                                class="getImg">  </iframe> 
+                                            <a class="btn btn-sm btn-primary preview" id="0" hidden>Preview</a>
                                         </div>
                                     </div>
 
@@ -218,7 +226,14 @@ include 'settings/topbar.php';
                                         <div class="imgUp">   
                                             <label><b>Upload Letter of Approval:</b></label>
                                             <input type="file" class="form-control uploadFile img" name="letterApprovalImg" >
-                                            <img class="imagePreview" data-enlargeable ></img>
+                                            <iframe
+                                                src=""
+                                                type=""
+                                                scrolling="auto"
+                                                height="200px"
+                                                width="100%"
+                                                class="getImg">  </iframe> 
+                                            <a class="btn btn-sm btn-primary preview" id="1" hidden>Preview</a>
                                         </div>
                                     </div>
                                     
@@ -242,48 +257,96 @@ include 'settings/topbar.php';
                                     var uploadFile = $(this);
                                     var files = !!this.files ? this.files : [];
                                     if (!files.length || !window.FileReader) return; // no file selected, or no FileReader support
-                            
-                                    if (/^image/.test( files[0].type)){ // only image file
-                                        var reader = new FileReader(); // instance of the FileReader
-                                        reader.readAsDataURL(files[0]); // read the local file
-                            
-                                        reader.onloadend = function(){ // set image data as background of div
-                                            //alert(uploadFile.closest(".upimage").find('.imagePreview').length);
-                                            // css("src", "url("+this.result+")");
-                                        uploadFile.closest(".imgUp").find('.imagePreview').attr('src',this.result);
+                                  
+                                    var reader = new FileReader(); 
+                                    reader.readAsDataURL(files[0]); 
+                 
+                                    reader.onloadend = function(){ // set image data as background of div
+                                        uploadFile.closest(".imgUp").find('.getImg').attr('src',this.result);
+
+                                        if(uploadFile.attr("name")=="activityFormImg"){
+                                            $(".getImg").first().attr("src",this.result);
+                                            $(".getImg").first().attr("type",files[0].type);
+                                            $(".preview").first().attr("hidden", false);
+                                        }else if(uploadFile.attr("name")=="letterApprovalImg"){
+                                            $(".getImg").last().attr("src",this.result);
+                                            $(".getImg").last().attr("type",files[0].type);
+                                            $(".preview").last().attr("hidden", false);
                                         }
                                     }
+
+                                    // if (/^image/.test( files[0].type) || /^pdf/.test( files[0].type)){ // only image file
+                                    //     var reader = new FileReader(); // instance of the FileReader
+                                    //     reader.readAsDataURL(files[0]); // read the local file
+                            
+                                    //     reader.onloadend = function(){ // set image data as background of div
+                                    //         //alert(uploadFile.closest(".upimage").find('.imagePreview').length);
+                                    //         // css("src", "url("+this.result+")");
+                                    //         uploadFile.closest(".imgUp").find('.getImg').attr('src',this.result);
+                                    //         $(".test").attr("src",this.result);
+                                    //         console.log($(".test"));
+                                    //         console.log(this.result);
+                                    //     }
+                                    // }
                                 
                                 });
 
-                                $('img[data-enlargeable]').addClass('img-enlargeable').click(function() {
-                                var src = $(this).attr('src');
-                                var modal;
+                                $('.preview').click(function() {
+                                    var isFirst = $(this).attr("id") == "0";
+                                    var fileObject =  (isFirst) ? $('.getImg').first() : $('.getImg').last();
+                                    var fileObjectSrc = fileObject.attr('src');
+                                    var fileObjectType = fileObject.attr('type');
+                                    var modal;
+                                    var modal2;
+                                    var closeBtn;
 
-                                function removeModal() {
-                                    modal.remove();
-                                    $('body').off('keyup.modal-close');
-                                }
-
-                                modal = $('<div>').css({
-                                    background: 'RGBA(0,0,0,.5) url(' + src + ') no-repeat center',
-                                    backgroundSize: 'contain',
-                                    width: '100%',
-                                    height: '100%',
-                                    position: 'fixed',
-                                    zIndex: '10000',
-                                    top: '0',
-                                    left: '0',
-                                    cursor: 'zoom-out'
-                                }).click(function() {
-                                    removeModal();
-                                }).appendTo('body');
-                                //handling ESC
-                                $('body').on('keyup.modal-close', function(e) {
-                                    if (e.key === 'Escape') {
-                                    removeModal();
+                                    function removeModal() {
+                                        modal.remove();
+                                        modal2.remove();
+                                        $('body').off('keyup.modal-close');
                                     }
+                                    
+                                    modal2 = $('<iframe>').attr('src',fileObjectSrc).css({
+                                        background: 'RGBA(0,0,0,.5)',
+                                        width: '100%',
+                                        height: '100%',
+                                        padding: '5%',
+                                        position: 'fixed',
+                                        zIndex: '10000',
+                                        top: '0',
+                                        left: '0'
+                                    }).click(function() {
+                                        removeModal();
                                     });
+
+                                    modal = $('<div>').css({
+                                        background: 'RGBA(0,0,0,.5) url(' + fileObjectSrc + ') no-repeat center',
+                                        backgroundSize: 'contain',
+                                        width: '100%',
+                                        height: '100%',
+                                        position: 'fixed',
+                                        zIndex: '10000',
+                                        top: '0',
+                                        left: '0',
+                                        cursor: 'zoom-out'
+                                    }).click(function() {
+                                        removeModal();
+                                    })
+                                    //handling ESC
+                                    $('body').on('keyup.modal-close', function(e) {
+                                        if (e.key === 'Escape') {
+                                            removeModal();
+                                        }
+                                    });
+
+                                    if(/^image/.test(fileObjectType)){
+                                        modal.appendTo('body');
+                                        // closeBtn.appendTo('body');
+                                    }else if(/^application/.test(fileObjectType)){
+                                        modal2.appendTo('body');
+                                        // closeBtn.appendTo('body');
+                                    }
+                                    
                                 });
                                     
                             });
