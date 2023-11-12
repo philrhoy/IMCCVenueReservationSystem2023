@@ -76,6 +76,11 @@ include 'settings/topbar.php';
                             ?>
             
                         </select>
+                        &nbsp;&nbsp;    
+                        <div class="form-inline" style="margin-left: auto;">
+                        <label><small>Search</small> &nbsp;</label>
+                            <input class="form-control form-control-sm" type="text" name="filterSearch" id="filterSearch" style="margin-left: auto;">
+                        </div>
                     </div>
 
                     <div class="table-responsive">       
@@ -154,10 +159,16 @@ include 'settings/topbar.php';
                                     var statusVal = $(this).val();
                                     var venueVal = $("#filterByVenue").val();
                                     var programVal = $("#filterByProgram").val();
+                                    var searchVal = $("#filterSearch").val();
                                     $.ajax({
                                         url: "fetch_filtered_reservations.php",
                                         type: "POST",
-                                        data: {status: statusVal, venue: venueVal, program: programVal},
+                                        data: {
+                                            status: statusVal, 
+                                            venue: venueVal, 
+                                            program: programVal,
+                                            search: searchVal
+                                        },
                                         beforeSend:function(){
 
                                         },
@@ -170,11 +181,17 @@ include 'settings/topbar.php';
                                 $("#filterByVenue").on("change", function(){
                                     var statusVal = $("#filterByStatus").val();
                                     var programVal = $("#filterByProgram").val();
+                                    var searchVal = $("#filterSearch").val();
                                     var venueVal = $(this).val();
                                     $.ajax({
                                         url: "fetch_filtered_reservations.php",
                                         type: "POST",
-                                        data: {status: statusVal, venue: venueVal, program: programVal},
+                                        data: {
+                                            status: statusVal, 
+                                            venue: venueVal, 
+                                            program: programVal,
+                                            search: searchVal
+                                        },
                                         beforeSend:function(){
 
                                         },
@@ -187,11 +204,40 @@ include 'settings/topbar.php';
                                 $("#filterByProgram").on("change", function(){
                                     var statusVal = $("#filterByStatus").val();
                                     var venueVal =  $("#filterByVenue").val();
+                                    var searchVal = $("#filterSearch").val();
                                     var programVal = $(this).val();
                                     $.ajax({
                                         url: "fetch_filtered_reservations.php",
                                         type: "POST",
-                                        data: {status: statusVal, venue: venueVal, program: programVal},
+                                        data: {
+                                            status: statusVal, 
+                                            venue: venueVal, 
+                                            program: programVal,
+                                            search: searchVal
+                                        },
+                                        beforeSend:function(){
+
+                                        },
+                                        success:function(data){
+                                            $(".table-responsive").html(data);
+                                        }
+                                    });
+                                });
+
+                                $("#filterSearch").on("change", function(){
+                                    var statusVal = $("#filterByStatus").val();
+                                    var venueVal =  $("#filterByVenue").val();
+                                    var programVal = $("#filterByProgram").val();
+                                    var searchVal = $(this).val();
+                                    $.ajax({
+                                        url: "fetch_filtered_reservations.php",
+                                        type: "POST",
+                                        data: {
+                                            status: statusVal, 
+                                            venue: venueVal, 
+                                            program: programVal,
+                                            search: searchVal
+                                        },
                                         beforeSend:function(){
 
                                         },

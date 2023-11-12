@@ -6,6 +6,7 @@ if (isset($_POST['status'])){
     $status = $_POST['status'];
     $filterVenue = $_POST['venue'];
     $filterProgram = $_POST['program'];
+    $filterSearch = $_POST['search'];
     $appendAdminID = "";
 
     if($status == "AA" || $status == "RA"){
@@ -33,6 +34,10 @@ if (isset($_POST['status'])){
 
     if($filterProgram != "0"){
         $fetchReservations .= "AND (`schedules`.programID = '$filterProgram')";
+    }
+
+    if($filterSearch != ""){
+        $fetchReservations .= "AND (`schedules`.name LIKE '%$filterSearch%')";
     }
 
 ?>
