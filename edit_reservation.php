@@ -92,6 +92,8 @@ include 'settings/topbar.php';
                             $end_time = "";
                             $act_form_file = "";
                             $letter_approve_file = "";
+                            $act_form_file_ext = "";
+                            $letter_approve_file_ext = "";
                             $status = "";
                             $statusStr = "Pending for Approval";
 
@@ -124,6 +126,12 @@ include 'settings/topbar.php';
                                 $notes = $data->notes;
                                 $act_form_file = $data->act_form_file;
                                 $letter_approve_file = $data->letter_approve_file;
+
+                                $file_ext = explode(".",$act_form_file);
+                                $act_form_file_ext = (strtolower(end($file_ext)) == "pdf") ? "application/".strtolower(end($file_ext)) : "image/".strtolower(end($file_ext));
+
+                                $file_ext = explode(".",$letter_approve_file);
+                                $letter_approve_file_ext = (strtolower(end($file_ext)) == "pdf") ? "application/".strtolower(end($file_ext)) : "image/".strtolower(end($file_ext));
                             }
                         }
                        
@@ -238,8 +246,15 @@ include 'settings/topbar.php';
                                     </div>
 
                                     <div class="form-group">
-                                        <div class="imgUp" style="overflow: scroll; height:250px">
-                                            <img data-enlargeable class="" src="uploads/<?= $act_form_file ?>">
+                                        <div class="imgUp">
+                                            <iframe
+                                                src="uploads/<?= $act_form_file ?>"
+                                                type="<?=$act_form_file_ext?>"
+                                                scrolling="auto"
+                                                height="220px"
+                                                width="100%"
+                                                class="getImg">  </iframe> 
+                                            <a class="btn btn-sm btn-primary preview" id="0">Preview</a>
                                         </div>
                                     </div>
 
@@ -250,8 +265,15 @@ include 'settings/topbar.php';
                                     </div>
 
                                     <div class="form-group">
-                                        <div class="imgUp" style="overflow: scroll; height:250px">   
-                                             <img data-enlargeable class="" src="uploads/<?= $letter_approve_file ?>">
+                                        <div class="imgUp">   
+                                             <iframe
+                                                src="uploads/<?= $letter_approve_file ?>"
+                                                type="<?=$letter_approve_file_ext?>"
+                                                scrolling="auto"
+                                                height="220px"
+                                                width="100%"
+                                                class="getImg">  </iframe> 
+                                            <a class="btn btn-sm btn-primary preview" id="1">Preview</a>
                                         </div>
                                     </div> 
                                 </div>
@@ -326,31 +348,52 @@ include 'settings/topbar.php';
                                     var getCurrentUpload = $(".imagePreview");
                                     if (!files.length || !window.FileReader) return; // no file selected, or no FileReader support
                                     
-                            
-                                    if (/^image/.test( files[0].type)){ // only image file
-                                        var reader = new FileReader(); // instance of the FileReader
-                                        reader.readAsDataURL(files[0]); // read the local file
-                            
-                                        reader.onloadend = function(){ // set image data as background of div
-                                            //alert(uploadFile.closest(".upimage").find('.imagePreview').length);
-                                        uploadFile.closest(".imgUp")
-                                            .find('.imagePreview').css("background-image", "url("+this.result+")")
-                                            .prop("src","");
+                                    reader.onloadend = function(){ // set image data as background of div
+                                        uploadFile.closest(".imgUp").find('.getImg').attr('src',this.result);
+
+                                        if(uploadFile.attr("name")=="activityFormImg"){
+                                            $(".getImg").first().attr("src",this.result);
+                                            $(".getImg").first().attr("type",files[0].type);
+                                            $(".preview").first().attr("hidden", false);
+                                        }else if(uploadFile.attr("name")=="letterApprovalImg"){
+                                            $(".getImg").last().attr("src",this.result);
+                                            $(".getImg").last().attr("type",files[0].type);
+                                            $(".preview").last().attr("hidden", false);
                                         }
                                     }
                                 
                                 });
 
-                                $('img[data-enlargeable]').addClass('img-enlargeable').click(function() {
-                                var src = $(this).attr('src');
-                                var modal;
+                                $('.preview').click(function() {
+                                    var isFirst = $(this).attr("id") == "0";
+                                    var fileObject =  (isFirst) ? $('.getImg').first() : $('.getImg').last();
+                                    var fileObjectSrc = fileObject.attr('src');
+                                    var fileObjectType = fileObject.attr('type');
+                                    var modal;
+                                    var modal2;
+                                    var closeBtn;
 
-                                function removeModal() {
-                                    modal.remove();
-                                    $('body').off('keyup.modal-close');
-                                }
-                                modal = $('<div>').css({
-                                        background: 'RGBA(0,0,0,.5) url(' + src + ') no-repeat center',
+                                    function removeModal() {
+                                        modal.remove();
+                                        modal2.remove();
+                                        $('body').off('keyup.modal-close');
+                                    }
+                                    
+                                    modal2 = $('<iframe>').attr('src',fileObjectSrc).css({
+                                        background: 'RGBA(0,0,0,.5)',
+                                        width: '100%',
+                                        height: '100%',
+                                        padding: '5%',
+                                        position: 'fixed',
+                                        zIndex: '10000',
+                                        top: '0',
+                                        left: '0'
+                                    }).click(function() {
+                                        removeModal();
+                                    });
+
+                                    modal = $('<div>').css({
+                                        background: 'RGBA(0,0,0,.5) url(' + fileObjectSrc + ') no-repeat center',
                                         backgroundSize: 'contain',
                                         width: '100%',
                                         height: '100%',
@@ -361,14 +404,23 @@ include 'settings/topbar.php';
                                         cursor: 'zoom-out'
                                     }).click(function() {
                                         removeModal();
-                                    }).appendTo('body');
+                                    })
                                     //handling ESC
                                     $('body').on('keyup.modal-close', function(e) {
                                         if (e.key === 'Escape') {
-                                        removeModal();
+                                            removeModal();
                                         }
                                     });
-                                 });
+
+                                    if(/^image/.test(fileObjectType)){
+                                        modal.appendTo('body');
+                                        // closeBtn.appendTo('body');
+                                    }else if(/^application/.test(fileObjectType)){
+                                        modal2.appendTo('body');
+                                        // closeBtn.appendTo('body');
+                                    }
+                                    
+                                });
 
                                 $("#performAction").on("change", function(){
                                     var statusVal = $(this).val();

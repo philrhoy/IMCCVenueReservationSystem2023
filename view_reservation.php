@@ -33,7 +33,9 @@ include 'settings/topbar.php';
                             $end_time = "";
                             $notes = "";
                             $act_form_file = "";
+                            $act_form_file_ext = "";
                             $letter_approve_file = "";
+                            $letter_approve_file_ext = "";
 
                             $sequence = $db->query("SELECT * FROM schedules WHERE id = '$res_id'");
                             $fetch = $sequence->fetchAll(PDO::FETCH_OBJ);
@@ -52,6 +54,12 @@ include 'settings/topbar.php';
                                 $notes = $data->notes;
                                 $act_form_file = $data->act_form_file;
                                 $letter_approve_file = $data->letter_approve_file;
+
+                                $file_ext = explode(".",$act_form_file);
+                                $act_form_file_ext = (strtolower(end($file_ext)) == "pdf") ? "application/".strtolower(end($file_ext)) : "image/".strtolower(end($file_ext));
+
+                                $file_ext = explode(".",$letter_approve_file);
+                                $letter_approve_file_ext = (strtolower(end($file_ext)) == "pdf") ? "application/".strtolower(end($file_ext)) : "image/".strtolower(end($file_ext));
                             }
                            
                         }
@@ -156,15 +164,31 @@ include 'settings/topbar.php';
                                 <div class="col-6">   
                                     <div class="form-group">
                                         <label><b>Upload Fully Signed Student Activity Form:</b></label>
-                                        <div class="imgUp" style="overflow: scroll; height:250px">
-                                            <img class="" data-enlargeable src="uploads/<?= $act_form_file ?>" >
+                                        <div class="imgUp">
+                                            <!-- <img class="" data-enlargeable src="uploads/<?= $act_form_file ?>" > -->
+                                            <iframe
+                                                src="uploads/<?= $act_form_file ?>"
+                                                type="<?= $act_form_file_ext?>"
+                                                scrolling="auto"
+                                                height="220px"
+                                                width="100%"
+                                                class="getImg">  </iframe> 
+                                            <a class="btn btn-sm btn-primary preview" id="0">Preview</a>
                                         </div>
                                     </div>
 
                                     <div class="form-group">
                                         <label><b>Upload Letter of Approval:</b></label>    
-                                        <div class="imgUp" style="overflow: scroll; height:250px">   
-                                            <img class="" data-enlargeable src="uploads/<?= $letter_approve_file ?>" >
+                                        <div class="imgUp">   
+                                            <!-- <img class="" data-enlargeable src="uploads/<?= $letter_approve_file ?>" > -->
+                                            <iframe
+                                                src="uploads/<?= $letter_approve_file ?>"
+                                                type="<?= $letter_approve_file_ext ?>"
+                                                scrolling="auto"
+                                                height="220px"
+                                                width="100%"
+                                                class="getImg">  </iframe> 
+                                            <a class="btn btn-sm btn-primary preview" id="1">Preview</a>
                                         </div>
                                     </div>
 
@@ -203,34 +227,63 @@ include 'settings/topbar.php';
                                     }
                                 });
 
-                                $('img[data-enlargeable]').addClass('img-enlargeable').click(function() {
-                                var src = $(this).attr('src');
-                                var modal;
+                                $('.preview').click(function() {
+                                    var isFirst = $(this).attr("id") == "0";
+                                    var fileObject =  (isFirst) ? $('.getImg').first() : $('.getImg').last();
+                                    var fileObjectSrc = fileObject.attr('src');
+                                    var fileObjectType = fileObject.attr('type');
+                                    var modal;
+                                    var modal2;
+                                    var closeBtn;
 
-                                function removeModal() {
-                                    modal.remove();
-                                    $('body').off('keyup.modal-close');
-                                }
-                                modal = $('<div>').css({
-                                    background: 'RGBA(0,0,0,.5) url(' + src + ') no-repeat center',
-                                    backgroundSize: 'contain',
-                                    width: '100%',
-                                    height: '100%',
-                                    position: 'fixed',
-                                    zIndex: '10000',
-                                    top: '0',
-                                    left: '0',
-                                    cursor: 'zoom-out'
-                                }).click(function() {
-                                    removeModal();
-                                }).appendTo('body');
-                                //handling ESC
-                                $('body').on('keyup.modal-close', function(e) {
-                                    if (e.key === 'Escape') {
-                                    removeModal();
+                                    function removeModal() {
+                                        modal.remove();
+                                        modal2.remove();
+                                        $('body').off('keyup.modal-close');
                                     }
+                                    
+                                    modal2 = $('<iframe>').attr('src',fileObjectSrc).css({
+                                        background: 'RGBA(0,0,0,.5)',
+                                        width: '100%',
+                                        height: '100%',
+                                        padding: '5%',
+                                        position: 'fixed',
+                                        zIndex: '10000',
+                                        top: '0',
+                                        left: '0'
+                                    }).click(function() {
+                                        removeModal();
+                                    });
+
+                                    modal = $('<div>').css({
+                                        background: 'RGBA(0,0,0,.5) url(' + fileObjectSrc + ') no-repeat center',
+                                        backgroundSize: 'contain',
+                                        width: '100%',
+                                        height: '100%',
+                                        position: 'fixed',
+                                        zIndex: '10000',
+                                        top: '0',
+                                        left: '0',
+                                        cursor: 'zoom-out'
+                                    }).click(function() {
+                                        removeModal();
+                                    })
+                                    //handling ESC
+                                    $('body').on('keyup.modal-close', function(e) {
+                                        if (e.key === 'Escape') {
+                                            removeModal();
+                                        }
+                                    });
+
+                                    if(/^image/.test(fileObjectType)){
+                                        modal.appendTo('body');
+                                        // closeBtn.appendTo('body');
+                                    }else if(/^application/.test(fileObjectType)){
+                                        modal2.appendTo('body');
+                                        // closeBtn.appendTo('body');
+                                    }
+                                    
                                 });
-                            });
                         });
                         </script>
                     </div>
