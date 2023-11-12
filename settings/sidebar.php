@@ -55,7 +55,7 @@
                 <li class="nav-item <?= $reservation; ?>">
                     <a class="nav-link" href="reservation_list.php">
                         <i class="fas fa-fw fa-bars"></i>
-                        <span>Submitted Reservations</span></a>
+                        <span>Reservations</span></a>
                 </li>
                 <li class="nav-item <?= $reservation; ?>">
                     <a class="nav-link" href="add_reservation.php">
@@ -68,7 +68,7 @@
                 <li class="nav-item <?= $reservation; ?>">
                     <a class="nav-link" href="reservation_list.php">
                         <i class="fas fa-fw fa-bars"></i>
-                        <span>Submitted Reservations</span></a>
+                        <span>Reservations</span></a>
                 </li>
             <?php
             }
@@ -83,8 +83,15 @@
             <li class="nav-item <?= $reservation; ?>">
                 <a class="nav-link" href="reservation_list.php">
                     <i class="fas fa-fw fa-bars"></i>
-                    <span>Submitted Reservations</span></a>
+                    <span>Reservations</span></a>
             </li>
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                Reports 
+            </div>
             <li class="nav-item <?= $reservation; ?>">
                     <a class="nav-link" href="monthly_report.php">
                         <i class="fas fa-fw fa-bars"></i>
@@ -194,6 +201,8 @@
 
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
+
+
 
             <!-- Sidebar Toggler (Sidebar) -->
             <div class="text-center d-none d-md-inline">

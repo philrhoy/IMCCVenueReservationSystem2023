@@ -7,6 +7,7 @@ if (isset($_POST['status'])){
     $filterVenue = $_POST['venue'];
     $filterProgram = $_POST['program'];
     $filterSearch = $_POST['search'];
+    $filterUserType = $_POST['userType'];
     $appendAdminID = "";
 
     if($status == "AA" || $status == "RA"){
@@ -23,10 +24,17 @@ if (isset($_POST['status'])){
                             `schedules`.date_end AS 'END_DATE',
                             `schedules`.status AS 'STATUS' FROM `schedules` 
                         INNER JOIN `venues` 
-                        ON `schedules`.venueID = `venues`.id
+                            ON `schedules`.venueID = `venues`.id
                         INNER JOIN `program` 
-                        ON `schedules`.programID = `program`.id 
-                        WHERE (`schedules`.status = '$status')";
+                            ON `schedules`.programID = `program`.id 
+                        INNER JOIN `users`
+                            ON `schedules`.userID = `users`.id ";
+
+    if($status != "0"){
+        $fetchReservations .= "WHERE (`schedules`.status = '$status') ";
+    }else{
+        $fetchReservations .= "WHERE (1 = 1) ";
+    }
 
     if($filterVenue != "0"){
         $fetchReservations .= "AND (`schedules`.venueID = '$filterVenue') ";
@@ -36,12 +44,17 @@ if (isset($_POST['status'])){
         $fetchReservations .= "AND (`schedules`.programID = '$filterProgram')";
     }
 
+    if($filterUserType != "0"){
+        $position = (($filterUserType == "S") ? "STO" : "DSA");
+        $fetchReservations .= "AND (`users`.position = '$position')";
+    }
+
     if($filterSearch != ""){
         $fetchReservations .= "AND (`schedules`.name LIKE '%$filterSearch%')";
     }
 
 ?>
-<table class="table table-bordered table-hovered" width="100%" cellspacing="0">
+<table class="table table-sm table-bordered table-hovered" width="100%" cellspacing="0">
     <thead>
         <tr>
             <th>Reservation ID</th>

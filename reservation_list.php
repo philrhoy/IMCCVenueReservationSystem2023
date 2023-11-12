@@ -24,11 +24,12 @@ include 'settings/topbar.php';
                     <div class="form-group form-inline" <?php echo ($_SESSION["position"] == "STO" ? "hidden disabled" : "")?>>   
                         <label for=""><small>Filter by Status</small> &nbsp;&nbsp;</label>
                         <select class="form-control form-control-sm" name="filterByStatus" id="filterByStatus">
-                            <option value="P">Pending Approval</option>
+                            <option value="0">No Selection</option>
+                            <option value="P">Pending</option>
                             <option value="A">Approved</option>
                             <option value="R">Rejected</option>
-                            <option value="AA"<?php echo ($_SESSION["position"] != "DSA" ? "hidden disabled" : "")?>>Approved by Admin</option>
-                            <option value="RA"<?php echo ($_SESSION["position"] != "DSA" ? "hidden disabled" : "")?>>Rejected by Admin</option>
+                            <!-- <option value="AA"<?php echo ($_SESSION["position"] != "DSA" ? "hidden disabled" : "")?>>Approved by Admin</option>
+                            <option value="RA"<?php echo ($_SESSION["position"] != "DSA" ? "hidden disabled" : "")?>>Rejected by Admin</option> -->
                         </select>
                         &nbsp;&nbsp;
                         <label><small>Venue</small> &nbsp;</label>
@@ -55,7 +56,7 @@ include 'settings/topbar.php';
                         </select>
                         &nbsp;&nbsp;
                         <label><small>Program</small> &nbsp;</label>
-                        <select class="form-control form-control-sm" name="program" name="filterByProgram" id="filterByProgram">
+                        <select class="form-control form-control-sm" name="filterByProgram" id="filterByProgram">
                             <option value="0" selected>No selection</option>
                             <?php  
                             $fetchPrograms = $db->query("SELECT * FROM `program` ORDER BY name ASC");
@@ -76,15 +77,21 @@ include 'settings/topbar.php';
                             ?>
             
                         </select>
-                        &nbsp;&nbsp;    
+                        &nbsp;&nbsp;   
+                        <label><small>User Type</small> &nbsp;</label>
+                        <select class="form-control form-control-sm" name="filterByUserType" id="filterByUserType">
+                                        <option value="0" selected>No Selection</option>
+                                        <option value="S">Student</option>
+                                        <option value="D">Admin</option>
+                                        </select> 
                         <div class="form-inline" style="margin-left: auto;">
-                        <label><small>Search</small> &nbsp;</label>
-                            <input class="form-control form-control-sm" type="text" name="filterSearch" id="filterSearch" style="margin-left: auto;">
+                            <input class="form-control form-control-sm" type="text" name="filterSearch" id="filterSearch" placeholder="Search title" style="margin-left: auto;">
                         </div>
+
                     </div>
 
                     <div class="table-responsive">       
-                        <table class="table table-bordered table-hovered" id="<?php echo ($_SESSION["position"] == "STO" ? "dataTable" : "")?>"width="100%" cellspacing="0">
+                        <table class="table table-sm table-bordered table-hovered" id="<?php echo ($_SESSION["position"] == "STO" ? "dataTable" : "")?>"width="100%" cellspacing="0">
                             <thead>
                                 <tr>
                                     <th>Reservation ID</th>
@@ -111,9 +118,13 @@ include 'settings/topbar.php';
                                                         INNER JOIN `program` 
                                                         ON `schedules`.programID = `program`.id";
 
-                                if($_SESSION['position']=='STO'){
+                                if($_SESSION['position'] == 'STO'){
                                     $userID = $_SESSION['id'];
                                     $fetchReservations .= " WHERE `schedules`.userID = '$userID'";
+                                }
+
+                                if($_SESSION["position"] == "PTC"){
+                                    $fetchReservations .= " WHERE `schedules`.status = 'A'";
                                 }
                                 
                                 $reservations = $db->query($fetchReservations);
@@ -160,6 +171,7 @@ include 'settings/topbar.php';
                                     var venueVal = $("#filterByVenue").val();
                                     var programVal = $("#filterByProgram").val();
                                     var searchVal = $("#filterSearch").val();
+                                    var userTypeVal = $("#filterByUserType").val();
                                     $.ajax({
                                         url: "fetch_filtered_reservations.php",
                                         type: "POST",
@@ -167,6 +179,7 @@ include 'settings/topbar.php';
                                             status: statusVal, 
                                             venue: venueVal, 
                                             program: programVal,
+                                            userType: userTypeVal,
                                             search: searchVal
                                         },
                                         beforeSend:function(){
@@ -182,6 +195,7 @@ include 'settings/topbar.php';
                                     var statusVal = $("#filterByStatus").val();
                                     var programVal = $("#filterByProgram").val();
                                     var searchVal = $("#filterSearch").val();
+                                    var userTypeVal = $("#filterByUserType").val();
                                     var venueVal = $(this).val();
                                     $.ajax({
                                         url: "fetch_filtered_reservations.php",
@@ -190,6 +204,7 @@ include 'settings/topbar.php';
                                             status: statusVal, 
                                             venue: venueVal, 
                                             program: programVal,
+                                            userType: userTypeVal,
                                             search: searchVal
                                         },
                                         beforeSend:function(){
@@ -205,6 +220,7 @@ include 'settings/topbar.php';
                                     var statusVal = $("#filterByStatus").val();
                                     var venueVal =  $("#filterByVenue").val();
                                     var searchVal = $("#filterSearch").val();
+                                    var userTypeVal = $("#filterByUserType").val();
                                     var programVal = $(this).val();
                                     $.ajax({
                                         url: "fetch_filtered_reservations.php",
@@ -213,6 +229,7 @@ include 'settings/topbar.php';
                                             status: statusVal, 
                                             venue: venueVal, 
                                             program: programVal,
+                                            userType: userTypeVal,
                                             search: searchVal
                                         },
                                         beforeSend:function(){
@@ -228,6 +245,7 @@ include 'settings/topbar.php';
                                     var statusVal = $("#filterByStatus").val();
                                     var venueVal =  $("#filterByVenue").val();
                                     var programVal = $("#filterByProgram").val();
+                                    var userTypeVal = $("#filterByUserType").val();
                                     var searchVal = $(this).val();
                                     $.ajax({
                                         url: "fetch_filtered_reservations.php",
@@ -236,6 +254,7 @@ include 'settings/topbar.php';
                                             status: statusVal, 
                                             venue: venueVal, 
                                             program: programVal,
+                                            userType: userTypeVal,
                                             search: searchVal
                                         },
                                         beforeSend:function(){
@@ -246,6 +265,33 @@ include 'settings/topbar.php';
                                         }
                                     });
                                 });
+
+                                $("#filterByUserType").on("change", function(){
+                                    var statusVal = $("#filterByStatus").val();
+                                    var venueVal =  $("#filterByVenue").val();
+                                    var programVal = $("#filterByProgram").val();
+                                    var searchVal = $("#filterSearch").val();
+                                    var userTypeVal = $(this).val();
+                                    $.ajax({
+                                        url: "fetch_filtered_reservations.php",
+                                        type: "POST",
+                                        data: {
+                                            status: statusVal, 
+                                            venue: venueVal, 
+                                            program: programVal,
+                                            userType: userTypeVal,
+                                            search: searchVal
+                                        },
+                                        beforeSend:function(){
+
+                                        },
+                                        success:function(data){
+                                            $(".table-responsive").html(data);
+                                        }
+                                    });
+                                });
+
+
                             });
                         </script>
                     </div>
