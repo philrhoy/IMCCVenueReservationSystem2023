@@ -4,6 +4,8 @@ include 'session.php';
 
 if (isset($_POST['status'])){
     $status = $_POST['status'];
+    $filterVenue = $_POST['venue'];
+    $filterProgram = $_POST['program'];
     $appendAdminID = "";
 
     if($status == "AA" || $status == "RA"){
@@ -22,18 +24,26 @@ if (isset($_POST['status'])){
                         INNER JOIN `venues` 
                         ON `schedules`.venueID = `venues`.id
                         INNER JOIN `program` 
-                        ON `schedules`.programID = `program`.id";
-    $appendWhereClause = " WHERE `schedules`.status = '$status'";
-    $fetchReservations .= $appendWhereClause;
+                        ON `schedules`.programID = `program`.id 
+                        WHERE (`schedules`.status = '$status')";
+
+    if($filterVenue != "0"){
+        $fetchReservations .= "AND (`schedules`.venueID = '$filterVenue') ";
+    }
+
+    if($filterProgram != "0"){
+        $fetchReservations .= "AND (`schedules`.programID = '$filterProgram')";
+    }
+
 ?>
 <table class="table table-bordered table-hovered" width="100%" cellspacing="0">
     <thead>
         <tr>
             <th>Reservation ID</th>
             <th>Activity</th>
-            <th>Venue</th>
-            <th>Program</th>
             <th>Schedule Date</th>
+            <th>Program</th>
+            <th>Venue</th>
             <th>Status</th>
             <th>Options</th>
         </tr>
@@ -62,9 +72,9 @@ if (isset($_POST['status'])){
             <tr>
                 <td><?= '<a href="view_reservation.php?reservation_id='.$row->INT_RES_ID.'" target="_blank">' . $row->RESERVATION_ID. '</a>'; ?></td>
                 <td><?= $row->ACTIVITY; ?></td>
-                <td><?= $row->VENUE_NAME; ?></td>
-                <td><?= $row->PROGRAM_NAME; ?></td>
                 <td><?= $row->START_DATE . "-" . $row->END_DATE; ?></td>
+                <td><?= $row->PROGRAM_NAME; ?></td>
+                <td><?= $row->VENUE_NAME; ?></td>
                 <td><?= $statusStr; ?></td>
                 <td align="center">
                     <a href='edit_reservation.php?reservation_id=<?= $row->INT_RES_ID ?>' class="btn btn-primary btn-icon-split btn-sm keychainify-checked" target="_blank">

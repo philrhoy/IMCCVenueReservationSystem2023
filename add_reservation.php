@@ -260,7 +260,7 @@ include 'settings/topbar.php';
                                   
                                     var reader = new FileReader(); 
                                     reader.readAsDataURL(files[0]); 
-                                    console.log(files[0].type);
+                 
                                     reader.onloadend = function(){ // set image data as background of div
                                         uploadFile.closest(".imgUp").find('.getImg').attr('src',this.result);
 
@@ -273,7 +273,6 @@ include 'settings/topbar.php';
                                             $(".getImg").last().attr("type",files[0].type);
                                             $(".preview").last().attr("hidden", false);
                                         }
-                                        
                                     }
 
                                     // if (/^image/.test( files[0].type) || /^pdf/.test( files[0].type)){ // only image file

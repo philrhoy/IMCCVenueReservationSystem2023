@@ -22,13 +22,59 @@ include 'settings/topbar.php';
             <div class="card shadow mb-4">
                 <div class="card-body">
                     <div class="form-group form-inline" <?php echo ($_SESSION["position"] == "STO" ? "hidden disabled" : "")?>>   
-                        <label for="">Filter by Status &nbsp;&nbsp;</label>
-                        <select class="form-control" name="filterByStatus" id="filterByStatus">
+                        <label for=""><small>Filter by Status</small> &nbsp;&nbsp;</label>
+                        <select class="form-control form-control-sm" name="filterByStatus" id="filterByStatus">
                             <option value="P">Pending Approval</option>
                             <option value="A">Approved</option>
                             <option value="R">Rejected</option>
                             <option value="AA"<?php echo ($_SESSION["position"] != "DSA" ? "hidden disabled" : "")?>>Approved by Admin</option>
                             <option value="RA"<?php echo ($_SESSION["position"] != "DSA" ? "hidden disabled" : "")?>>Rejected by Admin</option>
+                        </select>
+                        &nbsp;&nbsp;
+                        <label><small>Venue</small> &nbsp;</label>
+                        <select class="form-control form-control-sm" name="filterByVenue" id="filterByVenue">
+                            <option value="0" selected>No selection</option>
+                            <?php  
+                            $fetchVenues = $db->query("SELECT * FROM `venues` ORDER BY name ASC");
+
+                            $row_donor = $fetchVenues->fetchAll(PDO::FETCH_OBJ);
+                            
+                            foreach($row_donor as $row){
+                                if(htmlentities($_POST['venue']) == $row->id){
+                            ?>
+                                <option value="<?php echo $row->id ?>" selected> <?php echo $row->name ?> </option>
+                            <?php
+                                }else{
+                            ?>
+                                <option value="<?php echo $row->id ?>"> <?php echo $row->name ?> </option>
+                            <?php
+                                }
+                            }
+                            
+                            ?>
+                        </select>
+                        &nbsp;&nbsp;
+                        <label><small>Program</small> &nbsp;</label>
+                        <select class="form-control form-control-sm" name="program" name="filterByProgram" id="filterByProgram">
+                            <option value="0" selected>No selection</option>
+                            <?php  
+                            $fetchPrograms = $db->query("SELECT * FROM `program` ORDER BY name ASC");
+
+                            $row_donor = $fetchPrograms->fetchAll(PDO::FETCH_OBJ);
+
+                            foreach($row_donor as $row){
+                                if(htmlentities($_POST['program']) == $row->id){
+                            ?>
+                                <option value="<?php echo $row->id ?>" selected> <?php echo $row->name ?> </option>
+                            <?php
+                                }else{
+                            ?>
+                                <option value="<?php echo $row->id ?>"> <?php echo $row->name ?> </option>
+                            <?php
+                                }
+                            }
+                            ?>
+            
                         </select>
                     </div>
 
@@ -38,9 +84,9 @@ include 'settings/topbar.php';
                                 <tr>
                                     <th>Reservation ID</th>
                                     <th>Activity</th>
-                                    <th>Venue</th>
-                                    <th>Program</th>
                                     <th>Schedule Date</th>
+                                    <th>Program</th>
+                                    <th>Venue</th>
                                     <th>Status</th>
                                     <th>Options</th>
                                 </tr>
@@ -86,9 +132,9 @@ include 'settings/topbar.php';
                                     <tr>
                                         <td><?= $row->RESERVATION_ID; ?></td>
                                         <td><?= '<a href="view_reservation.php?reservation_id='.$row->INT_RES_ID.'" target="_blank">' . $row->ACTIVITY. '</a>'; ?></td>
-                                        <td><?= $row->VENUE_NAME; ?></td>
-                                        <td><?= $row->PROGRAM_NAME; ?></td>
                                         <td><?= $row->START_DATE . "-" . $row->END_DATE; ?></td>
+                                        <td><?= $row->PROGRAM_NAME; ?></td>
+                                        <td><?= $row->VENUE_NAME; ?></td>
                                         <td><?= $statusStr; ?></td>
                                         <td align="center">
                                             <a href='edit_reservation.php?reservation_id=<?= $row->INT_RES_ID ?>' class="btn btn-primary btn-icon-split btn-sm keychainify-checked" target="_blank">
@@ -106,10 +152,46 @@ include 'settings/topbar.php';
                             $(document).ready(function(){
                                 $("#filterByStatus").on("change", function(){
                                     var statusVal = $(this).val();
+                                    var venueVal = $("#filterByVenue").val();
+                                    var programVal = $("#filterByProgram").val();
                                     $.ajax({
                                         url: "fetch_filtered_reservations.php",
                                         type: "POST",
-                                        data: "status=" + statusVal,
+                                        data: {status: statusVal, venue: venueVal, program: programVal},
+                                        beforeSend:function(){
+
+                                        },
+                                        success:function(data){
+                                            $(".table-responsive").html(data);
+                                        }
+                                    });
+                                });
+
+                                $("#filterByVenue").on("change", function(){
+                                    var statusVal = $("#filterByStatus").val();
+                                    var programVal = $("#filterByProgram").val();
+                                    var venueVal = $(this).val();
+                                    $.ajax({
+                                        url: "fetch_filtered_reservations.php",
+                                        type: "POST",
+                                        data: {status: statusVal, venue: venueVal, program: programVal},
+                                        beforeSend:function(){
+
+                                        },
+                                        success:function(data){
+                                            $(".table-responsive").html(data);
+                                        }
+                                    });
+                                });
+
+                                $("#filterByProgram").on("change", function(){
+                                    var statusVal = $("#filterByStatus").val();
+                                    var venueVal =  $("#filterByVenue").val();
+                                    var programVal = $(this).val();
+                                    $.ajax({
+                                        url: "fetch_filtered_reservations.php",
+                                        type: "POST",
+                                        data: {status: statusVal, venue: venueVal, program: programVal},
                                         beforeSend:function(){
 
                                         },
