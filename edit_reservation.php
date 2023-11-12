@@ -238,8 +238,8 @@ include 'settings/topbar.php';
                                     </div>
 
                                     <div class="form-group">
-                                        <div class="imgUp">
-                                            <img data-enlargeable class="imagePreview" src="uploads/<?= $act_form_file ?>">
+                                        <div class="imgUp" style="overflow: scroll; height:250px">
+                                            <img data-enlargeable class="" src="uploads/<?= $act_form_file ?>">
                                         </div>
                                     </div>
 
@@ -250,8 +250,8 @@ include 'settings/topbar.php';
                                     </div>
 
                                     <div class="form-group">
-                                        <div class="imgUp">   
-                                             <img data-enlargeable class="imagePreview" src="uploads/<?= $letter_approve_file ?>">
+                                        <div class="imgUp" style="overflow: scroll; height:250px">   
+                                             <img data-enlargeable class="" src="uploads/<?= $letter_approve_file ?>">
                                         </div>
                                     </div> 
                                 </div>

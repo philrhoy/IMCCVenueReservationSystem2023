@@ -53,7 +53,8 @@ include 'settings/topbar.php';
                                     if(!in_array($image_extension, $valid_extensions)){
                                         $check_error++;
                                         echo"<script> alert('Invalid image extension')</script>";
-                                    }elseif($file_size > 10000000){
+                                    }
+                                    elseif($file_size > 10000000){
                                         $check_error++;
                                         echo"<script> alert('Image size is too big')</script>";
                                     }
@@ -210,7 +211,9 @@ include 'settings/topbar.php';
                                         <div class="imgUp">
                                             <label><b>Upload Fully Signed Student Activity Form:</b></label>
                                             <input type="file" class="form-control uploadFile img" name="activityFormImg" required>
-                                            <img class="imagePreview" data-enlargeable></img>
+                                            <div style="overflow: scroll; height: 250px;">   
+                                                <img class="getImg" data-enlargeable></img>
+                                            </div>
                                         </div>
                                     </div>
 
@@ -218,7 +221,9 @@ include 'settings/topbar.php';
                                         <div class="imgUp">   
                                             <label><b>Upload Letter of Approval:</b></label>
                                             <input type="file" class="form-control uploadFile img" name="letterApprovalImg" >
-                                            <img class="imagePreview" data-enlargeable ></img>
+                                            <div style="overflow: scroll; height: 250px;">   
+                                                <img class="getImg" data-enlargeable ></img>
+                                            </div>
                                         </div>
                                     </div>
                                     
@@ -250,7 +255,7 @@ include 'settings/topbar.php';
                                         reader.onloadend = function(){ // set image data as background of div
                                             //alert(uploadFile.closest(".upimage").find('.imagePreview').length);
                                             // css("src", "url("+this.result+")");
-                                        uploadFile.closest(".imgUp").find('.imagePreview').attr('src',this.result);
+                                        uploadFile.closest(".imgUp").find('.getImg').attr('src',this.result);
                                         }
                                     }
                                 

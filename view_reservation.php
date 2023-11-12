@@ -60,7 +60,7 @@ include 'settings/topbar.php';
                     <div class="table-responsive-lg">
                         <form role="form" method="post" enctype="multipart/form-data">
                             <div class="row">   
-                                <div class="col-4">   
+                                <div class="col-6">   
                                     <div class="form-group">
                                         <label>ID</label>
                                         <input class="form-control" type="text" name="resID" value="<?= $res_id_text ?>" readonly>
@@ -153,29 +153,31 @@ include 'settings/topbar.php';
                                     </div>
                                 </div>
 
-                                <div class="col-4">   
+                                <div class="col-6">   
                                     <div class="form-group">
-                                        <div class="imgUp">
-                                            <label><b>Upload Fully Signed Student Activity Form:</b></label>
-                                            <img class="imagePreview" data-enlargeable src="uploads/<?= $act_form_file ?>">
+                                        <label><b>Upload Fully Signed Student Activity Form:</b></label>
+                                        <div class="imgUp" style="overflow: scroll; height:250px">
+                                            <img class="" data-enlargeable src="uploads/<?= $act_form_file ?>" >
                                         </div>
                                     </div>
 
                                     <div class="form-group">
-                                        <div class="imgUp">   
-                                            <label><b>Upload Letter of Approval:</b></label>
-                                            <img class="imagePreview" data-enlargeable src="uploads/<?= $letter_approve_file ?>">
+                                        <label><b>Upload Letter of Approval:</b></label>    
+                                        <div class="imgUp" style="overflow: scroll; height:250px">   
+                                            <img class="" data-enlargeable src="uploads/<?= $letter_approve_file ?>" >
                                         </div>
                                     </div>
-                                    
-                                </div>
 
-                                <div class="col-4">
                                     <div class="form-group">
                                         <label>Notes</label>
                                         <textarea class="form-control" id="exampleFormControlTextarea1" name='notes' placeholder="Notes will be provided by Property Custodian or Admin" rows="3"
                                             <?= (($_SESSION['position'] == 'STO' ? 'disabled': ''));?> readonly><?= $notes ?></textarea>
-                                    </div>      
+                                    </div> 
+                                    
+                                </div>
+
+                                <div class="col-4">
+                                         
                                 <div> 
 
                             </div>
