@@ -88,8 +88,8 @@ if (isset($_POST['status'])){
     
         ?>
             <tr>
-                <td><?= '<a href="view_reservation.php?reservation_id='.$row->INT_RES_ID.'" target="_blank">' . $row->RESERVATION_ID. '</a>'; ?></td>
-                <td><?= $row->ACTIVITY; ?></td>
+                <td><?= $row->RESERVATION_ID; ?></td>
+                <td><?= '<a href="view_reservation.php?reservation_id='.$row->INT_RES_ID.'" target="_blank">' . $row->ACTIVITY. '</a>'; ?></td>
                 <td><?= $row->START_DATE . "-" . $row->END_DATE; ?></td>
                 <td><?= $row->PROGRAM_NAME; ?></td>
                 <td><?= $row->VENUE_NAME; ?></td>
