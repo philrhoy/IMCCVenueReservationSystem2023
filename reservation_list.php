@@ -26,7 +26,7 @@ include 'settings/topbar.php';
                         <select class="form-control form-control-sm" name="filterByStatus" id="filterByStatus">
                             <option value="0">No Selection</option>
                             <option value="P">Pending</option>
-                            <option value="A">Approved</option>
+                            <option value="A" <?php echo ((($_SESSION["position"] == "PTC") ? "selected" : ""));?>>Approved</option>
                             <option value="R">Rejected</option>
                             <!-- <option value="AA"<?php echo ($_SESSION["position"] != "DSA" ? "hidden disabled" : "")?>>Approved by Admin</option>
                             <option value="RA"<?php echo ($_SESSION["position"] != "DSA" ? "hidden disabled" : "")?>>Rejected by Admin</option> -->
