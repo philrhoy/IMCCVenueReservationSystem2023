@@ -132,15 +132,18 @@ include 'settings/topbar.php';
                                 $row_reservations = $reservations->fetchAll(PDO::FETCH_OBJ);
                                 foreach ($row_reservations as $row) {
                                     $statusStr = "Pending for Approval";
-
+                                    $statusColor = "";
                                     switch($row->STATUS){
                                         case "P":
+                                            $statusColor = "text-warning";
                                             $statusStr = "Pending for Approval";
                                             break;
                                         case "A":
+                                            $statusColor = "text-success";
                                             $statusStr = "Approved";
                                             break;
                                         case "R":
+                                            $statusColor = "text-danger";
                                             $statusStr = "Rejected";
                                             break;
                                     }
@@ -151,7 +154,7 @@ include 'settings/topbar.php';
                                         <td><?= $row->START_DATE . "-" . $row->END_DATE; ?></td>
                                         <td><?= $row->PROGRAM_NAME; ?></td>
                                         <td><?= $row->VENUE_NAME; ?></td>
-                                        <td><?= $statusStr; ?></td>
+                                        <td class="<?= $statusColor?>"><?= $statusStr; ?></td>
                                         <td align="center">
                                             <a href='edit_reservation.php?reservation_id=<?= $row->INT_RES_ID ?>' class="btn btn-primary btn-icon-split btn-sm keychainify-checked" target="_blank">
                                                 <span class="icon text-white-50">
