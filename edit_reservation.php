@@ -32,6 +32,7 @@ include 'settings/topbar.php';
                             $startTime = $_POST['start_time'];
                             $endTime = $_POST['end_time'];
                             $notes = $_POST['notes'];
+                            $material = $_POST['material'];
                             $status = $_POST['status'];
 
                             if($status != "A"){
@@ -59,7 +60,7 @@ include 'settings/topbar.php';
                                 }else{
                                     //Prevent Student Officer from updating notes
                                     $query .= ($_SESSION['position'] != 'STO' ?  
-                                    ", notes = '$notes' WHERE id = '$res_id'":
+                                    ", notes = '$notes', material = '$material' WHERE id = '$res_id'":
                                     " WHERE id = '$res_id'");
                                 }
                             
@@ -95,6 +96,7 @@ include 'settings/topbar.php';
                             $act_form_file_ext = "";
                             $letter_approve_file_ext = "";
                             $status = "";
+                            $material = "";
                             $statusStr = "Pending for Approval";
 
                             $sequence = $db->query("SELECT * FROM schedules WHERE id = '$res_id'");
@@ -124,6 +126,7 @@ include 'settings/topbar.php';
                                 $end_date =  $data->date_end;
                                 $end_time = $data->time_end;
                                 $notes = $data->notes;
+                                $material = $data->material;
                                 $act_form_file = $data->act_form_file;
                                 $letter_approve_file = $data->letter_approve_file;
 
@@ -284,6 +287,17 @@ include 'settings/topbar.php';
                                         <textarea class="form-control" id="noteTextArea" name='notes' placeholder="Notes will be provided by Property Custodian or Admin" rows="3"
                                             <?= (($_SESSION['position'] != 'PTC' ? 'readonly': ''));?>><?= $notes ?></textarea>
                                     </div> 
+                                    <div class="form-group note-form-group">
+                                        <label>Materials to use</label>
+                                        <select class="form-control" name="material">
+                                            <option value="M1"<?php echo (($material == "M1") ? "selected" : ""); ?>>Microphone (1pc)</option>
+                                            <option value="E1"<?php echo (($material == "E1") ? "selected" : ""); ?>>Extension Wire (1pc)</option>
+                                            <option value="EP"<?php echo (($material == "EP") ? "selected" : ""); ?>>Epson Projector Device</option>
+                                            <option value="PR"<?php echo (($material == "PR") ? "selected" : ""); ?>>Projector White Screen</option>
+                                            <option value="PC50"<?php echo (($material == "PC50") ? "selected" :""); ?>>Plastic Chairs (50 pcs)</option>
+                                            <option value="PC100"<?php echo (($material == "PC100") ? "selected" :""); ?>>Plastic Chairs (100 pcs)</option>
+                                        </select>
+                                    </div> 
 
                                     <div class="form-group" <?= (($_SESSION['position'] != 'DSA'? 'hidden': ''));?>>
                                         <label>Choose action to perform</label>
@@ -316,8 +330,7 @@ include 'settings/topbar.php';
                                         </div>
                                         <div class="modal-body"></div>
                                         <div class="modal-footer">
-                                        <button type="submit" name='submit' class="btn btn-success btn-icon-split btn-sm keychainify-checked"
-                                            <?= (($status == 'A' ? 'disabled': ''));?>>
+                                        <button type="submit" name='submit' class="btn btn-success btn-icon-split btn-sm keychainify-checked">
                                             <span class="icon text-white-50">
                                                 <i class="fas fa-plus"></i>
                                             </span>
