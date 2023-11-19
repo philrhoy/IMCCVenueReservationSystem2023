@@ -12146,6 +12146,12 @@ a:focus {
     }
 }
 
+.text-main{
+    display: table-cell;
+    vertical-align: middle;
+    text-align:center
+}
+
 .bg-login-image {
     background: url(../img/imcc.png);
     background-position: center;
