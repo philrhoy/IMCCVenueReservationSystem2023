@@ -26,7 +26,7 @@ include 'settings/topbar.php';
                         <select class="form-control form-control-sm" name="filterByStatus" id="filterByStatus">
                             <option value="0">No Selection</option>
                             <option value="P">Pending</option>
-                            <option value="A">Approved</option>
+                            <option value="A" <?php echo ((($_SESSION["position"] == "PTC") ? "selected" : ""));?>>Approved</option>
                             <option value="R">Rejected</option>
                             <!-- <option value="AA"<?php echo ($_SESSION["position"] != "DSA" ? "hidden disabled" : "")?>>Approved by Admin</option>
                             <option value="RA"<?php echo ($_SESSION["position"] != "DSA" ? "hidden disabled" : "")?>>Rejected by Admin</option> -->
@@ -132,15 +132,18 @@ include 'settings/topbar.php';
                                 $row_reservations = $reservations->fetchAll(PDO::FETCH_OBJ);
                                 foreach ($row_reservations as $row) {
                                     $statusStr = "Pending for Approval";
-
+                                    $statusColor = "";
                                     switch($row->STATUS){
                                         case "P":
+                                            $statusColor = "text-warning";
                                             $statusStr = "Pending for Approval";
                                             break;
                                         case "A":
+                                            $statusColor = "text-success";
                                             $statusStr = "Approved";
                                             break;
                                         case "R":
+                                            $statusColor = "text-danger";
                                             $statusStr = "Rejected";
                                             break;
                                     }
@@ -151,7 +154,7 @@ include 'settings/topbar.php';
                                         <td><?= $row->START_DATE . "-" . $row->END_DATE; ?></td>
                                         <td><?= $row->PROGRAM_NAME; ?></td>
                                         <td><?= $row->VENUE_NAME; ?></td>
-                                        <td><?= $statusStr; ?></td>
+                                        <td class="<?= $statusColor?>"><?= $statusStr; ?></td>
                                         <td align="center">
                                             <a href='edit_reservation.php?reservation_id=<?= $row->INT_RES_ID ?>' class="btn btn-primary btn-icon-split btn-sm keychainify-checked" target="_blank">
                                                 <span class="icon text-white-50">

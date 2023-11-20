@@ -4,19 +4,23 @@ include 'settings/header.php';
 ?>
 
 <body class="login-bg-gradient-imcc">
-
+<img src="img/imcc2.png" style="position: absolute; top:6%; left:7%; width:300px;">
     <div class="container">
-
+        
         <!-- Outer Row -->
         <div class="row justify-content-center">
-
             <div class="col-xl-10 col-lg-12 col-md-9">
-
                 <div class="card o-hidden border-0 shadow-lg my-imcc">
                     <div class="card-body p-0">
                         <!-- Nested Row within Card Body -->
                         <div class="row">
-                            <div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
+                            <div class="col-lg-6 d-none d-lg-block">
+                                    <div class="text-center text-main p-5" style="margin-top:20%;">
+                                        <h1 class="h1 text-gray-900 mb-3">Venue Reservation System</h1>
+                                        <h6 class="h56 text-gray-900">Exclusive Use For Student Org. Officers, DSA, and Property Custodian
+under the Institution of IMCC.</h6>
+                                    </div>
+                            </div>
                             <div class="col-lg-6">
                                 <div class="p-5">
                                     <div class="text-center">

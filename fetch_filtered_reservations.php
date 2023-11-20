@@ -4,6 +4,7 @@ include 'session.php';
 
 if (isset($_POST['status'])){
     $status = $_POST['status'];
+    $statusColor = "";
     $filterVenue = $_POST['venue'];
     $filterProgram = $_POST['program'];
     $filterSearch = $_POST['search'];
@@ -76,24 +77,27 @@ if (isset($_POST['status'])){
 
             switch($row->STATUS){
                 case "P":
+                    $statusColor = "text-warning";
                     $statusStr = "Pending for Approval";
                     break;
                 case "A":
+                    $statusColor = "text-success";
                     $statusStr = "Approved";
                     break;
                 case "R":
+                    $statusColor = "text-danger";
                     $statusStr = "Rejected";
                     break;
             }
     
         ?>
             <tr>
-                <td><?= '<a href="view_reservation.php?reservation_id='.$row->INT_RES_ID.'" target="_blank">' . $row->RESERVATION_ID. '</a>'; ?></td>
-                <td><?= $row->ACTIVITY; ?></td>
+                <td><?= $row->RESERVATION_ID; ?></td>
+                <td><?= '<a href="view_reservation.php?reservation_id='.$row->INT_RES_ID.'" target="_blank">' . $row->ACTIVITY. '</a>'; ?></td>
                 <td><?= $row->START_DATE . "-" . $row->END_DATE; ?></td>
                 <td><?= $row->PROGRAM_NAME; ?></td>
                 <td><?= $row->VENUE_NAME; ?></td>
-                <td><?= $statusStr; ?></td>
+                <td class="<?=$statusColor?>"><?= $statusStr; ?></td>
                 <td align="center">
                     <a href='edit_reservation.php?reservation_id=<?= $row->INT_RES_ID ?>' class="btn btn-primary btn-icon-split btn-sm keychainify-checked" target="_blank">
                         <span class="icon text-white-50">
