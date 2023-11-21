@@ -63,10 +63,9 @@ switch ($_POST['req']) {
           foreach ($events['d'][$day] as $eid) { 
             $programID = $events['e'][$eid]['programID'];
             $fetchProgram = $CAL->getProgram($programID);
-            $color = $events['e'][$eid]['tag_color']; 
             $tagColor = ($fetchProgram != null ? $fetchProgram["color"] : "fffff");
             ?>
-            <div class="calevt" data-eid="<?= $eid ?>" style="border: 1px solid #EEE;padding: 5px;color: <?= get_brightness($color) > 130 ? 'black': 'white';  ?>;background:<?= $tagColor ?>">
+            <div class="calevt" data-eid="<?= $eid ?>" style="border: 1px solid #EEE;padding: 5px;color: <?= get_brightness($tagColor) > 130 ? 'black': 'white';  ?>;background:<?= $tagColor ?>">
               <?= $events['e'][$eid]['reservationID'] . ' - ' . $events['e'][$eid]['description'] . ' (' . $events['e'][$eid]['name'] . ')'?>
               <!--<span class="tooltipText"><?= $events['e'][$eid]['description'] ?></span>-->
             </div>
