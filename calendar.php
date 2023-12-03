@@ -166,6 +166,9 @@ include 'settings/topbar.php';
         $("#calvenue").select().val(0).trigger("change");
         $("#calmonth").select().val(month + 1).trigger("change");
         $("#calyear").select().val(year).trigger("change");
+
+        window.location.reload();
+
     });
 
     var sequence = <?php echo json_encode($newID); ?>;
