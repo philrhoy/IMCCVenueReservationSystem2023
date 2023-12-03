@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Dec 03, 2023 at 10:19 PM
+-- Generation Time: Dec 03, 2023 at 10:26 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -182,6 +182,7 @@ CREATE TABLE `venues` (
   `id` int(11) NOT NULL,
   `venueID` varchar(20) NOT NULL,
   `name` varchar(255) DEFAULT NULL,
+  `capacity` varchar(255) DEFAULT NULL,
   `dateAdded` datetime NOT NULL DEFAULT current_timestamp(),
   `dateUpdated` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -190,11 +191,11 @@ CREATE TABLE `venues` (
 -- Dumping data for table `venues`
 --
 
-INSERT INTO `venues` (`id`, `venueID`, `name`, `dateAdded`, `dateUpdated`) VALUES
-(1, 'VN000001', 'Audio-Visual Room', '2023-09-10 00:24:22', NULL),
-(2, 'VN000002', 'Review Center', '2023-09-10 00:24:33', NULL),
-(4, 'VN000003', 'Covered Court', '2023-09-10 00:24:55', '2023-09-10 00:32:21'),
-(5, 'VN000004', 'Auditorium', '2023-09-10 00:25:04', NULL);
+INSERT INTO `venues` (`id`, `venueID`, `name`, `capacity`, `dateAdded`, `dateUpdated`) VALUES
+(1, 'VN000001', 'Audio-Visual Room', '500 seats', '2023-09-10 00:24:22', '2023-12-04 05:25:35'),
+(2, 'VN000002', 'Review Center', '1000 Max', '2023-09-10 00:24:33', '2023-12-04 05:25:57'),
+(4, 'VN000003', 'Covered Court', '1000 or More', '2023-09-10 00:24:55', '2023-12-04 05:26:13'),
+(5, 'VN000004', 'Auditorium', '5000 Max', '2023-09-10 00:25:04', '2023-12-04 05:26:23');
 
 --
 -- Indexes for dumped tables

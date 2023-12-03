@@ -30,6 +30,7 @@ include 'settings/topbar.php';
                                 <tr>
                                     <th>Venue ID</th>
                                     <th>Name</th>
+                                    <th>Seat Capacity (Approx.)</th>
                                     <?php if ($_SESSION['position'] === 'DSA') { ?>
                                         <th>Actions</th>
                                     <?php } ?>
@@ -45,6 +46,7 @@ include 'settings/topbar.php';
                                     <tr>
                                         <td><?php echo ($_SESSION['position'] === 'DSA') ? '<a href="venue_edit.php?id=' . $row->id . '">' . $row->venueID . '</a>' : $row->venueID; ?></td>
                                         <td><?= $row->name; ?></td>
+                                        <td><?= $row->capacity; ?></td>
                                         <?php if ($_SESSION['position'] === 'DSA') { ?>
                                             <td align="center">
                                                 <a href="venue_edit.php?id=<?php echo $row->id; ?>" class="btn btn-primary btn-icon-split btn-sm keychainify-checked">
