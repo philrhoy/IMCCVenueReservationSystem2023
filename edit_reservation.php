@@ -270,7 +270,7 @@ include 'settings/topbar.php';
                                     <div class="form-group">
                                         <div class="imgUp">   
                                              <iframe
-                                                src="uploads/<?= $letter_approve_file ?>"
+                                                src="uploads/<?= (($letter_approve_file == "") ? "no-file-icon.png" : $letter_approve_file) ?>"
                                                 type="<?=$letter_approve_file_ext?>"
                                                 scrolling="auto"
                                                 height="220px"
