@@ -98,6 +98,7 @@ switch ($_POST['req']) {
       $_POST['reservationID'],
       $_POST['RID'],
       $_POST['venueID'],
+      $_POST['status'],
       isset($_POST['eid']) ? $_POST['eid'] : null
     ) ? "OK" : $CAL->error;
     break;
