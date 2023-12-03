@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Nov 21, 2023 at 01:38 PM
+-- Generation Time: Dec 03, 2023 at 10:19 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -128,9 +128,9 @@ INSERT INTO `schedules` (`id`, `reservationID`, `userID`, `venueID`, `programID`
 (5, 'RES000004', 4, 4, 5, 'P', '2023-09-09', '2023-09-09', '', '', 'Sample', NULL, 'ss', 0, 0, NULL, 0, 0, 0, 0, '', '', 'TEST', ''),
 (8, 'RES000005', 4, 2, 3, 'P', '2023-10-11', '2023-10-11', '', '', 'SSG ELECTION', NULL, 'SSG Elections for grade 6 students', 125, 0, NULL, 0, 0, 0, 0, '6527e9bc2f12c.png', '6527e9bc2f23c.png', '', ''),
 (9, 'RES000007', 6, 5, 2, 'P', '2023-10-13', '2023-10-13', '', '', 'PE 2 Final Performance', NULL, 'Final Requirement for P2 ', 30, 0, NULL, 0, 0, 0, 0, '6527ebe506660.png', '6527ebe506740.png', 'test', ''),
-(10, 'RES000008', 4, 4, 5, 'P', '2023-10-13', '2023-10-13', '', '', 'Sumbaganay lang sa', NULL, 'Sumbagay w/ executives', 10, 0, NULL, 0, 0, 0, 0, '6527eda766fe4.png', '6527eda7670c5.png', '', ''),
+(10, 'RES000008', 4, 4, 5, 'P', '2023-10-13', '2023-10-13', '', '', 'Campus Scavenger Hunt', NULL, 'Campus Scavenger Hunt', 10, 0, NULL, 0, 0, 0, 0, '6527eda766fe4.png', '6527eda7670c5.png', '', ''),
 (11, 'RES000009', 6, 4, 1, 'P', '2023-10-16', '2023-10-16', '', '', 'HIV Awareness Orientation', NULL, 'To raise awareness on HIV', 50, 0, NULL, 0, 0, 0, 0, '65282783e35c1.png', '65282783e3ee5.png', '', ''),
-(13, 'RES000010', 4, 1, 2, 'P', '2023-10-17', '2023-10-18', '08:00', '09:00', 'Sumbagay Dev vs HR', NULL, 'sumbagay nlng sa kay gahi kayog ulo ang HR', 25, 0, NULL, 0, 0, 0, 0, '652898b1f3b60.png', '652898b1f3cb8.png', '', ''),
+(13, 'RES000010', 4, 1, 2, 'P', '2023-10-17', '2023-10-18', '08:00', '09:00', 'Career fairs', NULL, 'Career fairs', 25, 0, NULL, 0, 0, 0, 0, '652898b1f3b60.png', '652898b1f3cb8.png', '', ''),
 (14, 'RES000011', 4, 1, 5, 'P', '2023-10-01', '2023-10-01', '17:50', '17:50', 'Test 10/30/2023', NULL, 'Test objectives', 15, 0, NULL, 0, 0, 0, 0, '653f7cf006c5f.jpg', '653f7cf00747f.png', '', ''),
 (15, 'RES000012', 4, 4, 6, 'P', '2023-10-30', '2023-10-30', '17:56', '17:56', 'Test bug fix 1', NULL, 'Test objectives', 10, 0, NULL, 0, 0, 0, 0, '653f7de1dfb3d.png', '653f7de1dfdd5.jpg', '', ''),
 (16, 'RES000013', 6, 4, 6, 'P', '2023-10-01', '2023-10-02', '21:09', '21:09', 'TEST UPLOAD IMAGE', NULL, 'TEST UPLOAD IMAGE', 21, 0, NULL, 0, 0, 0, 0, '653fab140816f.jpg', '653fab140853c.png', 'TEST NOTE', 'E1'),
@@ -170,7 +170,7 @@ INSERT INTO `users` (`id`, `userID`, `first_name`, `middle_name`, `last_name`, `
 (4, 'USR0002', 'Administrator', NULL, NULL, NULL, 'admin', '21232f297a57a5a743894a0e4a801fc3', 1, 'DSA', NULL, '2023-09-10 06:08:09', NULL),
 (3, 'USR0001', 'Student Officer', NULL, NULL, NULL, 'stud_officer', 'cd73502828457d15655bbd7a63fb0bc8', 1, 'STO', 2, '2023-09-10 06:06:58', NULL),
 (6, 'USR0004', 'Dimple', 'Grace', 'Normadination', '09090909090', 'admin1', 'e00cf25ad42683b3df678c61f42c6bda', 1, 'STO', 6, '2023-10-10 22:38:21', '2023-10-10 22:40:11'),
-(7, 'USR0008', 'Property', 'Cus', 'todian', '09090909090', 'prop1', '366fad496447472a7fcf154888e09282', 1, 'PTC', NULL, '2023-10-30 20:00:03', '2023-10-30 20:00:30');
+(7, 'USR0008', 'Property', '', 'Custodian', '09090909090', 'prop1', '366fad496447472a7fcf154888e09282', 1, 'PTC', NULL, '2023-10-30 20:00:03', '2023-10-30 20:00:30');
 
 -- --------------------------------------------------------
 
