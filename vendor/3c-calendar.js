@@ -74,6 +74,7 @@ var cal = {
       document.getElementById("evtend").value = edata['date_end'];
       $("#evtvenue").val(edata['venueID']).trigger("change");
       document.getElementById("evtname").value = edata['name'];
+      $("#evtstatus").val(edata['status']).trigger("change");
       // document.getElementById("evtvenue").value = edata['venueID'];
       // document.getElementById("evtcontact").value = edata['contact'];
       document.getElementById("evttxt").value = edata['description'];

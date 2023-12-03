@@ -134,6 +134,18 @@ include 'settings/topbar.php';
             <div class="form-group">
                 <div class="row">
                     <div class="col-md-12">
+                        <label for="evttxt">Status</label>
+                        <select name="evtstatus" id="evtstatus" class="form-control" disabled readonly>
+                            <option value="A">Approved</option>
+                            <option value="R">Rejected</option>
+                            <option value="P">Pending for Approval</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-12">
                         <label for="evttxt">Purpose</label>
                         <textarea id="evttxt" class="form-control" rows="5" readonly></textarea>
                     </div>
