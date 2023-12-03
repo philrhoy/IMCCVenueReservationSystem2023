@@ -66,7 +66,7 @@ switch ($_POST['req']) {
             $tagColor = ($fetchProgram != null ? $fetchProgram["color"] : "fffff");
             ?>
             <div class="calevt" data-eid="<?= $eid ?>" style="border: 1px solid #EEE;padding: 5px;color: <?= get_brightness($tagColor) > 130 ? 'black': 'white';  ?>;background:<?= $tagColor ?>">
-              <?= $events['e'][$eid]['reservationID'] . ' - ' . $events['e'][$eid]['description'] . ' (' . $events['e'][$eid]['name'] . ')'?>
+              <?= $events['e'][$eid]['reservationID'] . ' - ' . $events['e'][$eid]['name']?>
               <!--<span class="tooltipText"><?= $events['e'][$eid]['description'] ?></span>-->
             </div>
         <?php if ($day == $events['e'][$eid]['first']) {
