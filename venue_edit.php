@@ -25,9 +25,10 @@ include 'settings/topbar.php';
                     <?php
                     if (isset($_POST['name'])) {
                         $name = $_POST["name"];
+                        $capacity = $_POST["capacity"];
                         $id = $_POST["id"];
 
-                        $update_venue = $db->query("UPDATE venues SET `name` = '$name', `dateUpdated` = NOW() WHERE `id`= $id") or die($db->error);
+                        $update_venue = $db->query("UPDATE venues SET `name` = '$name', `capacity` = '$capacity', `dateUpdated` = NOW() WHERE `id`= $id") or die($db->error);
                         if (!$update_venue) {
                             echo '<script>
     alert("Error updating venue data.");
@@ -49,6 +50,7 @@ include 'settings/topbar.php';
                             $e_ID = $obj->id;
                             $e_name = $obj->name;
                             $e_venueID = $obj->venueID;
+                            $e_capacity = $obj->capacity;
                         }
                     }
                     ?>
@@ -64,7 +66,10 @@ include 'settings/topbar.php';
                                 <label>Name</label>
                                 <input class="form-control" type="text" placeholder="Name" name="name" value="<?= $e_name ?>" required>
                             </div>
-
+                            <div class="form-group">
+                                <label>Seat Capacity (Approx.)</label>
+                                <input class="form-control" type="text" placeholder="Seat Capacity" name="capacity" value="<?= $e_capacity ?>" required>
+                            </div>
                             <button type="submit" class="btn btn-success btn-icon-split btn-sm keychainify-checked">
                                 <span class="icon text-white-50">
                                     <i class="fas fa-save"></i>
