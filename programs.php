@@ -12,12 +12,14 @@ include 'settings/topbar.php';
         <div class="container-fluid">
             <div class="d-sm-flex align-items-center justify-content-between mb-4">
                 <h1 class="h3 mb-2 text-gray-800">Program List</h1>
-                <a href="program_add.php" class="btn btn-success btn-icon-split btn-sm keychainify-checked">
-                    <span class="icon text-white-50">
-                        <i class="fas fa-fw fa-plus"></i>
-                    </span>
-                    <span class="text">Add Program</span>
-                </a>
+                <?php if ($_SESSION['position'] === 'DSA') { ?>
+                    <a href="program_add.php" class="btn btn-success btn-icon-split btn-sm keychainify-checked">
+                        <span class="icon text-white-50">
+                            <i class="fas fa-fw fa-plus"></i>
+                        </span>
+                        <span class="text">Add Program</span>
+                    </a>
+                <?php } ?>
             </div>
             <div class="card shadow mb-4">
 
@@ -30,7 +32,9 @@ include 'settings/topbar.php';
                                     <th>Name</th>
                                     <th>In-charge Organization</th>
                                     <th>Color</th>
-                                    <th>Actions</th>
+                                    <?php if ($_SESSION['position'] === 'DSA') { ?>
+                                        <th>Actions</th>
+                                    <?php } ?>
                                 </tr>
                             </thead>
                             <tbody>
@@ -41,24 +45,26 @@ include 'settings/topbar.php';
                                 foreach ($row_donor as $row) {
                                 ?>
                                     <tr>
-                                        <td><?= '<a href="program_edit.php?id='.$row->id.'">' . $row->programID. '</a>'; ?></td>
+                                        <td><?php echo ($_SESSION['position'] === 'DSA') ? '<a href="program_edit.php?id=' . $row->id . '">' . $row->programID . '</a>' : $row->programID; ?></td>
                                         <td><?= $row->name; ?></td>
                                         <td><?= $row->incharge_organization; ?></td>
                                         <td align="center"><i class="fas fa-circle" style="font-size:2rem;color:<?= $row->color; ?>"></i></td>
-                                        <td align="center">
-                                            <a href="program_edit.php?id=<?php echo $row->id; ?>" class="btn btn-primary btn-icon-split btn-sm keychainify-checked">
-                                                <span class="icon text-white-50">
-                                                    <i class="fas fa-edit"></i>
-                                                </span>
-                                                <span class="text">Edit</span>
-                                            </a>
-                                            <a href="program_delete.php?id=<?php echo $row->id; ?>" onclick="return confirm('Are you sure you want to delete <?= $row->name; ?>?')" class="btn btn-danger btn-icon-split btn-sm keychainify-checked">
-                                                <span class="icon text-white-50">
-                                                    <i class="fas fa-trash"></i>
-                                                </span>
-                                                <span class="text">Delete</span>
-                                            </a>
-                                        </td>
+                                        <?php if ($_SESSION['position'] === 'DSA') { ?>
+                                            <td align="center">
+                                                <a href="program_edit.php?id=<?php echo $row->id; ?>" class="btn btn-primary btn-icon-split btn-sm keychainify-checked">
+                                                    <span class="icon text-white-50">
+                                                        <i class="fas fa-edit"></i>
+                                                    </span>
+                                                    <span class="text">Edit</span>
+                                                </a>
+                                                <a href="program_delete.php?id=<?php echo $row->id; ?>" onclick="return confirm('Are you sure you want to delete <?= $row->name; ?>?')" class="btn btn-danger btn-icon-split btn-sm keychainify-checked">
+                                                    <span class="icon text-white-50">
+                                                        <i class="fas fa-trash"></i>
+                                                    </span>
+                                                    <span class="text">Delete</span>
+                                                </a>
+                                            </td>
+                                        <?php } ?>
                                     </tr>
                                 <?php } ?>
                             </tbody>

@@ -97,6 +97,8 @@
                         <i class="fas fa-fw fa-bars"></i>
                         <span>Monthly Report</span></a>
                 </li>   
+                
+            <?php } ?>
             <hr class="sidebar-divider">
 
             <!-- Heading -->
@@ -117,7 +119,9 @@
                     <i class="fas fa-fw fa-flag"></i>
                     <span>Programs</span></a>
             </li>
-
+            <?php
+            if ($_SESSION['position'] == 'DSA') {
+            ?>
             <!-- Nav Item - Users -->
             <li class="nav-item <?= $user; ?>">
                 <a class="nav-link" href="users.php">
