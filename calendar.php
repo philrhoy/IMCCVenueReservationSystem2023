@@ -13,6 +13,19 @@ include 'settings/topbar.php';
         <div class="form-group">
             <div class="row">
                 <div class="col-md-2">
+                    <select name="calvenue" style='height: 50px !important; font-size: 1.5rem !important;' id="calvenue" class="form-control" title="Selected Venue will filter the display to the corresponding reservation." required>
+                        <option value="0">All Venues</option>
+                        <?php
+                        $getVenues = $db->query("SELECT * FROM venues ORDER BY name ASC");
+                        $res = $getVenues->fetchAll(PDO::FETCH_OBJ);
+                        foreach ($res as $v) { ?>
+                            <option value="<?php echo $v->id; ?>" ?><?php echo $v->name; ?></option>
+                        <?php
+                        }
+                        ?>
+                    </select>
+                </div>
+                <div class="col-md-2">
                     <?php
                     // (B1) MONTH SELECTOR
                     // NOTE: DEFAULT TO CURRENT SERVER MONTH YEAR
@@ -22,7 +35,7 @@ include 'settings/topbar.php';
                         9 => "September", 10 => "October", 11 => "November", 12 => "December"
                     ];
                     $monthNow = date("m");
-                    echo "<select id='calmonth' class='form-control'>";
+                    echo "<select id='calmonth' style='height: 50px !important; font-size: 1.5rem !important;' class='form-control' title='Select a month. (Default: Current Month)'>";
                     foreach ($months as $m => $mth) {
                         printf(
                             "<option value='%s'%s>%s</option>",
@@ -37,24 +50,11 @@ include 'settings/topbar.php';
                 <div class="col-md-2">
                     <?php
                     // (B2) YEAR SELECTOR
-                    echo "<input type='number' min='0' id='calyear' class='form-control form-sm' value='" . date("Y") . "'/>";
+                    echo "<input type='number' min='0' style='height: 50px !important; font-size: 1.5rem !important;' id='calyear' title='Input a year. (Default: Current Year)' class='form-control form-sm' value='" . date("Y") . "'/>";
                     ?>
                 </div>
-                <div class="col-md-2">
-                    <select name="calvenue" id="calvenue" class="form-control" required>
-                        <option value="0">All</option>
-                        <?php
-                        $getVenues = $db->query("SELECT * FROM venues ORDER BY name ASC");
-                        $res = $getVenues->fetchAll(PDO::FETCH_OBJ);
-                        foreach ($res as $v) { ?>
-                            <option value="<?php echo $v->id; ?>" ?><?php echo $v->name; ?></option>
-                        <?php
-                        }
-                        ?>
-                    </select>
-                </div>
                 <div class="col-md-4">
-                    <button class="btn btn-primary " id='clear' name='clear'>Clear </button>
+                    <button class="btn btn-primary " style='height: 50px !important; font-size: 1.5rem !important;' id='clear' title='Clear all the filters and set it back to default.' name='clear'>Clear </button>
                 </div>
             </div>
         </div>
