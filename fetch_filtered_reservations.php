@@ -77,15 +77,15 @@ if (isset($_POST['status'])){
 
             switch($row->STATUS){
                 case "P":
-                    $statusColor = "text-warning";
+                    $statusColor = "badge-warning";
                     $statusStr = "Pending for Approval";
                     break;
                 case "A":
-                    $statusColor = "text-success";
+                    $statusColor = "badge-success";
                     $statusStr = "Approved";
                     break;
                 case "R":
-                    $statusColor = "text-danger";
+                    $statusColor = "badge-danger";
                     $statusStr = "Rejected";
                     break;
             }
@@ -97,7 +97,7 @@ if (isset($_POST['status'])){
                 <td><?= $row->START_DATE . "-" . $row->END_DATE; ?></td>
                 <td><?= $row->PROGRAM_NAME; ?></td>
                 <td><?= $row->VENUE_NAME; ?></td>
-                <td class="<?=$statusColor?>"><?= $statusStr; ?></td>
+                <td align="center"><span class="badge <?= $statusColor?>"><?= $statusStr; ?></td>
                 <td align="center">
                     <a href='edit_reservation.php?reservation_id=<?= $row->INT_RES_ID ?>' class="btn btn-primary btn-icon-split btn-sm keychainify-checked" target="_blank">
                         <span class="icon text-white-50">
