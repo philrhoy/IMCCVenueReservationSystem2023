@@ -130,12 +130,13 @@ $donor = null;
                                                         `schedules`.name AS 'ACTIVITY',
                                                         `program`.name AS 'PROGRAM_NAME',
                                                         `schedules`.date_start AS 'START_DATE',
-                                                        `schedules`.date_end AS 'END_DATE' FROM `schedules` 
+                                                        `schedules`.date_end AS 'END_DATE' 
+                                                        FROM `schedules` 
                                                     INNER JOIN `venues` 
                                                     ON `schedules`.venueID = `venues`.id
                                                     INNER JOIN `program` 
                                                     ON `schedules`.programID = `program`.id 
-                                                    WHERE (`schedules`.date_start BETWEEN '$filterStart' AND '$filterEnd') ";
+                                                    WHERE (`schedules`.date_start BETWEEN '$filterStart' AND '$filterEnd' AND `status` = 'A') ";
 
                                     if ($filterVenue != "0") {
                                         $str_query .= "AND (`schedules`.venueID = '$filterVenue') ";
