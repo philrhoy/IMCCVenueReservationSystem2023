@@ -117,7 +117,8 @@ class Calendar
     WHERE $data `date_start` BETWEEN ? AND ?
     AND `date_end` BETWEEN ? AND ?
     AND cancelled = 0
-    AND deleted = 0 ");
+    AND deleted = 0 
+    AND status != 'R'");
     $this->stmt->execute([$dayFirst, $dayLast, $dayFirst, $dayLast]);
 
     $events = ["e" => [], "d" => []];

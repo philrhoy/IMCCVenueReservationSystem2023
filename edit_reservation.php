@@ -312,7 +312,7 @@ include 'settings/topbar.php';
                             </div>
                             <a class="btn btn-success btn-icon-split btn-sm keychainify-checked confirmBtn" href="#" data-toggle="modal" data-target="#confirmModal">
                                 <span class="icon text-white-50">
-                                    <i class="fas fa-plus"></i>
+                                    <i class="fas fa-check"></i>
                                 </span>
                                 <span class="text">APPLY UPDATES</span>
                             </a>
@@ -332,15 +332,15 @@ include 'settings/topbar.php';
                                         <div class="modal-footer">
                                         <button type="submit" name='submit' class="btn btn-success btn-icon-split btn-sm keychainify-checked">
                                             <span class="icon text-white-50">
-                                                <i class="fas fa-plus"></i>
+                                                <i class="fas fa-check"></i>
                                             </span>
-                                            <span class="text">PROCEED</span>
+                                            <span class="text">Proceed</span>
                                         </button>
                                         <button class="btn btn-secondary btn-icon-split btn-sm keychainify-checked" type="button" data-dismiss="modal">
                                              <span class="icon text-white-50">
                                                 <i class="fas fa-window-close"></i>
                                             </span>
-                                            <span class="text">CANCEL</span>
+                                            <span class="text">Cancel</span>
                                         </button>
 
                                         </div>
