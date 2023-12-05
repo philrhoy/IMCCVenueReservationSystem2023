@@ -228,17 +228,17 @@ foreach ($fetch as $data) {
                                             <label><b>Upload Fully Signed Student Activity Form:</b></label>
                                             <span class="invalidFormat" style="visibility: hidden; color: red">Invalid file format</span>
                                             <input type="file" class="form-control uploadFile img" name="activityFormImg" accept="image/jpeg, image/png, application/pdf" id="activityForm" aria-label="0" required>
-                                            <iframe src="" type="" scrolling="auto" height="200px" width="100%" class="getImg"> </iframe>
+                                            <iframe src="" type="" scrolling="auto" height="250px" width="100%" class="getImg"> </iframe>
                                             <a class="btn btn-sm btn-primary preview" id="0" hidden>Preview</a>
                                         </div>
                                     </div>
 
                                     <div class="form-group">
-                                        <div class="imgUp">
+                                        <div class="imgUp" style="overflow-y:scroll;">
                                             <label><b>Upload Letter of Approval:</b></label>
                                             <span class="invalidFormat" style="visibility: hidden; color: red">Invalid file format</span>
                                             <input type="file" class="form-control uploadFile img" name="letterApprovalImg" id="letterApproval" accept="image/jpeg, image/png, application/pdf" aria-label="0">
-                                            <iframe src="" type="" scrolling="auto" height="200px" width="100%" class="getImg"> </iframe>
+                                            <iframe src="" type="" scrolling="auto" height="250px" width="100%" class=" getImg"> </iframe>
                                             <a class="btn btn-sm btn-primary preview" id="1" hidden>Preview</a>
                                         </div>
                                     </div>

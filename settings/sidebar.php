@@ -94,7 +94,7 @@
             </div>
             <li class="nav-item <?= $reservation; ?>">
                     <a class="nav-link" href="monthly_report.php">
-                        <i class="fas fa-fw fa-bars"></i>
+                        <i class="fas fa-fw fa-print"></i>
                         <span>Monthly Report</span></a>
                 </li>   
                 
