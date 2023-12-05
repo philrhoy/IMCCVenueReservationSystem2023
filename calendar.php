@@ -183,7 +183,6 @@ include 'settings/topbar.php';
 
     });
 
-    var sequence = <?php echo json_encode($newID); ?>;
 </script>
 
 <?php include 'settings/footer.php'; ?>
