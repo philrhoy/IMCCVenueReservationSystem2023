@@ -299,12 +299,14 @@ foreach ($fetch as $data) {
                                 $(document).on("change", ".uploadFile", function() {
                                     var uploadFile = $(this);
                                     var files = !!this.files ? this.files : [];
+                                    var fileExt = (files[0].type).split("/")[1];
+                                    const allowedExt = ["pdf", "png", "jpg", "jpeg"];
                                     if (!files.length || !window.FileReader) return; // no file selected, or no FileReader support
 
                                     var reader = new FileReader();
                                     reader.readAsDataURL(files[0]);
-
-                                    if (!/^image/.test(files[0].type) && !/^pdf/.test(files[0].type)) {
+                          
+                                    if (!(allowedExt.includes(fileExt.toLowerCase()))) {
                                         uploadFile.prop({
                                             ariaLabel: "1"
                                         });
