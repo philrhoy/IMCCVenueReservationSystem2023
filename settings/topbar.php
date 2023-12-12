@@ -44,18 +44,77 @@
                 </li>
 
                 <!-- Nav Item - Alerts -->
+                <?php 
+                    if(isset($_GET['notificationRef']) && isset($_GET['isRead'])){
+                        $notificationRef = $_GET['notificationRef'];
+                        $updateNotif = $db->query("UPDATE notifications 
+                        SET isRead = '1' WHERE id='$notificationRef'");
+                    }
+                    //Get user notifications
+                    $currentUserID = $_SESSION["id"];
+                    $currentUserType = $_SESSION["position"];
+                    $getNotif = $db->query("SELECT * FROM notifications 
+                                            WHERE (recipient = '$currentUserID' OR notifyToAllUserType = '$currentUserType')  ORDER BY id DESC");
+                    $fetchNotifications = $getNotif->fetchAll(PDO::FETCH_OBJ);
+                    $notificationCount = 0;
+
+                    // echo $_SERVER['HTTP_HOST'] . "<br>";
+                    // echo $_SERVER['REQUEST_URI'] . "<br>";
+
+                    foreach ($fetchNotifications as $data)
+                    {
+                        if($data->isRead == 0){
+                            $notificationCount++;
+                        }
+                    }
+                
+                ?>
                 <li class="nav-item dropdown no-arrow mx-1">
                     <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fas fa-bell fa-fw"> </i>
                         <!-- Counter - Alerts -->
-                        <span class="badge badge-danger badge-counter">3+</span>
+                        <span class="badge badge-danger badge-counter" style="<?php echo (($notificationCount == 0) ? "visibility: hidden;": "visibility: visible;")?>"><?php echo $notificationCount; ?></span>
                     </a>
                     <!-- Dropdown - Alerts -->
                     <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
                         <h6 class="dropdown-header">
                             Notifications
                         </h6>
-                        <a class="dropdown-item d-flex align-items-center" href="#">
+                        <?php 
+                          foreach ($fetchNotifications as $data){
+                            ?>
+                            <a class="dropdown-item d-flex align-items-center" href="<?php echo $data->link."&notificationRef=".$data->id."&isRead=1";?>">
+                                <div class="mr-3">
+                                    <div class="icon-circle bg-primary">
+                                        <i class="fas fa-file-alt text-white"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="small text-gray-500"><?php echo $data->dateAdded;?></div>
+                                    <span class="font-weight-bold"><?php echo $data->details;?></span>
+                                </div>
+                            </a>
+                            <?php 
+                          }
+
+                          if(sizeof($fetchNotifications) == 0){
+                            ?>
+                            <a class="dropdown-item d-flex align-items-center" >
+                                <div class="mr-3">
+                                    <div class="icon-circle bg-primary">
+                                        <i class="fas fa-file-alt text-white"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <!-- <div class="small text-gray-500">December 12, 2019</div> -->
+                                    <span class="font-weight-bold">No notifications</span>
+                                </div>
+                            </a>
+                            <?php 
+                          }
+
+                        ?>
+                        <!-- <a class="dropdown-item d-flex align-items-center" href="#">
                             <div class="mr-3">
                                 <div class="icon-circle bg-primary">
                                     <i class="fas fa-file-alt text-white"></i>
@@ -88,7 +147,8 @@
                                 Spending Alert: We've noticed unusually high spending for your account.
                             </div>
                         </a>
-                        <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
+                      -->
+                      <!-- <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>  -->
                     </div>
                 </li>
 

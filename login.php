@@ -65,6 +65,7 @@ under the Institution of IMCC.</h6>
                                                     $_SESSION['userID'] = $row_admin->userID;
                                                     $_SESSION['username'] = $row_admin->username;
                                                     $_SESSION['name'] = $row_admin->first_name . ' ' . $row_admin->middle_name . ' ' . $row_admin->last_name;
+                                                    $_SESSION['name2'] = $row_admin->first_name . ' ' . $row_admin->last_name;
                                                     header('location: calendar.php');
                                                 } else {
                                                     header('location: change_password.php');

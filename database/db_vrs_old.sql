@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Sep 11, 2023 at 08:15 AM
+-- Generation Time: Dec 03, 2023 at 10:26 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -53,9 +53,9 @@ CREATE TABLE `number_sequence` (
 
 INSERT INTO `number_sequence` (`id`, `page_name`, `last_number`, `CreatedDateTime`) VALUES
 (1, 'venues', 4, '2022-05-18 14:52:45'),
-(2, 'users', 3, '2022-05-18 14:52:58'),
+(2, 'users', 8, '2022-05-18 14:52:58'),
 (3, 'programs', 6, '2022-07-16 13:20:28'),
-(4, 'reservations', 6, '2022-08-21 14:42:40');
+(4, 'reservations', 18, '2022-08-21 14:42:40');
 
 -- --------------------------------------------------------
 
@@ -81,7 +81,7 @@ INSERT INTO `program` (`id`, `programID`, `name`, `color`, `incharge_organizatio
 (1, 'PRG0001', 'College of Education', '#1acedb', 'IMCC', '2023-09-03 00:00:00', '2023-09-11 13:36:45'),
 (2, 'PRG0002', 'College of Business Administration', '#eba40a', 'IMCC', '2023-09-03 00:00:00', '2023-09-11 13:37:27'),
 (3, 'PRG0003', 'College of Medical Technology', '#33d738', 'IMCC', '2023-09-10 00:00:00', '2023-09-11 13:37:33'),
-(5, 'PRG0005', 'College of Art and Sciences', '#ec0909', 'IMCC', '2023-09-10 00:00:00', '2023-09-11 13:37:50'),
+(5, 'PRG0005', 'College of Art and Sciences', '#ec0958', 'IMCC', '2023-09-10 00:00:00', '2023-11-21 20:32:45'),
 (6, 'PRG0006', 'College of Computer Studies', '#7d7d7d', 'IMCC', '2023-09-10 00:00:00', '2023-09-11 13:37:54');
 
 -- --------------------------------------------------------
@@ -93,30 +93,52 @@ INSERT INTO `program` (`id`, `programID`, `name`, `color`, `incharge_organizatio
 CREATE TABLE `schedules` (
   `id` bigint(11) NOT NULL,
   `reservationID` varchar(255) NOT NULL,
+  `userID` int(11) NOT NULL,
   `venueID` int(15) DEFAULT NULL,
+  `programID` int(11) NOT NULL,
+  `status` varchar(3) NOT NULL DEFAULT 'P',
   `date_start` date NOT NULL,
   `date_end` date NOT NULL,
+  `time_start` varchar(50) NOT NULL,
+  `time_end` varchar(50) NOT NULL,
   `name` varchar(255) DEFAULT NULL,
-  `address` varchar(255) DEFAULT NULL,
   `contact` varchar(11) DEFAULT NULL,
   `description` text DEFAULT NULL,
-  `tag_color` varchar(7) DEFAULT '#ffffff',
+  `num_participants` int(11) NOT NULL,
   `notified` tinyint(1) NOT NULL DEFAULT 0,
   `last_notified` date DEFAULT NULL,
   `cancelled` tinyint(1) NOT NULL DEFAULT 0,
-  `deleted` tinyint(1) NOT NULL DEFAULT 0,
-  `approved` tinyint(1) NOT NULL DEFAULT 0
+  `deleted` tinyint(4) NOT NULL,
+  `rejectedByAdmin` int(1) NOT NULL DEFAULT 0,
+  `approvedByAdmin` int(1) NOT NULL DEFAULT 0,
+  `act_form_file` varchar(255) NOT NULL,
+  `letter_approve_file` varchar(255) NOT NULL,
+  `notes` text NOT NULL,
+  `material` varchar(150) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `schedules`
 --
 
-INSERT INTO `schedules` (`id`, `reservationID`, `venueID`, `date_start`, `date_end`, `name`, `address`, `contact`, `description`, `tag_color`, `notified`, `last_notified`, `cancelled`, `deleted`, `approved`) VALUES
-(2, 'RES000001', 1, '2023-09-07', '2023-09-07', 'fgf', 'fg', '34343353535', 'er', '#164dbb', 0, NULL, 0, 0, 0),
-(3, 'RES000002', 1, '2023-09-06', '2023-09-08', 'Sample', 'sample', '21212212121', 'resr', '#ee1b1b', 0, NULL, 0, 0, 0),
-(4, 'RES000003', 5, '2023-09-07', '2023-09-07', 'Sample', 'dd', '21212212121', 're', '#1aff34', 0, NULL, 0, 0, 0),
-(5, 'RES000004', 4, '2023-09-09', '2023-09-09', 'Sample', NULL, NULL, 'ss', '#ffffff', 0, NULL, 0, 0, 0);
+INSERT INTO `schedules` (`id`, `reservationID`, `userID`, `venueID`, `programID`, `status`, `date_start`, `date_end`, `time_start`, `time_end`, `name`, `contact`, `description`, `num_participants`, `notified`, `last_notified`, `cancelled`, `deleted`, `rejectedByAdmin`, `approvedByAdmin`, `act_form_file`, `letter_approve_file`, `notes`, `material`) VALUES
+(2, 'RES000001', 4, 1, 3, 'A', '2023-09-07', '2023-09-07', '', '', 'fgf', '34343353535', 'er', 0, 0, NULL, 0, 0, 0, 0, '', '', 'test', 'PR'),
+(3, 'RES000002', 6, 1, 1, 'R', '2023-09-06', '2023-09-08', '', '', 'SampleMODAL', '21212212121', 'resr', 22, 0, NULL, 0, 0, 4, 0, '', '', 'yawards', ''),
+(4, 'RES000003', 6, 5, 6, 'P', '2023-09-07', '2023-09-07', '', '', 'Sample', '21212212121', 're', 0, 0, NULL, 0, 0, 0, 0, '', '', '', ''),
+(5, 'RES000004', 4, 4, 5, 'P', '2023-09-09', '2023-09-09', '', '', 'Sample', NULL, 'ss', 0, 0, NULL, 0, 0, 0, 0, '', '', 'TEST', ''),
+(8, 'RES000005', 4, 2, 3, 'P', '2023-10-11', '2023-10-11', '', '', 'SSG ELECTION', NULL, 'SSG Elections for grade 6 students', 125, 0, NULL, 0, 0, 0, 0, '6527e9bc2f12c.png', '6527e9bc2f23c.png', '', ''),
+(9, 'RES000007', 6, 5, 2, 'P', '2023-10-13', '2023-10-13', '', '', 'PE 2 Final Performance', NULL, 'Final Requirement for P2 ', 30, 0, NULL, 0, 0, 0, 0, '6527ebe506660.png', '6527ebe506740.png', 'test', ''),
+(10, 'RES000008', 4, 4, 5, 'P', '2023-10-13', '2023-10-13', '', '', 'Campus Scavenger Hunt', NULL, 'Campus Scavenger Hunt', 10, 0, NULL, 0, 0, 0, 0, '6527eda766fe4.png', '6527eda7670c5.png', '', ''),
+(11, 'RES000009', 6, 4, 1, 'P', '2023-10-16', '2023-10-16', '', '', 'HIV Awareness Orientation', NULL, 'To raise awareness on HIV', 50, 0, NULL, 0, 0, 0, 0, '65282783e35c1.png', '65282783e3ee5.png', '', ''),
+(13, 'RES000010', 4, 1, 2, 'P', '2023-10-17', '2023-10-18', '08:00', '09:00', 'Career fairs', NULL, 'Career fairs', 25, 0, NULL, 0, 0, 0, 0, '652898b1f3b60.png', '652898b1f3cb8.png', '', ''),
+(14, 'RES000011', 4, 1, 5, 'P', '2023-10-01', '2023-10-01', '17:50', '17:50', 'Test 10/30/2023', NULL, 'Test objectives', 15, 0, NULL, 0, 0, 0, 0, '653f7cf006c5f.jpg', '653f7cf00747f.png', '', ''),
+(15, 'RES000012', 4, 4, 6, 'P', '2023-10-30', '2023-10-30', '17:56', '17:56', 'Test bug fix 1', NULL, 'Test objectives', 10, 0, NULL, 0, 0, 0, 0, '653f7de1dfb3d.png', '653f7de1dfdd5.jpg', '', ''),
+(16, 'RES000013', 6, 4, 6, 'P', '2023-10-01', '2023-10-02', '21:09', '21:09', 'TEST UPLOAD IMAGE', NULL, 'TEST UPLOAD IMAGE', 21, 0, NULL, 0, 0, 0, 0, '653fab140816f.jpg', '653fab140853c.png', 'TEST NOTE', 'E1'),
+(17, 'RES000014', 6, 1, 2, 'A', '0000-00-00', '2023-11-30', '', '10:12', 'SK VOTE TEST', NULL, 'SK VOTE TEST', 25, 0, NULL, 0, 0, 0, 4, '653fababdd1e5.jpg', '653fababdd350.jpg', 'TEST NOTA', ''),
+(18, 'RES000015', 6, 4, 2, 'A', '2023-11-01', '2023-11-01', '09:05', '11:05', 'TEST USER ID FLAG', NULL, 'TEST TEST ONLY ONLY', 69, 0, NULL, 0, 0, 4, 4, '65424d578c3ed.png', '65424d578c5fd.png', '', ''),
+(19, 'RES000016', 6, 1, 6, 'A', '2023-11-02', '2023-11-02', '09:53', '10:54', 'TEST Image Preview', NULL, 'TEST Image Preview po', 65, 0, NULL, 0, 0, 4, 4, '654258a6d6420.png', '654258a6d652f.png', 'TEST NOTEs', ''),
+(20, 'RES000017', 4, 5, 5, 'P', '2023-11-13', '2023-11-13', '13:31', '23:36', 'TEST HIGH RESOLUTION IMAGE', NULL, '1. Temporary removed image validation\r\n2. Test out image scroll spy', 1, 0, NULL, 0, 0, 0, 0, '65505554369e2.jpg', '6550555436b4b.jpg', '', ''),
+(21, 'RES000018', 6, 5, 2, 'P', '2023-11-16', '2023-11-16', '13:00', '14:00', 'TEST PDF IMAGE & PDF VIEWER', NULL, '1. Added new button for file preview\r\n2. Added PDF to accepted file ext.\r\n', 1, 0, NULL, 0, 0, 0, 0, '655093284d456.pdf', '655093284d52f.png', '', '');
 
 -- --------------------------------------------------------
 
@@ -146,7 +168,9 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `userID`, `first_name`, `middle_name`, `last_name`, `contact`, `username`, `password`, `change_pass`, `position`, `programID`, `dateAdded`, `dateUpdated`) VALUES
 (4, 'USR0002', 'Administrator', NULL, NULL, NULL, 'admin', '21232f297a57a5a743894a0e4a801fc3', 1, 'DSA', NULL, '2023-09-10 06:08:09', NULL),
-(3, 'USR0001', 'Student Officer', NULL, NULL, NULL, 'stud_officer', 'cd73502828457d15655bbd7a63fb0bc8', 1, 'STO', 2, '2023-09-10 06:06:58', NULL);
+(3, 'USR0001', 'Student Officer', NULL, NULL, NULL, 'stud_officer', 'cd73502828457d15655bbd7a63fb0bc8', 1, 'STO', 2, '2023-09-10 06:06:58', NULL),
+(6, 'USR0004', 'Dimple', 'Grace', 'Normadination', '09090909090', 'admin1', 'e00cf25ad42683b3df678c61f42c6bda', 1, 'STO', 6, '2023-10-10 22:38:21', '2023-10-10 22:40:11'),
+(7, 'USR0008', 'Property', '', 'Custodian', '09090909090', 'prop1', '366fad496447472a7fcf154888e09282', 1, 'PTC', NULL, '2023-10-30 20:00:03', '2023-10-30 20:00:30');
 
 -- --------------------------------------------------------
 
@@ -158,6 +182,7 @@ CREATE TABLE `venues` (
   `id` int(11) NOT NULL,
   `venueID` varchar(20) NOT NULL,
   `name` varchar(255) DEFAULT NULL,
+  `capacity` varchar(255) DEFAULT NULL,
   `dateAdded` datetime NOT NULL DEFAULT current_timestamp(),
   `dateUpdated` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -166,11 +191,11 @@ CREATE TABLE `venues` (
 -- Dumping data for table `venues`
 --
 
-INSERT INTO `venues` (`id`, `venueID`, `name`, `dateAdded`, `dateUpdated`) VALUES
-(1, 'VN000001', 'Audio-Visual Room', '2023-09-10 00:24:22', NULL),
-(2, 'VN000002', 'Review Center', '2023-09-10 00:24:33', NULL),
-(4, 'VN000003', 'Covered Court', '2023-09-10 00:24:55', '2023-09-10 00:32:21'),
-(5, 'VN000004', 'Auditorium', '2023-09-10 00:25:04', NULL);
+INSERT INTO `venues` (`id`, `venueID`, `name`, `capacity`, `dateAdded`, `dateUpdated`) VALUES
+(1, 'VN000001', 'Audio-Visual Room', '500 seats', '2023-09-10 00:24:22', '2023-12-04 05:25:35'),
+(2, 'VN000002', 'Review Center', '1000 Max', '2023-09-10 00:24:33', '2023-12-04 05:25:57'),
+(4, 'VN000003', 'Covered Court', '1000 or More', '2023-09-10 00:24:55', '2023-12-04 05:26:13'),
+(5, 'VN000004', 'Auditorium', '5000 Max', '2023-09-10 00:25:04', '2023-12-04 05:26:23');
 
 --
 -- Indexes for dumped tables
@@ -241,13 +266,13 @@ ALTER TABLE `program`
 -- AUTO_INCREMENT for table `schedules`
 --
 ALTER TABLE `schedules`
-  MODIFY `id` bigint(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` bigint(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `venues`

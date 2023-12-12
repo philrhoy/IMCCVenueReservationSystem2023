@@ -4,6 +4,7 @@ include 'session.php';
 include 'settings/header.php';
 include "settings/sidebar.php";
 include 'settings/topbar.php';
+include 'notification_helper.php';
 ?>
 <div class="container-fluid">
 
@@ -22,6 +23,8 @@ include 'settings/topbar.php';
                             $adminID = $_SESSION['id'];
                             $action = $_POST['action'];
                             $res_id = $_POST['id'];
+                            $res_id_text = $_POST['resID'];
+                            $recipient = $_POST['userID'];
                             $activity = $_POST['activity'];
                             $participants = $_POST['participants'];
                             $description = $_POST['description'];
@@ -71,6 +74,46 @@ include 'settings/topbar.php';
                                             alert("Error updating reservation.");
                                         </script>';
                                 } else {
+                                    $notiHelper = new NotificationHelper();
+                                    $user_id = $_SESSION['id'];
+                                    $user_name =  $_SESSION['name2'];
+                                    $redirectPage = "edit_reservation.php?reservation_id=".$res_id;
+                                    $addNotifQuery = "";
+
+                                    if($_SESSION['position'] == 'STO' || $_SESSION['position'] == 'PTC'){
+                                        $notificationContent = $notiHelper->createNotification($res_id_text, strtoupper($user_name), "UPDATE");
+                                        $addNotifQuery = "INSERT INTO `notifications` 
+                                                        (sourceUser, notifyToAllUserType, details, link, dateAdded) values
+                                                        ('$user_id','DSA','$notificationContent','$redirectPage',NOW())";
+                                        $add_notif = $db->query($addNotifQuery) or die($db->error);
+                                    }else if($_SESSION['position'] == 'DSA'){
+                                        if($action == "APPROVE"){
+                                            $notificationContent = $notiHelper->createNotification($res_id_text, strtoupper($user_name), "APPROVE");
+                                            $addNotifQuery = "INSERT INTO `notifications` 
+                                                        (sourceUser, recipient, details, link, dateAdded) values
+                                                        ('$user_id','$recipient','$notificationContent','$redirectPage',NOW())";
+                                            $add_notif = $db->query($addNotifQuery) or die($db->error);
+                                           
+                                           $addNotifQuery = "INSERT INTO `notifications` 
+                                                        (sourceUser, notifyToAllUserType, details, link, dateAdded) values
+                                                        ('$user_id','PTC','$notificationContent','$redirectPage',NOW())";
+                                            $add_notif = $db->query($addNotifQuery) or die($db->error);
+                                        }elseif($action == "REJECT"){
+                                            $notificationContent = $notiHelper->createNotification($res_id_text, strtoupper($user_name), "REJECT");
+                                            $addNotifQuery = "INSERT INTO `notifications` 
+                                                        (sourceUser, recipient, details, link, dateAdded) values
+                                                        ('$user_id','$recipient', '$notificationContent','$redirectPage',NOW())";
+                                            $add_notif = $db->query($addNotifQuery) or die($db->error);
+                                        }else{
+                                            $notificationContent = $notiHelper->createNotification($res_id_text, strtoupper($user_name), "UPDATE");
+                                            $addNotifQuery = "INSERT INTO `notifications` 
+                                                        (sourceUser, recipient, details, link, dateAdded) values
+                                                        ('$user_id','$recipient','$notificationContent','$redirectPage',NOW())";
+                                            $add_notif = $db->query($addNotifQuery) or die($db->error);
+                                        }
+
+                                    }
+                                  
                                     //Alert message must correspond to action performed
                                     echo '<script>
                                             alert("Successfully updated reservation.");
@@ -81,6 +124,7 @@ include 'settings/topbar.php';
                         if(isset($_GET['reservation_id']))
                         {
                             $res_id = $_GET['reservation_id'];
+                            $user_id = "";
                             $res_id_text = "";
                             $activity = "";
                             $participants = "";
@@ -115,6 +159,7 @@ include 'settings/topbar.php';
                                         break;
                                 }       
                                 $res_id_text = $data->reservationID;
+                                $user_id = $data->userID;
                                 $activity = $data->name;
                                 $status = $data->status;
                                 $participants = $data->num_participants;
@@ -145,6 +190,7 @@ include 'settings/topbar.php';
                                 <div class="col-4">   
                                     <div class="form-group">
                                         <label>ID</label>
+                                        <input class="form-control" type="hidden" name="userID" value="<?= $user_id ?>" readonly>
                                         <input class="form-control" type="hidden" name="id" value="<?= $res_id ?>" readonly>
                                         <input class="form-control" type="text" name="resID" value="<?= $res_id_text ?>" readonly>
                                     </div>

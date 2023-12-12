@@ -2,8 +2,8 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Generation Time: Dec 03, 2023 at 10:26 PM
+-- Host: 127.0.0.1
+-- Generation Time: Dec 12, 2023 at 12:50 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -30,9 +30,26 @@ SET time_zone = "+00:00";
 CREATE TABLE `notifications` (
   `id` int(11) NOT NULL,
   `details` text DEFAULT NULL,
+  `sourceUser` int(11) NOT NULL,
+  `recipient` int(11) DEFAULT NULL,
+  `notifyToAllUserType` varchar(50) DEFAULT NULL,
+  `isRead` int(1) NOT NULL DEFAULT 0,
   `link` text DEFAULT NULL,
-  `dateAdded` date NOT NULL DEFAULT current_timestamp()
+  `dateAdded` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `notifications`
+--
+
+INSERT INTO `notifications` (`id`, `details`, `sourceUser`, `recipient`, `notifyToAllUserType`, `isRead`, `link`, `dateAdded`) VALUES
+(2, 'DIMPLE NORMADINATION created a new reservation [RES000020]. Please review.', 6, NULL, 'DSA', 0, 'edit_reservation.php?reservation_id=20', '2023-12-12 19:39:18'),
+(3, 'DIMPLE NORMADINATION created a new reservation [RES000021]. Please review.', 6, NULL, 'DSA', 0, 'edit_reservation.php?reservation_id=21', '2023-12-12 19:41:47'),
+(4, 'DIMPLE NORMADINATION updated reservation [RES000020]. Please review the updates.', 6, NULL, 'DSA', 0, 'edit_reservation.php?reservation_id=23', '2023-12-12 19:42:35'),
+(5, 'Reservation [RES000020] was Rejected by Admin JOHN DOE. Please review and update the reservation.', 4, 6, NULL, 0, 'edit_reservation.php?reservation_id=23', '2023-12-12 19:43:28'),
+(6, 'Reservation [RES000021] was Approved by Admin JOHN DOE.', 4, 6, NULL, 0, 'edit_reservation.php?reservation_id=24', '2023-12-12 19:46:00'),
+(7, 'Reservation [RES000021] was Approved by Admin JOHN DOE.', 4, NULL, 'PTC', 0, 'edit_reservation.php?reservation_id=24', '2023-12-12 19:46:00'),
+(8, 'JOHN DOE updated reservation [RES000021]. Please review the updates.', 4, 6, NULL, 0, 'edit_reservation.php?reservation_id=24', '2023-12-12 19:47:01');
 
 -- --------------------------------------------------------
 
@@ -55,7 +72,7 @@ INSERT INTO `number_sequence` (`id`, `page_name`, `last_number`, `CreatedDateTim
 (1, 'venues', 4, '2022-05-18 14:52:45'),
 (2, 'users', 8, '2022-05-18 14:52:58'),
 (3, 'programs', 6, '2022-07-16 13:20:28'),
-(4, 'reservations', 18, '2022-08-21 14:42:40');
+(4, 'reservations', 21, '2022-08-21 14:42:40');
 
 -- --------------------------------------------------------
 
@@ -122,23 +139,8 @@ CREATE TABLE `schedules` (
 --
 
 INSERT INTO `schedules` (`id`, `reservationID`, `userID`, `venueID`, `programID`, `status`, `date_start`, `date_end`, `time_start`, `time_end`, `name`, `contact`, `description`, `num_participants`, `notified`, `last_notified`, `cancelled`, `deleted`, `rejectedByAdmin`, `approvedByAdmin`, `act_form_file`, `letter_approve_file`, `notes`, `material`) VALUES
-(2, 'RES000001', 4, 1, 3, 'A', '2023-09-07', '2023-09-07', '', '', 'fgf', '34343353535', 'er', 0, 0, NULL, 0, 0, 0, 0, '', '', 'test', 'PR'),
-(3, 'RES000002', 6, 1, 1, 'R', '2023-09-06', '2023-09-08', '', '', 'SampleMODAL', '21212212121', 'resr', 22, 0, NULL, 0, 0, 4, 0, '', '', 'yawards', ''),
-(4, 'RES000003', 6, 5, 6, 'P', '2023-09-07', '2023-09-07', '', '', 'Sample', '21212212121', 're', 0, 0, NULL, 0, 0, 0, 0, '', '', '', ''),
-(5, 'RES000004', 4, 4, 5, 'P', '2023-09-09', '2023-09-09', '', '', 'Sample', NULL, 'ss', 0, 0, NULL, 0, 0, 0, 0, '', '', 'TEST', ''),
-(8, 'RES000005', 4, 2, 3, 'P', '2023-10-11', '2023-10-11', '', '', 'SSG ELECTION', NULL, 'SSG Elections for grade 6 students', 125, 0, NULL, 0, 0, 0, 0, '6527e9bc2f12c.png', '6527e9bc2f23c.png', '', ''),
-(9, 'RES000007', 6, 5, 2, 'P', '2023-10-13', '2023-10-13', '', '', 'PE 2 Final Performance', NULL, 'Final Requirement for P2 ', 30, 0, NULL, 0, 0, 0, 0, '6527ebe506660.png', '6527ebe506740.png', 'test', ''),
-(10, 'RES000008', 4, 4, 5, 'P', '2023-10-13', '2023-10-13', '', '', 'Campus Scavenger Hunt', NULL, 'Campus Scavenger Hunt', 10, 0, NULL, 0, 0, 0, 0, '6527eda766fe4.png', '6527eda7670c5.png', '', ''),
-(11, 'RES000009', 6, 4, 1, 'P', '2023-10-16', '2023-10-16', '', '', 'HIV Awareness Orientation', NULL, 'To raise awareness on HIV', 50, 0, NULL, 0, 0, 0, 0, '65282783e35c1.png', '65282783e3ee5.png', '', ''),
-(13, 'RES000010', 4, 1, 2, 'P', '2023-10-17', '2023-10-18', '08:00', '09:00', 'Career fairs', NULL, 'Career fairs', 25, 0, NULL, 0, 0, 0, 0, '652898b1f3b60.png', '652898b1f3cb8.png', '', ''),
-(14, 'RES000011', 4, 1, 5, 'P', '2023-10-01', '2023-10-01', '17:50', '17:50', 'Test 10/30/2023', NULL, 'Test objectives', 15, 0, NULL, 0, 0, 0, 0, '653f7cf006c5f.jpg', '653f7cf00747f.png', '', ''),
-(15, 'RES000012', 4, 4, 6, 'P', '2023-10-30', '2023-10-30', '17:56', '17:56', 'Test bug fix 1', NULL, 'Test objectives', 10, 0, NULL, 0, 0, 0, 0, '653f7de1dfb3d.png', '653f7de1dfdd5.jpg', '', ''),
-(16, 'RES000013', 6, 4, 6, 'P', '2023-10-01', '2023-10-02', '21:09', '21:09', 'TEST UPLOAD IMAGE', NULL, 'TEST UPLOAD IMAGE', 21, 0, NULL, 0, 0, 0, 0, '653fab140816f.jpg', '653fab140853c.png', 'TEST NOTE', 'E1'),
-(17, 'RES000014', 6, 1, 2, 'A', '0000-00-00', '2023-11-30', '', '10:12', 'SK VOTE TEST', NULL, 'SK VOTE TEST', 25, 0, NULL, 0, 0, 0, 4, '653fababdd1e5.jpg', '653fababdd350.jpg', 'TEST NOTA', ''),
-(18, 'RES000015', 6, 4, 2, 'A', '2023-11-01', '2023-11-01', '09:05', '11:05', 'TEST USER ID FLAG', NULL, 'TEST TEST ONLY ONLY', 69, 0, NULL, 0, 0, 4, 4, '65424d578c3ed.png', '65424d578c5fd.png', '', ''),
-(19, 'RES000016', 6, 1, 6, 'A', '2023-11-02', '2023-11-02', '09:53', '10:54', 'TEST Image Preview', NULL, 'TEST Image Preview po', 65, 0, NULL, 0, 0, 4, 4, '654258a6d6420.png', '654258a6d652f.png', 'TEST NOTEs', ''),
-(20, 'RES000017', 4, 5, 5, 'P', '2023-11-13', '2023-11-13', '13:31', '23:36', 'TEST HIGH RESOLUTION IMAGE', NULL, '1. Temporary removed image validation\r\n2. Test out image scroll spy', 1, 0, NULL, 0, 0, 0, 0, '65505554369e2.jpg', '6550555436b4b.jpg', '', ''),
-(21, 'RES000018', 6, 5, 2, 'P', '2023-11-16', '2023-11-16', '13:00', '14:00', 'TEST PDF IMAGE & PDF VIEWER', NULL, '1. Added new button for file preview\r\n2. Added PDF to accepted file ext.\r\n', 1, 0, NULL, 0, 0, 0, 0, '655093284d456.pdf', '655093284d52f.png', '', '');
+(23, 'RES000020', 6, 1, 5, 'R', '2023-12-12', '2023-12-12', '19:38', '20:38', 'TEST NOTIFY ADMIN', '09090909090', 'SHOULD NOTIFY ADMIN - TEST STUDENT UPDATE', 10, 0, NULL, 0, 0, 4, 0, '6578466613838.pdf', '', 'TEST REJECT', ''),
+(24, 'RES000021', 6, 2, 5, 'A', '2023-12-12', '2023-12-12', '21:40', '22:40', 'TEST NOTIFY ADMIN 2', '09090909090', '1. SHOULD INCREMENT ADMIN NOTIFICATION COUNTER\r\n\r\n2. SHOULD NOTIFY STUDENT', 9, 0, NULL, 0, 0, 0, 4, '657846fb236d8.pdf', '657846fb23884.png', '', '');
 
 -- --------------------------------------------------------
 
@@ -167,10 +169,10 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `userID`, `first_name`, `middle_name`, `last_name`, `contact`, `username`, `password`, `change_pass`, `position`, `programID`, `dateAdded`, `dateUpdated`) VALUES
-(4, 'USR0002', 'Administrator', NULL, NULL, NULL, 'admin', '21232f297a57a5a743894a0e4a801fc3', 1, 'DSA', NULL, '2023-09-10 06:08:09', NULL),
-(3, 'USR0001', 'Student Officer', NULL, NULL, NULL, 'stud_officer', 'cd73502828457d15655bbd7a63fb0bc8', 1, 'STO', 2, '2023-09-10 06:06:58', NULL),
+(4, 'USR0002', 'John', NULL, 'Doe', NULL, 'admin', '21232f297a57a5a743894a0e4a801fc3', 1, 'DSA', NULL, '2023-09-10 06:08:09', NULL),
+(3, 'USR0001', 'Liza', NULL, 'Soberano', NULL, 'stud_officer', 'e00cf25ad42683b3df678c61f42c6bda', 1, 'STO', 2, '2023-09-10 06:06:58', NULL),
 (6, 'USR0004', 'Dimple', 'Grace', 'Normadination', '09090909090', 'admin1', 'e00cf25ad42683b3df678c61f42c6bda', 1, 'STO', 6, '2023-10-10 22:38:21', '2023-10-10 22:40:11'),
-(7, 'USR0008', 'Property', '', 'Custodian', '09090909090', 'prop1', '366fad496447472a7fcf154888e09282', 1, 'PTC', NULL, '2023-10-30 20:00:03', '2023-10-30 20:00:30');
+(7, 'USR0008', 'Mark', '', 'Monter', '09090909090', 'prop1', '366fad496447472a7fcf154888e09282', 1, 'PTC', NULL, '2023-10-30 20:00:03', '2023-10-30 20:00:30');
 
 -- --------------------------------------------------------
 
@@ -248,7 +250,7 @@ ALTER TABLE `venues`
 -- AUTO_INCREMENT for table `notifications`
 --
 ALTER TABLE `notifications`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `number_sequence`
@@ -266,7 +268,7 @@ ALTER TABLE `program`
 -- AUTO_INCREMENT for table `schedules`
 --
 ALTER TABLE `schedules`
-  MODIFY `id` bigint(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` bigint(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `users`

@@ -1,121 +1,125 @@
 <?php
-include 'settings/system.php';
-include 'session.php';
-include 'settings/header.php';
-include "settings/sidebar.php";
-include 'settings/topbar.php';
-$queryStatus = 0;
-/*
-        0 = default/no query
-        1 = error 
-        2 = success
-    */
+    include 'settings/system.php';
+    include 'session.php';
+    include 'settings/header.php';
+    include "settings/sidebar.php";
+    include 'settings/topbar.php';
+    include 'notification_helper.php';
+    $queryStatus = 0;
+    /*
+            0 = default/no query
+            1 = error 
+            2 = success
+        */
 
+    if (isset($_POST['submit'])) {
+        $id = $_POST['id'];
+        $res_id = $_POST['resID'];
+        $user_id = $_SESSION['id'];
+        $user_name = $_SESSION['username'];
+        $activity = $_POST['activity'];
+        $participants = $_POST['participants'];
+        $description = $_POST['description'];
+        $venueID = $_POST['venue'];
+        $programID = $_POST['program'];
+        $startDate = $_POST['start_date'];
+        $endDate = $_POST['end_date'];
+        $startTime = $_POST['start_time'];
+        $endTime = $_POST['end_time'];
+        $contact = $_POST['contact_no'];
 
-if (isset($_POST['submit'])) {
-    $id = $_POST['id'];
-    $res_id = $_POST['resID'];
-    $user_id = $_SESSION['id'];
-    $activity = $_POST['activity'];
-    $participants = $_POST['participants'];
-    $description = $_POST['description'];
-    $venueID = $_POST['venue'];
-    $programID = $_POST['program'];
-    $startDate = $_POST['start_date'];
-    $endDate = $_POST['end_date'];
-    $startTime = $_POST['start_time'];
-    $endTime = $_POST['end_time'];
-    $contact = $_POST['contact_no'];
+        $imgForms = array();
 
-    $imgForms = array();
+        // echo $notiHelper->createNotification($res_id, strtoupper($user_name), "CREATE") . "<br>";
+        // echo $notiHelper->createNotification($res_id, strtoupper($user_name), "UPDATE") . "<br>";
+        // echo $notiHelper->createNotification($res_id, strtoupper($user_name), "APPROVE") . "<br>";
+        // echo $notiHelper->createNotification($res_id, strtoupper($user_name), "REJECT"). "<br>";
 
-    if ($_FILES["activityFormImg"]["error"]) {
-        echo "<script> alert('Image does not exist')</script>";
-    } else {
-        //CHECK FOR IMAGE ERRORS:
-        $valid_extensions = ['jpeg', 'jpg', 'png', 'pdf'];
-        $check_error = 0;
-
-        foreach ($_FILES as $file) {
-            if ($file["name"] == "" || $file["size"] == "") continue;
-            $file_name = $file["name"];
-            $file_size = $file["size"];
-
-            $image_extension = explode(".", $file_name);
-            $image_extension = strtolower(end($image_extension));
-
-            if (!in_array($image_extension, $valid_extensions)) {
-                $queryStatus = 1;
-                $check_error++;
-                // echo"<script> alert('Invalid image extension')</script>";
-            } elseif ($file_size > 10000000) {
-                $queryStatus = 1;
-                $check_error++;
-                // echo"<script> alert('Image size is too big')</script>";
-            }
-        }
-
-        //Upload image 
-        if ($check_error == 0) {
+        if ($_FILES["activityFormImg"]["error"]) {
+            echo "<script> alert('Image does not exist')</script>";
+        } else {
+            //CHECK FOR IMAGE ERRORS:
+            $valid_extensions = ['jpeg', 'jpg', 'png', 'pdf'];
+            $check_error = 0;
 
             foreach ($_FILES as $file) {
-                if ($file["name"] == "" || $file_size == "") continue;
+                if ($file["name"] == "" || $file["size"] == "") continue;
                 $file_name = $file["name"];
-                $tmp_name = $file["tmp_name"];
-                //$tmp_name = $_FILES['photo']['tmp_name'];
-                //activityFormImg
-                //letterApprovalImg
-                $fileerror = $file['error'];
+                $file_size = $file["size"];
 
                 $image_extension = explode(".", $file_name);
                 $image_extension = strtolower(end($image_extension));
 
-                $unique_img_name = uniqid();
-                // $unique_img_name = $unique_img_name . ($index == 0 ? "ACT_FORM" : "APPROVAL");
-                $unique_img_name .= '.' . $image_extension;
-                $path = 'uploads/';
-                move_uploaded_file($tmp_name, $path . $unique_img_name);
-
-                array_push($imgForms, $unique_img_name);
+                if (!in_array($image_extension, $valid_extensions)) {
+                    $queryStatus = 1;
+                    $check_error++;
+                } elseif ($file_size > 10000000) {
+                    $queryStatus = 1;
+                    $check_error++;
+                }
             }
 
-            $activity_form = $imgForms[0];
-            $letter_approval = ((sizeof($imgForms) > 1) ? $imgForms[1] : "");
+            //Upload image 
+            if ($check_error == 0) {
 
-            //Execute DB Insert
-            $add_res = $db->query("INSERT INTO `schedules` 
-                (reservationID,userID,venueID,programID,date_start,date_end,time_start,time_end,name,contact,description,num_participants,act_form_file,letter_approve_file) values
-                ('$res_id','$user_id','$venueID','$programID','$startDate','$endDate','$startTime','$endTime','$activity','$contact','$description','$participants','$activity_form','$letter_approval')")
-                or die($db->error);
-            $update_sequence = $db->query("UPDATE number_sequence SET last_number = '$id' WHERE page_name='reservations'");
+                foreach ($_FILES as $file) {
+                    if ($file["name"] == "" || $file_size == "") continue;
+                    $file_name = $file["name"];
+                    $tmp_name = $file["tmp_name"];
+                    //$tmp_name = $_FILES['photo']['tmp_name'];
+                    $fileerror = $file['error'];
 
-            if (!$add_res) {
-                $queryStatus = 1;
-                echo '<script>
-                            alert("Error saving reservation.");
-                        </script>';
-            } else {
-                $queryStatus = 2;
-                // echo '<script>
-                //         alert("Successfully created reservation.");
-                //     </script>';
+                    $image_extension = explode(".", $file_name);
+                    $image_extension = strtolower(end($image_extension));
+
+                    $unique_img_name = uniqid();
+                    $unique_img_name .= '.' . $image_extension;
+                    $path = 'uploads/';
+                    move_uploaded_file($tmp_name, $path . $unique_img_name);
+
+                    array_push($imgForms, $unique_img_name);
+                }
+
+                $activity_form = $imgForms[0];
+                $letter_approval = ((sizeof($imgForms) > 1) ? $imgForms[1] : "");
+
+                $add_res = $db->query("INSERT INTO `schedules` 
+                    (reservationID,userID,venueID,programID,date_start,date_end,time_start,time_end,name,contact,description,num_participants,act_form_file,letter_approve_file) values
+                    ('$res_id','$user_id','$venueID','$programID','$startDate','$endDate','$startTime','$endTime','$activity','$contact','$description','$participants','$activity_form','$letter_approval')")
+                    or die($db->error);
+                $update_sequence = $db->query("UPDATE number_sequence SET last_number = '$id' WHERE page_name='reservations'");
+
+                if (!$add_res) {
+                    $queryStatus = 1;
+                } else {
+                    $notiHelper = new NotificationHelper();
+                    $user_name = $_SESSION['name2'];
+                    $notificationContent = $notiHelper->createNotification($res_id, strtoupper($user_name), "CREATE");
+                    $redirectPage = "edit_reservation.php?reservation_id=".$id;
+
+                    $add_notif = $db->query("INSERT INTO `notifications` 
+                    (sourceUser, notifyToAllUserType, details, link, dateAdded) values
+                    ('$user_id','DSA','$notificationContent','$redirectPage',NOW())")
+                    or die($db->error);
+
+                    $queryStatus = 2;
+                }
             }
         }
     }
-}
 
-$sequence = $db->query("SELECT * FROM number_sequence WHERE page_name = 'reservations'");
-$fetch = $sequence->fetchAll(PDO::FETCH_OBJ);
-foreach ($fetch as $data) {
-    $newID = $data->last_number + 1;
-    $lengthID = strlen((string)$newID);
-    if ($lengthID == 1) $ID = "00000" . $newID;
-    elseif ($lengthID == 2) $ID = "0000" . $newID;
-    elseif ($lengthID == 3) $ID = "000" . $newID;
-    elseif ($lengthID == 4) $ID = "00" . $newID;
-    elseif ($lengthID == 5) $ID = "0" . $newID;
-    else $ID = $newID;
-}
+    $sequence = $db->query("SELECT * FROM number_sequence WHERE page_name = 'reservations'");
+    $fetch = $sequence->fetchAll(PDO::FETCH_OBJ);
+    foreach ($fetch as $data) {
+        $newID = $data->last_number + 1;
+        $lengthID = strlen((string)$newID);
+        if ($lengthID == 1) $ID = "00000" . $newID;
+        elseif ($lengthID == 2) $ID = "0000" . $newID;
+        elseif ($lengthID == 3) $ID = "000" . $newID;
+        elseif ($lengthID == 4) $ID = "00" . $newID;
+        elseif ($lengthID == 5) $ID = "0" . $newID;
+        else $ID = $newID;
+    }
 ?>
 <div class="container-fluid">
 
@@ -305,8 +309,9 @@ foreach ($fetch as $data) {
 
                                     var reader = new FileReader();
                                     reader.readAsDataURL(files[0]);
-                          
-                                    if (!(allowedExt.includes(fileExt.toLowerCase()))) {
+
+                                    // console.log(());
+                                    if(fileExt == null){
                                         uploadFile.prop({
                                             ariaLabel: "1"
                                         });
@@ -318,31 +323,47 @@ foreach ($fetch as $data) {
                                         uploadFile.css({
                                             color: "red",
                                         });
+                                    }else{
+                                        if (!(allowedExt.includes(fileExt.toLowerCase()))) {
+                                            uploadFile.prop({
+                                                ariaLabel: "1"
+                                            });
+                                            errors++;
+                                            uploadFile.closest(".imgUp").find('.getImg').attr('src', '');
+                                            uploadFile.closest(".imgUp").find('.invalidFormat').css({
+                                                visibility: "visible"
+                                            });
+                                            uploadFile.css({
+                                                color: "red",
+                                            });
 
-                                    } else {
-                                        uploadFile.prop({
-                                            ariaLabel: "0"
-                                        });
-                                        uploadFile.closest(".imgUp").find('.invalidFormat').css({
-                                            visibility: "hidden"
-                                        });
-                                        uploadFile.css({
-                                            color: "black"
-                                        });
+                                        } else {
+                                            uploadFile.prop({
+                                                ariaLabel: "0"
+                                            });
+                                            uploadFile.closest(".imgUp").find('.invalidFormat').css({
+                                                visibility: "hidden"
+                                            });
+                                            uploadFile.css({
+                                                color: "black"
+                                            });
 
-                                        reader.onloadend = function() { // set image data as background of div
-                                            uploadFile.closest(".imgUp").find('.getImg').attr('src', this.result);
-                                            if (uploadFile.attr("name") == "activityFormImg") {
-                                                $(".getImg").first().attr("src", this.result);
-                                                $(".getImg").first().attr("type", files[0].type);
-                                                $(".preview").first().attr("hidden", false);
-                                            } else if (uploadFile.attr("name") == "letterApprovalImg") {
-                                                $(".getImg").last().attr("src", this.result);
-                                                $(".getImg").last().attr("type", files[0].type);
-                                                $(".preview").last().attr("hidden", false);
+                                            reader.onloadend = function() { // set image data as background of div
+                                                uploadFile.closest(".imgUp").find('.getImg').attr('src', this.result);
+                                                if (uploadFile.attr("name") == "activityFormImg") {
+                                                    $(".getImg").first().attr("src", this.result);
+                                                    $(".getImg").first().attr("type", files[0].type);
+                                                    $(".preview").first().attr("hidden", false);
+                                                } else if (uploadFile.attr("name") == "letterApprovalImg") {
+                                                    $(".getImg").last().attr("src", this.result);
+                                                    $(".getImg").last().attr("type", files[0].type);
+                                                    $(".preview").last().attr("hidden", false);
+                                                }
                                             }
                                         }
                                     }
+                          
+                                    
 
 
                                     // if (/^image/.test( files[0].type) || /^pdf/.test( files[0].type)){ // only image file
