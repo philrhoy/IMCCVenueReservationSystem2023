@@ -18,7 +18,7 @@ include 'settings/header.php';
                                     <div class="text-center text-main p-5" style="margin-top:20%;">
                                         <h1 class="h1 text-gray-900 mb-3">Venue Reservation System</h1>
                                         <h6 class="h56 text-gray-900">Exclusive Use For Student Org. Officers, DSA, and Property Custodian
-under the Institution of IMCC.</h6>
+within the IMCC Institution.</h6>
                                     </div>
                             </div>
                             <div class="col-lg-6">
