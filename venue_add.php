@@ -27,8 +27,9 @@ include 'settings/topbar.php';
                         $name = $_POST["name"];
                         $venueID = $_POST["venueID"];
                         $id = $_POST["id"];
+                        $capacity = $_POST["capacity"];
 
-                        $add_venue = $db->query("INSERT INTO venues (venueID,name,dateAdded) values ('$venueID','$name',NOW())") or die($db->error);
+                        $add_venue = $db->query("INSERT INTO venues (venueID,name,capacity,dateAdded) values ('$venueID','$name','$capacity',NOW())") or die($db->error);
                         $update_sequence = $db->query("UPDATE number_sequence SET last_number = '$id' WHERE page_name='venues'");
                         
                         if (!$add_venue) {
@@ -67,7 +68,10 @@ include 'settings/topbar.php';
                                 <label>Name</label>
                                 <input class="form-control" type="text" placeholder="Name" name="name" required>
                             </div>
-
+                            <div class="form-group">
+                                <label>Seat Capacity (Approx.)</label>
+                                <input class="form-control" type="text" placeholder="Seat Capacity" name="capacity" required>
+                            </div>
                             <button type="submit" class="btn btn-success btn-icon-split btn-sm keychainify-checked">
                                 <span class="icon text-white-50">
                                     <i class="fas fa-plus"></i>
