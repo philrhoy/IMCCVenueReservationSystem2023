@@ -60,6 +60,23 @@ include 'settings/topbar.php';
 
                             $file_ext = explode(".", $letter_approve_file);
                             $letter_approve_file_ext = (strtolower(end($file_ext)) == "pdf") ? "application/" . strtolower(end($file_ext)) : "image/" . strtolower(end($file_ext));
+
+                            $statusStr = "Pending for Approval";
+                            $statusColor = "";
+                            switch ($data->status) {
+                                case "P":
+                                    $statusColor = "badge-warning";
+                                    $statusStr = "Pending for Approval";
+                                    break;
+                                case "A":
+                                    $statusColor = "badge-success";
+                                    $statusStr = "Approved";
+                                    break;
+                                case "R":
+                                    $statusColor = "badge-danger";
+                                    $statusStr = "Rejected";
+                                    break;
+                            }
                         }
                     }
 
@@ -68,9 +85,20 @@ include 'settings/topbar.php';
                         <form role="form" method="post" enctype="multipart/form-data">
                             <div class="row">
                                 <div class="col-6">
-                                    <div class="form-group">
-                                        <label>ID</label>
-                                        <input class="form-control" type="text" name="resID" value="<?= $res_id_text ?>" readonly>
+                                    <div class="form-group row">
+                                        <div class="col-6">
+                                            <div class="form-group">
+                                                <label>ID</label>
+                                                <input class="form-control" type="text" name="resID" value="<?= $res_id_text ?>" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="form-group">
+                                                <label>Status</label>
+                                                <br />
+                                                <span class="form-control badge <?= $statusColor ?>" style="padding-top:0.7em !important;"><?= $statusStr; ?></span>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="form-group">
                                         <label>Activity</label>
