@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Dec 14, 2023 at 07:25 AM
+-- Generation Time: Dec 14, 2023 at 07:33 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -59,7 +59,8 @@ INSERT INTO `notifications` (`id`, `type`, `details`, `sourceUser`, `recipient`,
 (14, 'UPDATE', 'DIMPLE NORMADINATION updated reservation [RES000021]. Please review the updates.', 6, NULL, 'DSA', 0, 'edit_reservation.php?reservation_id=24', '2023-12-14 14:14:23'),
 (15, 'UPDATE', 'DIMPLE NORMADINATION updated reservation [RES000021]. Please review the updates.', 6, NULL, 'DSA', 0, 'edit_reservation.php?reservation_id=24', '2023-12-14 14:15:06'),
 (16, 'UPDATE', 'DIMPLE NORMADINATION updated reservation [RES000021]. Please review the updates.', 6, NULL, 'DSA', 0, 'edit_reservation.php?reservation_id=24', '2023-12-14 14:15:34'),
-(17, 'UPDATE', 'DIMPLE NORMADINATION updated reservation [RES000021]. Please review the updates.', 6, NULL, 'DSA', 0, 'edit_reservation.php?reservation_id=24', '2023-12-14 14:15:36');
+(17, 'UPDATE', 'DIMPLE NORMADINATION updated reservation [RES000021]. Please review the updates.', 6, NULL, 'DSA', 0, 'edit_reservation.php?reservation_id=24', '2023-12-14 14:15:36'),
+(18, 'CREATE', 'JOHN DOE created a new reservation [RES000022]. Please review.', 4, NULL, 'DSA', 0, 'edit_reservation.php?reservation_id=22', '2023-12-14 14:33:03');
 
 -- --------------------------------------------------------
 
@@ -82,7 +83,7 @@ INSERT INTO `number_sequence` (`id`, `page_name`, `last_number`, `CreatedDateTim
 (1, 'venues', 4, '2022-05-18 14:52:45'),
 (2, 'users', 8, '2022-05-18 14:52:58'),
 (3, 'programs', 6, '2022-07-16 13:20:28'),
-(4, 'reservations', 21, '2022-08-21 14:42:40');
+(4, 'reservations', 22, '2022-08-21 14:42:40');
 
 -- --------------------------------------------------------
 
@@ -135,13 +136,13 @@ CREATE TABLE `schedules` (
   `notified` tinyint(1) NOT NULL DEFAULT 0,
   `last_notified` date DEFAULT NULL,
   `cancelled` tinyint(1) NOT NULL DEFAULT 0,
-  `deleted` tinyint(4) NOT NULL,
+  `deleted` tinyint(4) NOT NULL DEFAULT 0,
   `rejectedByAdmin` int(1) NOT NULL DEFAULT 0,
   `approvedByAdmin` int(1) NOT NULL DEFAULT 0,
   `act_form_file` varchar(255) NOT NULL,
   `letter_approve_file` varchar(255) NOT NULL,
-  `notes` text NOT NULL,
-  `material` text NOT NULL
+  `notes` text DEFAULT NULL,
+  `material` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
@@ -150,7 +151,9 @@ CREATE TABLE `schedules` (
 
 INSERT INTO `schedules` (`id`, `reservationID`, `userID`, `venueID`, `programID`, `status`, `date_start`, `date_end`, `time_start`, `time_end`, `name`, `contact`, `description`, `num_participants`, `notified`, `last_notified`, `cancelled`, `deleted`, `rejectedByAdmin`, `approvedByAdmin`, `act_form_file`, `letter_approve_file`, `notes`, `material`) VALUES
 (23, 'RES000020', 6, 1, 5, 'R', '2023-12-12', '2023-12-12', '19:38', '20:38', 'TEST NOTIFY ADMIN', '09090909090', 'SHOULD NOTIFY ADMIN - TEST STUDENT UPDATE', 10, 0, NULL, 0, 0, 4, 0, '6578466613838.pdf', '', 'TEST REJECT', ''),
-(24, 'RES000021', 6, 2, 5, 'R', '2023-12-12', '2023-12-12', '21:40', '22:40', 'TEST NOTIFY ADMIN 2', '09090909090', '1. SHOULD INCREMENT ADMIN NOTIFICATION COUNTER\r\n\r\n2. SHOULD NOTIFY STUDENT', 9, 0, NULL, 0, 0, 4, 4, '657846fb236d8.pdf', '657846fb23884.png', 'yuyu', '');
+(24, 'RES000021', 6, 2, 5, 'R', '2023-12-12', '2023-12-12', '21:40', '22:40', 'TEST NOTIFY ADMIN 2', '09090909090', '1. SHOULD INCREMENT ADMIN NOTIFICATION COUNTER\r\n\r\n2. SHOULD NOTIFY STUDENT', 9, 0, NULL, 0, 0, 4, 4, '657846fb236d8.pdf', '657846fb23884.png', 'yuyu', ''),
+(25, 'RES000022', 4, 5, 5, 'P', '2023-12-14', '2023-12-14', '14:31', '14:31', 'test', '09125455451', '\"\" test \"\" ', 45, 0, NULL, 0, 0, 0, 0, '657aa13479f5d.pdf', '657aa1347a54d.png', NULL, NULL),
+(26, 'RES000022', 4, 5, 5, 'P', '2023-12-14', '2023-12-14', '14:31', '14:31', 'test', '09125455451', '\"\" test \"\" ', 45, 0, NULL, 0, 0, 0, 0, '657aa19f75051.pdf', '657aa19f7565e.png', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -260,7 +263,7 @@ ALTER TABLE `venues`
 -- AUTO_INCREMENT for table `notifications`
 --
 ALTER TABLE `notifications`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `number_sequence`
@@ -278,7 +281,7 @@ ALTER TABLE `program`
 -- AUTO_INCREMENT for table `schedules`
 --
 ALTER TABLE `schedules`
-  MODIFY `id` bigint(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` bigint(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT for table `users`
