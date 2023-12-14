@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Dec 14, 2023 at 07:18 AM
+-- Generation Time: Dec 14, 2023 at 07:25 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -141,7 +141,7 @@ CREATE TABLE `schedules` (
   `act_form_file` varchar(255) NOT NULL,
   `letter_approve_file` varchar(255) NOT NULL,
   `notes` text NOT NULL,
-  `material` varchar(150) NOT NULL
+  `material` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --

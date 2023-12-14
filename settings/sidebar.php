@@ -59,7 +59,7 @@
                 </li>
                 <li class="nav-item <?= $reservation; ?>">
                     <a class="nav-link" href="add_reservation.php">
-                        <i class="fas fa-fw fa-bars"></i>
+                        <i class="fas fa-fw fa-plus"></i>
                         <span>Create Reservation</span></a>
                 </li>
             <?php
@@ -77,7 +77,7 @@
             ?>
             <li class="nav-item <?= $reservation; ?>">
                     <a class="nav-link" href="add_reservation.php">
-                        <i class="fas fa-fw fa-bars"></i>
+                        <i class="fas fa-fw fa-plus"></i>
                         <span>Create Reservation</span></a>
             </li>
             <li class="nav-item <?= $reservation; ?>">

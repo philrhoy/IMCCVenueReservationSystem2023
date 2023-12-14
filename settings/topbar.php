@@ -116,8 +116,8 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <div class="small text-gray-500"><?php echo $data->dateAdded;?></div>
-                                    <span class="font-weight-bold"><?php echo $data->details;?></span>
+                                    <div class="small text-gray-500"><?= date('m/d/Y h:i a', strtotime($data->dateAdded));?></div>
+                                    <span class="font-weight-bold"><?= $data->details;?></span>
                                 </div>
                             </a>
                             <?php 
