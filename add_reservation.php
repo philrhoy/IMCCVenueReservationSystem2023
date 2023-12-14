@@ -98,8 +98,8 @@
                     $redirectPage = "edit_reservation.php?reservation_id=".$id;
 
                     $add_notif = $db->query("INSERT INTO `notifications` 
-                    (sourceUser, notifyToAllUserType, details, link, dateAdded) values
-                    ('$user_id','DSA','$notificationContent','$redirectPage',NOW())")
+                    (type, sourceUser, notifyToAllUserType, details, link, dateAdded) values
+                    ('CREATE','$user_id','DSA','$notificationContent','$redirectPage',NOW())")
                     or die($db->error);
 
                     $queryStatus = 2;

@@ -85,8 +85,34 @@
                             ?>
                             <a class="dropdown-item d-flex align-items-center" href="<?php echo $data->link."&notificationRef=".$data->id."&isRead=1";?>">
                                 <div class="mr-3">
-                                    <div class="icon-circle bg-primary">
-                                        <i class="fas fa-file-alt text-white"></i>
+                                    <?php 
+
+                                    $color = "success";
+                                    $icon = "fa-doc-alt";
+
+                                    if ($data->type == "CREATE") 
+                                    { 
+                                        $color = "success";
+                                        $icon = "fa-plus";
+                                    } 
+                                    if ($data->type == "UPDATE") 
+                                    { 
+                                        $color = "info";
+                                        $icon = "fa-pen";
+                                    } 
+                                    if ($data->type == "APPROVE") 
+                                    { 
+                                        $color = "success";
+                                        $icon = "fa-check";
+                                    } 
+                                    if ($data->type == "REJECT") 
+                                    { 
+                                        $color = "warning";
+                                        $icon = "fa-times";
+                                    } 
+                                    ?>
+                                    <div class="icon-circle bg-<?= $color; ?>">
+                                        <i class="fas <?= $icon; ?> text-white"></i>
                                     </div>
                                 </div>
                                 <div>

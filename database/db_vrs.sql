@@ -2,8 +2,8 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Dec 12, 2023 at 12:50 PM
+-- Host: localhost
+-- Generation Time: Dec 14, 2023 at 07:18 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -29,6 +29,7 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `notifications` (
   `id` int(11) NOT NULL,
+  `type` varchar(15) DEFAULT NULL,
   `details` text DEFAULT NULL,
   `sourceUser` int(11) NOT NULL,
   `recipient` int(11) DEFAULT NULL,
@@ -42,14 +43,23 @@ CREATE TABLE `notifications` (
 -- Dumping data for table `notifications`
 --
 
-INSERT INTO `notifications` (`id`, `details`, `sourceUser`, `recipient`, `notifyToAllUserType`, `isRead`, `link`, `dateAdded`) VALUES
-(2, 'DIMPLE NORMADINATION created a new reservation [RES000020]. Please review.', 6, NULL, 'DSA', 0, 'edit_reservation.php?reservation_id=20', '2023-12-12 19:39:18'),
-(3, 'DIMPLE NORMADINATION created a new reservation [RES000021]. Please review.', 6, NULL, 'DSA', 0, 'edit_reservation.php?reservation_id=21', '2023-12-12 19:41:47'),
-(4, 'DIMPLE NORMADINATION updated reservation [RES000020]. Please review the updates.', 6, NULL, 'DSA', 0, 'edit_reservation.php?reservation_id=23', '2023-12-12 19:42:35'),
-(5, 'Reservation [RES000020] was Rejected by Admin JOHN DOE. Please review and update the reservation.', 4, 6, NULL, 0, 'edit_reservation.php?reservation_id=23', '2023-12-12 19:43:28'),
-(6, 'Reservation [RES000021] was Approved by Admin JOHN DOE.', 4, 6, NULL, 0, 'edit_reservation.php?reservation_id=24', '2023-12-12 19:46:00'),
-(7, 'Reservation [RES000021] was Approved by Admin JOHN DOE.', 4, NULL, 'PTC', 0, 'edit_reservation.php?reservation_id=24', '2023-12-12 19:46:00'),
-(8, 'JOHN DOE updated reservation [RES000021]. Please review the updates.', 4, 6, NULL, 0, 'edit_reservation.php?reservation_id=24', '2023-12-12 19:47:01');
+INSERT INTO `notifications` (`id`, `type`, `details`, `sourceUser`, `recipient`, `notifyToAllUserType`, `isRead`, `link`, `dateAdded`) VALUES
+(2, 'CREATE', 'DIMPLE NORMADINATION created a new reservation [RES000020]. Please review.', 6, NULL, 'DSA', 1, 'edit_reservation.php?reservation_id=20', '2023-12-12 19:39:18'),
+(3, 'CREATE', 'DIMPLE NORMADINATION created a new reservation [RES000021]. Please review.', 6, NULL, 'DSA', 1, 'edit_reservation.php?reservation_id=21', '2023-12-12 19:41:47'),
+(4, 'UPDATE', 'DIMPLE NORMADINATION updated reservation [RES000020]. Please review the updates.', 6, NULL, 'DSA', 1, 'edit_reservation.php?reservation_id=23', '2023-12-12 19:42:35'),
+(5, 'REJECT', 'Reservation [RES000020] was Rejected by Admin JOHN DOE. Please review and update the reservation.', 4, 6, NULL, 0, 'edit_reservation.php?reservation_id=23', '2023-12-12 19:43:28'),
+(6, 'APPROVE', 'Reservation [RES000021] was Approved by Admin JOHN DOE.', 4, 6, NULL, 0, 'edit_reservation.php?reservation_id=24', '2023-12-12 19:46:00'),
+(7, 'APPROVE', 'Reservation [RES000021] was Approved by Admin JOHN DOE.', 4, NULL, 'PTC', 0, 'edit_reservation.php?reservation_id=24', '2023-12-12 19:46:00'),
+(8, 'UPDATE', 'JOHN DOE updated reservation [RES000021]. Please review the updates.', 4, 6, NULL, 0, 'edit_reservation.php?reservation_id=24', '2023-12-12 19:47:01'),
+(9, 'APPROVE', 'Reservation [RES000021] was Approved by Admin ADMINISTRATOR .', 4, NULL, 'PTC', 0, 'edit_reservation.php?reservation_id=24', '2023-12-14 14:09:12'),
+(10, 'APPROVE', 'Reservation [RES000021] was Approved by Admin ADMINISTRATOR .', 4, 6, NULL, 0, 'edit_reservation.php?reservation_id=24', '2023-12-14 14:11:19'),
+(11, 'APPROVE', 'Reservation [RES000021] was Approved by Admin ADMINISTRATOR .', 4, NULL, 'PTC', 1, 'edit_reservation.php?reservation_id=24', '2023-12-14 14:11:19'),
+(12, 'REJECT', 'ADMINISTRATOR  updated reservation [RES000021]. Please review the updates.', 4, 6, NULL, 0, 'edit_reservation.php?reservation_id=24', '2023-12-14 14:11:24'),
+(13, 'REJECT', 'Reservation [RES000021] was Rejected by Admin ADMINISTRATOR . Please review and update the reservation.', 4, 6, NULL, 0, 'edit_reservation.php?reservation_id=24', '2023-12-14 14:12:56'),
+(14, 'UPDATE', 'DIMPLE NORMADINATION updated reservation [RES000021]. Please review the updates.', 6, NULL, 'DSA', 0, 'edit_reservation.php?reservation_id=24', '2023-12-14 14:14:23'),
+(15, 'UPDATE', 'DIMPLE NORMADINATION updated reservation [RES000021]. Please review the updates.', 6, NULL, 'DSA', 0, 'edit_reservation.php?reservation_id=24', '2023-12-14 14:15:06'),
+(16, 'UPDATE', 'DIMPLE NORMADINATION updated reservation [RES000021]. Please review the updates.', 6, NULL, 'DSA', 0, 'edit_reservation.php?reservation_id=24', '2023-12-14 14:15:34'),
+(17, 'UPDATE', 'DIMPLE NORMADINATION updated reservation [RES000021]. Please review the updates.', 6, NULL, 'DSA', 0, 'edit_reservation.php?reservation_id=24', '2023-12-14 14:15:36');
 
 -- --------------------------------------------------------
 
@@ -140,7 +150,7 @@ CREATE TABLE `schedules` (
 
 INSERT INTO `schedules` (`id`, `reservationID`, `userID`, `venueID`, `programID`, `status`, `date_start`, `date_end`, `time_start`, `time_end`, `name`, `contact`, `description`, `num_participants`, `notified`, `last_notified`, `cancelled`, `deleted`, `rejectedByAdmin`, `approvedByAdmin`, `act_form_file`, `letter_approve_file`, `notes`, `material`) VALUES
 (23, 'RES000020', 6, 1, 5, 'R', '2023-12-12', '2023-12-12', '19:38', '20:38', 'TEST NOTIFY ADMIN', '09090909090', 'SHOULD NOTIFY ADMIN - TEST STUDENT UPDATE', 10, 0, NULL, 0, 0, 4, 0, '6578466613838.pdf', '', 'TEST REJECT', ''),
-(24, 'RES000021', 6, 2, 5, 'A', '2023-12-12', '2023-12-12', '21:40', '22:40', 'TEST NOTIFY ADMIN 2', '09090909090', '1. SHOULD INCREMENT ADMIN NOTIFICATION COUNTER\r\n\r\n2. SHOULD NOTIFY STUDENT', 9, 0, NULL, 0, 0, 0, 4, '657846fb236d8.pdf', '657846fb23884.png', '', '');
+(24, 'RES000021', 6, 2, 5, 'R', '2023-12-12', '2023-12-12', '21:40', '22:40', 'TEST NOTIFY ADMIN 2', '09090909090', '1. SHOULD INCREMENT ADMIN NOTIFICATION COUNTER\r\n\r\n2. SHOULD NOTIFY STUDENT', 9, 0, NULL, 0, 0, 4, 4, '657846fb236d8.pdf', '657846fb23884.png', 'yuyu', '');
 
 -- --------------------------------------------------------
 
@@ -250,7 +260,7 @@ ALTER TABLE `venues`
 -- AUTO_INCREMENT for table `notifications`
 --
 ALTER TABLE `notifications`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `number_sequence`
