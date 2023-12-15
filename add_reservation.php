@@ -82,9 +82,9 @@ if (isset($_POST['submit'])) {
 
             $activity_form = $imgForms[0];
             $letter_approval = ((sizeof($imgForms) > 1) ? $imgForms[1] : "");
-echo "INSERT INTO `schedules` 
-(reservationID,userID,venueID,programID,date_start,date_end,time_start,time_end,name,contact,description,num_participants,act_form_file,letter_approve_file) values
-('$res_id','$user_id','$venueID','$programID','$startDate','$endDate','$startTime','$endTime','$activity','$contact','$description','$participants','$activity_form','$letter_approval')";
+            echo "INSERT INTO `schedules` 
+            (reservationID,userID,venueID,programID,date_start,date_end,time_start,time_end,name,contact,description,num_participants,act_form_file,letter_approve_file) values
+            ('$res_id','$user_id','$venueID','$programID','$startDate','$endDate','$startTime','$endTime','$activity','$contact','$description','$participants','$activity_form','$letter_approval')";
             $add_res = $db->query("INSERT INTO `schedules` 
                     (reservationID,userID,venueID,programID,date_start,date_end,time_start,time_end,name,contact,description,num_participants,act_form_file,letter_approve_file) values
                     ('$res_id','$user_id','$venueID','$programID','$startDate','$endDate','$startTime','$endTime','$activity','$contact','$description','$participants','$activity_form','$letter_approval')")
@@ -181,7 +181,7 @@ foreach ($fetch as $data) {
                                         </div>
                                         <div class="col-6">
                                             <label>Contact No.</label>
-                                            <input class="form-control" type="text" name="contact_no" maxlength="11" minlength="11">
+                                            <input class="form-control" type="text" name="contact_no" maxlength="11" minlength="11" required>
                                         </div>
                                     </div>
                                     <div class="form-group">
