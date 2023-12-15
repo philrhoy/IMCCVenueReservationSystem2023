@@ -7,10 +7,10 @@ include 'settings/topbar.php';
 include 'notification_helper.php';
 $queryStatus = 0;
 /*
-            0 = default/no query
-            1 = error 
-            2 = success
-        */
+    0 = default/no query
+    1 = error 
+    2 = success
+*/
 
 if (isset($_POST['submit'])) {
     $id = $_POST['id'];
@@ -29,11 +29,6 @@ if (isset($_POST['submit'])) {
     $contact = $_POST['contact_no'];
 
     $imgForms = array();
-
-    // echo $notiHelper->createNotification($res_id, strtoupper($user_name), "CREATE") . "<br>";
-    // echo $notiHelper->createNotification($res_id, strtoupper($user_name), "UPDATE") . "<br>";
-    // echo $notiHelper->createNotification($res_id, strtoupper($user_name), "APPROVE") . "<br>";
-    // echo $notiHelper->createNotification($res_id, strtoupper($user_name), "REJECT"). "<br>";
 
     if ($_FILES["activityFormImg"]["error"]) {
         echo "<script> alert('Image does not exist')</script>";
@@ -90,6 +85,7 @@ if (isset($_POST['submit'])) {
 
             if (!$add_res) {
                 $queryStatus = 1;
+                header("location: add_reservation.php?queryStatus=".$queryStatus);
             } else {
                 $notiHelper = new NotificationHelper();
                 $user_name = $_SESSION['name2'];
@@ -102,6 +98,8 @@ if (isset($_POST['submit'])) {
                     or die($db->error);
 
                 $queryStatus = 2;
+
+                header("location: add_reservation.php?queryStatus=".$queryStatus);
             }
         }
     }
@@ -118,7 +116,12 @@ foreach ($fetch as $data) {
     elseif ($lengthID == 4) $ID = "00" . $newID;
     elseif ($lengthID == 5) $ID = "0" . $newID;
     else $ID = $newID;
+
+if(!isset($_GET['queryStatus'])){
+    $_GET['queryStatus'] = 0;
 }
+}
+
 ?>
 <div class="container-fluid">
 
@@ -130,8 +133,8 @@ foreach ($fetch as $data) {
 
             </div>
             <div class="justify-content">
-                <div class="alert alert-success" role="alert" style="display:<?= (($queryStatus == 2) ? "block;" : "none;") ?>">Successfully created reservation</div>
-                <div class="alert alert-danger" role="alert" style="display:<?= (($queryStatus == 1) ? "block;" : "none;") ?>">Failed to save reservation. Error code: #</div>
+                <div class="alert alert-success" role="alert" style="display:<?= (($_GET['queryStatus'] == 2) ? "block;" : "none;") ?>">Successfully created reservation</div>
+                <div class="alert alert-danger" role="alert" style="display:<?= (($_GET['queryStatus'] == 1) ? "block;" : "none;") ?>">Failed to save reservation. Error code: #</div>
             </div>
             <div class="card shadow">
                 <div class="card-body">
@@ -361,9 +364,6 @@ foreach ($fetch as $data) {
                                             }
                                         }
                                     }
-
-
-
 
                                     // if (/^image/.test( files[0].type) || /^pdf/.test( files[0].type)){ // only image file
                                     //     var reader = new FileReader(); // instance of the FileReader
