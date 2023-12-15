@@ -144,6 +144,12 @@ include 'notification_helper.php';
                         $fetch = $sequence->fetchAll(PDO::FETCH_OBJ);
 
                         foreach ($fetch as $data) {
+                            //prevent studs to update record if approved
+                            if($data->status == 'A' && $_SESSION['position'] == 'STO'){
+                                //redirect somewhere
+                                header("location: reservation_list.php");
+                                exit();
+                            }
                             switch ($data->status) {
                                 case "P":
                                     $statusStr = "Pending for Approval";

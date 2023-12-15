@@ -156,7 +156,11 @@ include 'settings/topbar.php';
                                         <td><?= $row->VENUE_NAME; ?></td>
                                         <td align="center"><span class="badge <?= $statusColor ?>"><?= $statusStr; ?></span></td>
                                         <td align="center">
-                                            <a href='edit_reservation.php?reservation_id=<?= $row->INT_RES_ID ?>' class="btn btn-primary btn-icon-split btn-sm keychainify-checked" target="_blank">
+                                            <a href='edit_reservation.php?reservation_id=<?= $row->INT_RES_ID ?>' 
+                                                class="btn btn-primary btn-icon-split btn-sm keychainify-checked" 
+                                                target="_blank" 
+                                                style="<?php echo ($row->STATUS == 'A' && $_SESSION['position'] == 'STO' ? "visibility: hidden;" : "");?>">
+                                                
                                                 <span class="icon text-white-50">
                                                     <i class="fas fa-edit"></i>
                                                 </span>
