@@ -477,7 +477,7 @@ if(!isset($_GET['queryStatus'])){
                                             $('#emptyFormModal').modal({
                                                 show: true
                                             });
-                                        } else if (resConflict[0][0] != ""){
+                                        } else if (resConflict.length != 0){
                                             $('.modal-header').prop({
                                                 class: "modal-header bg-warning"
                                             });
