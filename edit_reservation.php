@@ -49,21 +49,21 @@ include 'notification_helper.php';
                                     $query .= ", notes = '$notes',
                                                     status = 'A',
                                                     approvedByAdmin = '$adminID'
-                                                    WHERE id = '$res_id'";
+                                                    WHERE id = '$res_id' OR reservationID = '$res_id'";
                                 } elseif ($action == "REJECT") {
                                     $query .= ", notes = '$notes',
                                                     status = 'R',
                                                     rejectedByAdmin = '$adminID'
-                                                    WHERE id = '$res_id'";
+                                                    WHERE id = '$res_id' OR reservationID = '$res_id'";
                                 } else {
                                     $query .= ", notes = '$notes'
-                                                    WHERE id = '$res_id'";
+                                                    WHERE id = '$res_id' OR reservationID = '$res_id'";
                                 }
                             } else {
                                 //Prevent Student Officer from updating notes
                                 $query .= ($_SESSION['position'] != 'STO' ?
-                                    ", notes = '$notes', material = '$material' WHERE id = '$res_id'" :
-                                    " WHERE id = '$res_id'");
+                                    ", notes = '$notes', material = '$material' WHERE id = '$res_id' OR reservationID = '$res_id'" :
+                                    " WHERE id = '$res_id' OR reservationID = '$res_id'");
                             }
 
                             $update_reservation = $db->query($query);
@@ -76,7 +76,8 @@ include 'notification_helper.php';
                                 $notiHelper = new NotificationHelper();
                                 $user_id = $_SESSION['id'];
                                 $user_name =  $_SESSION['name2'];
-                                $redirectPage = "edit_reservation.php?reservation_id=" . $res_id;
+                                $redirectPage = "edit_reservation.php?reservation_id=" . $res_id_text;
+                                $approveRedirectPage = "view_reservation.php?reservation_id=" . $res_id_text;
                                 $addNotifQuery = "";
 
                                 if ($_SESSION['position'] == 'STO' || $_SESSION['position'] == 'PTC') {
@@ -90,12 +91,12 @@ include 'notification_helper.php';
                                         $notificationContent = $notiHelper->createNotification($res_id_text, strtoupper($user_name), "APPROVE");
                                         $addNotifQuery = "INSERT INTO `notifications` 
                                                         (type,sourceUser, recipient, details, link, dateAdded) values
-                                                        ('APPROVE','$user_id','$recipient','$notificationContent','$redirectPage',NOW())";
+                                                        ('APPROVE','$user_id','$recipient','$notificationContent','$approveRedirectPage',NOW())";
                                         $add_notif = $db->query($addNotifQuery) or die($db->error);
 
                                         $addNotifQuery = "INSERT INTO `notifications` 
                                                         (type,sourceUser, notifyToAllUserType, details, link, dateAdded) values
-                                                        ('APPROVE','$user_id','PTC','$notificationContent','$redirectPage',NOW())";
+                                                        ('APPROVE','$user_id','PTC','$notificationContent','$approveRedirectPage',NOW())";
                                         $add_notif2 = $db->query($addNotifQuery) or die($db->error);
                                     } elseif ($action == "REJECT") {
                                         $notificationContent = $notiHelper->createNotification($res_id_text, strtoupper($user_name), "REJECT");
@@ -107,7 +108,7 @@ include 'notification_helper.php';
                                         $notificationContent = $notiHelper->createNotification($res_id_text, strtoupper($user_name), "UPDATE");
                                         $addNotifQuery = "INSERT INTO `notifications` 
                                                         (type,sourceUser, recipient, details, link, dateAdded) values
-                                                        ('REJECT','$user_id','$recipient','$notificationContent','$redirectPage',NOW())";
+                                                        ('UPDATE','$user_id','$recipient','$notificationContent','$redirectPage',NOW())";
                                         $add_notif = $db->query($addNotifQuery) or die($db->error);
                                     }
                                 }
@@ -140,7 +141,7 @@ include 'notification_helper.php';
                         $material = "";
                         $statusStr = "Pending for Approval";
 
-                        $sequence = $db->query("SELECT * FROM schedules WHERE id = '$res_id'");
+                        $sequence = $db->query("SELECT * FROM schedules WHERE id = '$res_id' OR reservationID = '$res_id'");
                         $fetch = $sequence->fetchAll(PDO::FETCH_OBJ);
 
                         foreach ($fetch as $data) {

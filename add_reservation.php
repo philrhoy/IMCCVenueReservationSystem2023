@@ -90,7 +90,7 @@ if (isset($_POST['submit'])) {
                 $notiHelper = new NotificationHelper();
                 $user_name = $_SESSION['name2'];
                 $notificationContent = $notiHelper->createNotification($res_id, strtoupper($user_name), "CREATE");
-                $redirectPage = "edit_reservation.php?reservation_id=" . $id;
+                $redirectPage = "edit_reservation.php?reservation_id=" . $res_id;
 
                 $add_notif = $db->query("INSERT INTO `notifications` 
                     (type, sourceUser, notifyToAllUserType, details, link, dateAdded) values
@@ -117,7 +117,7 @@ foreach ($fetch as $data) {
     elseif ($lengthID == 5) $ID = "0" . $newID;
     else $ID = $newID;
 
-$reservationListQuery = $db->query("SELECT * FROM schedules WHERE status = 'A'");
+$reservationListQuery = $db->query("SELECT * FROM schedules WHERE status = 'A' OR status = 'P'");
 $fetchReservations = $reservationListQuery->fetchAll(PDO::FETCH_OBJ);
 
 if(!isset($_GET['queryStatus'])){
@@ -482,8 +482,8 @@ if(!isset($_GET['queryStatus'])){
                                                 class: "modal-header bg-warning"
                                             });
                                             $('.modal-title').html("Warning");
-                                            $('.modal-body').html("Warning: This reservation has conflicted with an Approved Reservation "
-                                                                    + resConflict[0][0] + ", conflict detected!<br><br> Approved Reservation Details:<br><br> "
+                                            $('.modal-body').html("Warning: This reservation has conflicted with "+ resConflict[0][5] +" Reservation "
+                                                                    + resConflict[0][0] + ", conflict detected!<br><br> "+ resConflict[0][5] +" Reservation Details:<br><br> "
                                                                     + "<b>ReservationID: </b>" + resConflict[0][0] + "<br>"
                                                                     + "<b>Start Date: </b>" + resConflict[0][1] + "<br>"
                                                                     + "<b>Start Time: </b>" + resConflict[0][2] + "<br>"
@@ -526,7 +526,6 @@ if(!isset($_GET['queryStatus'])){
                                     var reservationList = <?php echo json_encode($fetchReservations); ?>; 
                                     var conflictCounter = 0;
                                     var currentVenue = $("#venue").val();
-                                    var reservationFlag = "";
                                     var returnDetail = [];
 
                                     for (let index = 0; index < reservationList.length; index++) {
@@ -540,6 +539,22 @@ if(!isset($_GET['queryStatus'])){
                                             var approvedStartTime = reservationList[index]["time_start"];
                                             var approvedEndDate = new Date(reservationList[index]["date_end"]);
                                             var approvedEndTime = reservationList[index]["time_end"];
+
+                                            //To return
+                                            var reservationFlag = reservationList[index]["reservationID"];
+                                            var status = ((reservationList[index]["status"] == "A") ? "Approved" : "Pending");
+                                            var sTimeSplit = approvedStartTime.split(":");
+                                            var eTimeSplit = approvedEndTime.split(":");
+                                            returnDetail = [
+                                                [
+                                                    reservationFlag, 
+                                                    approvedStartDate.toDateString(), 
+                                                    ((sTimeSplit[0] > 12) ? (sTimeSplit[0] % 12) + ":" + sTimeSplit[1] : (approvedStartTime)) + " " + ((sTimeSplit[0] > 12) ? "PM" : "AM"),
+                                                    approvedEndDate.toDateString(),
+                                                    ((eTimeSplit[0] > 12) ? (eTimeSplit[0] % 12) + ":" + eTimeSplit[1] : (approvedEndTime)) + " " + ((eTimeSplit[0] > 12) ? "PM" : "AM"),
+                                                    status,
+                                                ]
+                                            ];
 
                                             //Approved: 6:03am 
                                             //Input: 10:30am
@@ -555,68 +570,20 @@ if(!isset($_GET['queryStatus'])){
                                             if((convCurStartDate.getTime() > approvedStartDate.getTime()) 
                                                 && (convCurStartDate.getTime() < approvedEndDate.getTime())) {
                                                     console.log("1");
-                                                    reservationFlag = reservationList[index]["reservationID"];
-                                                    var sTimeSplit = approvedStartTime.split(":");
-                                                    var eTimeSplit = approvedEndTime.split(":");
-                                                    returnDetail = [
-                                                        [
-                                                            reservationFlag, 
-                                                            approvedStartDate.toDateString(), 
-                                                            ((sTimeSplit[0] > 12) ? (sTimeSplit[0] % 12) + ":" + sTimeSplit[1] : (approvedStartTime)) + ((sTimeSplit[0] > 12) ? "PM" : "AM"),
-                                                            approvedEndDate.toDateString(),
-                                                            ((eTimeSplit[0] > 12) ? (eTimeSplit[0] % 12) + ":" + eTimeSplit[1] : (approvedEndTime)) + " " + ((eTimeSplit[0] > 12) ? "PM" : "AM"),
-                                                        ]
-                                                    ];
                                                     conflictCounter++; break;
                                             }
                                             if((convCurStartDate.getTime() == approvedStartDate.getTime()) 
                                                 || (convCurStartDate.getTime() == approvedEndDate.getTime())) {
                                                 if((convCurStartTime >= approvedStartTime) && (convCurStartTime <= approvedEndTime)){
                                                     console.log("2");
-                                                    reservationFlag = reservationList[index]["reservationID"];
-                                                    var sTimeSplit = approvedStartTime.split(":");
-                                                    var eTimeSplit = approvedEndTime.split(":");
-                                                    returnDetail = [
-                                                        [
-                                                            reservationFlag, 
-                                                            approvedStartDate.toDateString(), 
-                                                            ((sTimeSplit[0] > 12) ? (sTimeSplit[0] % 12) + ":" + sTimeSplit[1] : (approvedStartTime)) + ((sTimeSplit[0] > 12) ? "PM" : "AM"),
-                                                            approvedEndDate.toDateString(),
-                                                            ((eTimeSplit[0] > 12) ? (eTimeSplit[0] % 12) + ":" + eTimeSplit[1] : (approvedEndTime)) + " " + ((eTimeSplit[0] > 12) ? "PM" : "AM"),
-                                                        ]
-                                                    ];
                                                     conflictCounter++; break;
                                                 }else {
                                                     if((approvedStartTime >= convCurStartTime) && (approvedStartTime <=  convCurEndTime)){
                                                         console.log("2.1");
-                                                        reservationFlag = reservationList[index]["reservationID"];
-                                                        var sTimeSplit = approvedStartTime.split(":");
-                                                        var eTimeSplit = approvedEndTime.split(":");
-                                                        returnDetail = [
-                                                            [
-                                                                reservationFlag, 
-                                                                approvedStartDate.toDateString(), 
-                                                                ((sTimeSplit[0] > 12) ? (sTimeSplit[0] % 12) + ":" + sTimeSplit[1] : (approvedStartTime)) + ((sTimeSplit[0] > 12) ? "PM" : "AM"),
-                                                                approvedEndDate.toDateString(),
-                                                                ((eTimeSplit[0] > 12) ? (eTimeSplit[0] % 12) + ":" + eTimeSplit[1] : (approvedEndTime)) + " " + ((eTimeSplit[0] > 12) ? "PM" : "AM"),
-                                                            ]
-                                                        ];
                                                         conflictCounter++; break;
                                                     }
                                                     if((approvedEndTime >= convCurStartTime) && (approvedEndTime <= convCurEndTime)){
                                                         console.log("2.2");
-                                                        reservationFlag = reservationList[index]["reservationID"];
-                                                        var sTimeSplit = approvedStartTime.split(":");
-                                                        var eTimeSplit = approvedEndTime.split(":");
-                                                        returnDetail = [
-                                                            [
-                                                                reservationFlag, 
-                                                                approvedStartDate.toDateString(), 
-                                                                ((sTimeSplit[0] > 12) ? (sTimeSplit[0] % 12) + ":" + sTimeSplit[1] : (approvedStartTime)) + ((sTimeSplit[0] > 12) ? "PM" : "AM"),
-                                                                approvedEndDate.toDateString(),
-                                                                ((eTimeSplit[0] > 12) ? (eTimeSplit[0] % 12) + ":" + eTimeSplit[1] : (approvedEndTime)) + " " + ((eTimeSplit[0] > 12) ? "PM" : "AM"),
-                                                            ]
-                                                        ];
                                                         conflictCounter++; break;
                                                     }
                                                 }
@@ -624,92 +591,32 @@ if(!isset($_GET['queryStatus'])){
                                             if((convCurEndDate.getTime() > approvedStartDate.getTime()) 
                                                 && (convCurEndDate.getTime() < approvedEndDate.getTime())){
                                                     console.log("3");
-                                                    reservationFlag = reservationList[index]["reservationID"];
-                                                    var sTimeSplit = approvedStartTime.split(":");
-                                                    var eTimeSplit = approvedEndTime.split(":");
-                                                    returnDetail = [
-                                                        [
-                                                            reservationFlag, 
-                                                            approvedStartDate.toDateString(), 
-                                                            ((sTimeSplit[0] > 12) ? (sTimeSplit[0] % 12) + ":" + sTimeSplit[1] : (approvedStartTime)) + ((sTimeSplit[0] > 12) ? "PM" : "AM"),
-                                                            approvedEndDate.toDateString(),
-                                                            ((eTimeSplit[0] > 12) ? (eTimeSplit[0] % 12) + ":" + eTimeSplit[1] : (approvedEndTime)) + " " + ((eTimeSplit[0] > 12) ? "PM" : "AM"),
-                                                        ]
-                                                    ];
                                                     conflictCounter++; break;
                                             }
                                             if((convCurEndDate.getTime() == approvedStartDate.getTime()) 
                                                 || (convCurEndDate.getTime() == approvedEndDate.getTime())){
                                                 if((convCurEndTime >= approvedStartTime) && (convCurEndTime <= approvedEndTime)){
                                                     console.log("4");
-                                                    reservationFlag = reservationList[index]["reservationID"];
-                                                    var sTimeSplit = approvedStartTime.split(":");
-                                                    var eTimeSplit = approvedEndTime.split(":");
-                                                    returnDetail = [
-                                                        [
-                                                            reservationFlag, 
-                                                            approvedStartDate.toDateString(), 
-                                                            ((sTimeSplit[0] > 12) ? (sTimeSplit[0] % 12) + ":" + sTimeSplit[1] : (approvedStartTime)) + ((sTimeSplit[0] > 12) ? "PM" : "AM"),
-                                                            approvedEndDate.toDateString(),
-                                                            ((eTimeSplit[0] > 12) ? (eTimeSplit[0] % 12) + ":" + eTimeSplit[1] : (approvedEndTime)) + " " + ((eTimeSplit[0] > 12) ? "PM" : "AM"),
-                                                        ]
-                                                    ];
                                                     conflictCounter++; break;
                                                 }else {
                                                     if((approvedStartTime >= convCurStartTime) && (approvedStartTime <=  convCurEndTime)){
                                                         console.log("4.1");
-                                                        reservationFlag = reservationList[index]["reservationID"];
-                                                        var sTimeSplit = approvedStartTime.split(":");
-                                                        var eTimeSplit = approvedEndTime.split(":");
-                                                        returnDetail = [
-                                                            [
-                                                                reservationFlag, 
-                                                                approvedStartDate.toDateString(), 
-                                                                ((sTimeSplit[0] > 12) ? (sTimeSplit[0] % 12) + ":" + sTimeSplit[1] : (approvedStartTime)) + ((sTimeSplit[0] > 12) ? "PM" : "AM"),
-                                                                approvedEndDate.toDateString(),
-                                                                ((eTimeSplit[0] > 12) ? (eTimeSplit[0] % 12) + ":" + eTimeSplit[1] : (approvedEndTime)) + " " + ((eTimeSplit[0] > 12) ? "PM" : "AM"),
-                                                            ]
-                                                        ];
                                                         conflictCounter++; break;
                                                     }
                                                     if((approvedEndTime >= convCurStartTime) && (approvedEndTime <= convCurEndTime)){
                                                         console.log("4.2");
-                                                        reservationFlag = reservationList[index]["reservationID"];
-                                                        var sTimeSplit = approvedStartTime.split(":");
-                                                        var eTimeSplit = approvedEndTime.split(":");
-                                                        returnDetail = [
-                                                            [
-                                                                reservationFlag, 
-                                                                approvedStartDate.toDateString(), 
-                                                                ((sTimeSplit[0] > 12) ? (sTimeSplit[0] % 12) + ":" + sTimeSplit[1] : (approvedStartTime)) + ((sTimeSplit[0] > 12) ? "PM" : "AM"),
-                                                                approvedEndDate.toDateString(),
-                                                                ((eTimeSplit[0] > 12) ? (eTimeSplit[0] % 12) + ":" + eTimeSplit[1] : (approvedEndTime)) + " " + ((eTimeSplit[0] > 12) ? "PM" : "AM"),
-                                                            ]
-                                                        ];
                                                         conflictCounter++; break;
                                                     }
                                                 }
                                             }
                                             if(isApprovedStartDateBetweenCurrentDates && isApprovedEndDateBetweenCurrentDates) {
                                                 console.log("5");
-                                                reservationFlag = reservationList[index]["reservationID"];
-                                                var sTimeSplit = approvedStartTime.split(":");
-                                                var eTimeSplit = approvedEndTime.split(":");
-                                                returnDetail = [
-                                                    [
-                                                        reservationFlag, 
-                                                        approvedStartDate.toDateString(), 
-                                                        ((sTimeSplit[0] > 12) ? (sTimeSplit[0] % 12) + ":" + sTimeSplit[1] : (approvedStartTime)) + ((sTimeSplit[0] > 12) ? "PM" : "AM"),
-                                                        approvedEndDate.toDateString(),
-                                                        ((eTimeSplit[0] > 12) ? (eTimeSplit[0] % 12) + ":" + eTimeSplit[1] : (approvedEndTime)) + " " + ((eTimeSplit[0] > 12) ? "PM" : "AM"),
-                                                    ]
-                                                ];
                                                 conflictCounter ++; break;
                                             }
                                         }    
                                     }
+                                    returnDetail = ((conflictCounter == 0) ? [] : returnDetail);
                                     console.log("Counter: " + ((conflictCounter == 0) ? "No Conflicts" : "Conflict"));
-                                    // var returnRes = ((conflictCounter != 0) ? : );
                                     return returnDetail;
                                 }
 
