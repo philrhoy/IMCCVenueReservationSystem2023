@@ -1,10 +1,187 @@
 <?php
-include 'settings/system.php';
-include 'session.php';
-include 'settings/header.php';
-include "settings/sidebar.php";
-include 'settings/topbar.php';
-include 'notification_helper.php';
+    include 'settings/system.php';
+    include 'session.php';
+    include 'settings/header.php';
+    include "settings/sidebar.php";
+    include 'settings/topbar.php';
+    include 'notification_helper.php';
+    $queryStatus = 0;
+    /*
+        0 = default/no query
+        1 = error 
+        2 = success
+    */
+
+    if (isset($_POST['submit'])) {
+        $adminID = $_SESSION['id'];
+        $action = $_POST['action'];
+        $res_id = $_POST['id'];
+        $res_id_text = $_POST['resID'];
+        $recipient = $_POST['userID'];
+        $activity = $_POST['activity'];
+        $participants = $_POST['participants'];
+        $description = $_POST['description'];
+        $venueID = $_POST['venue'];
+        $programID = $_POST['program'];
+        $startDate = $_POST['start_date'];
+        $endDate = $_POST['end_date'];
+        $startTime = $_POST['start_time'];
+        $endTime = $_POST['end_time'];
+        $notes = $_POST['notes'];
+        $material = $_POST['material'];
+        $status = $_POST['status'];
+
+        if ($status != "A") {
+            $query = "UPDATE `schedules` 
+                SET venueID = '$venueID', programID = '$programID', date_start = '$startDate', date_end = '$endDate',
+                    time_start = '$startTime', time_end = '$endTime', name = '$activity', description = '$description',
+                    num_participants = '$participants'";
+
+            //Check if approved or rejected
+            if ($_SESSION["position"] == "DSA") {
+                if ($action == "APPROVE") {
+                    $query .= ", notes = '$notes',
+                                    status = 'A',
+                                    approvedByAdmin = '$adminID'
+                                    WHERE id = '$res_id' OR reservationID = '$res_id'";
+                } elseif ($action == "REJECT") {
+                    $query .= ", notes = '$notes',
+                                    status = 'R',
+                                    rejectedByAdmin = '$adminID'
+                                    WHERE id = '$res_id' OR reservationID = '$res_id'";
+                } else {
+                    $query .= ", notes = '$notes'
+                                    WHERE id = '$res_id' OR reservationID = '$res_id'";
+                }
+            } else {
+                //Prevent Student Officer from updating notes
+                $query .= ($_SESSION['position'] != 'STO' ?
+                    ", notes = '$notes', material = '$material' WHERE id = '$res_id' OR reservationID = '$res_id'" :
+                    " WHERE id = '$res_id' OR reservationID = '$res_id'");
+            }
+
+            $update_reservation = $db->query($query);
+
+            if (!$update_reservation) {
+                $queryStatus = 1; /***** */ 
+                header("location: edit_reservation.php?reservation_id=".$res_id."&queryStatus=".$queryStatus);
+            } else {
+                $notiHelper = new NotificationHelper();
+                $user_id = $_SESSION['id'];
+                $user_name =  $_SESSION['name2'];
+                $redirectPage = "edit_reservation.php?reservation_id=" . $res_id_text;
+                $approveRedirectPage = "view_reservation.php?reservation_id=" . $res_id_text;
+                $addNotifQuery = "";
+
+                if ($_SESSION['position'] == 'STO' || $_SESSION['position'] == 'PTC') {
+                    $notificationContent = $notiHelper->createNotification($res_id_text, strtoupper($user_name), "UPDATE");
+                    $addNotifQuery = "INSERT INTO `notifications` 
+                                        (type, sourceUser, notifyToAllUserType, details, link, dateAdded) values
+                                        ('UPDATE','$user_id','DSA','$notificationContent','$redirectPage',NOW())";
+                    $add_notif = $db->query($addNotifQuery) or die($db->error);
+                } else if ($_SESSION['position'] == 'DSA') {
+                    if ($action == "APPROVE") {
+                        $notificationContent = $notiHelper->createNotification($res_id_text, strtoupper($user_name), "APPROVE");
+                        $addNotifQuery = "INSERT INTO `notifications` 
+                                        (type,sourceUser, recipient, details, link, dateAdded) values
+                                        ('APPROVE','$user_id','$recipient','$notificationContent','$approveRedirectPage',NOW())";
+                        $add_notif = $db->query($addNotifQuery) or die($db->error);
+
+                        $addNotifQuery = "INSERT INTO `notifications` 
+                                        (type,sourceUser, notifyToAllUserType, details, link, dateAdded) values
+                                        ('APPROVE','$user_id','PTC','$notificationContent','$redirectPage',NOW())";
+                        $add_notif2 = $db->query($addNotifQuery) or die($db->error);
+                    } elseif ($action == "REJECT") {
+                        $notificationContent = $notiHelper->createNotification($res_id_text, strtoupper($user_name), "REJECT");
+                        $addNotifQuery = "INSERT INTO `notifications` 
+                                        (type,sourceUser, recipient, details, link, dateAdded) values
+                                        ('REJECT','$user_id','$recipient', '$notificationContent','$redirectPage',NOW())";
+                        $add_notif = $db->query($addNotifQuery) or die($db->error);
+                    } else {
+                        $notificationContent = $notiHelper->createNotification($res_id_text, strtoupper($user_name), "UPDATE");
+                        $addNotifQuery = "INSERT INTO `notifications` 
+                                        (type,sourceUser, recipient, details, link, dateAdded) values
+                                        ('UPDATE','$user_id','$recipient','$notificationContent','$redirectPage',NOW())";
+                        $add_notif = $db->query($addNotifQuery) or die($db->error);
+                    }
+                }
+
+                //Alert message must correspond to action performed
+                $queryStatus = 2;
+                header("location: edit_reservation.php?reservation_id=".$res_id."&queryStatus=".$queryStatus);
+            }
+        }
+    }
+    if (isset($_GET['reservation_id'])) {
+        $res_id = $_GET['reservation_id'];
+        $user_id = "";
+        $res_id_text = "";
+        $activity = "";
+        $participants = "";
+        $objectives = "";
+        $program_id = "";
+        $venue_id = "";
+        $start_date = "";
+        $start_time = "";
+        $end_date = "";
+        $end_time = "";
+        $act_form_file = "";
+        $letter_approve_file = "";
+        $act_form_file_ext = "";
+        $letter_approve_file_ext = "";
+        $status = "";
+        $material = "";
+        $statusStr = "Pending for Approval";
+
+        $sequence = $db->query("SELECT * FROM schedules WHERE id = '$res_id' OR reservationID = '$res_id'");
+        $fetch = $sequence->fetchAll(PDO::FETCH_OBJ);
+
+        foreach ($fetch as $data) {
+            //prevent studs to update record if approved
+            if($data->status == 'A' && $_SESSION['position'] == 'STO'){
+                //redirect somewhere
+                header("location: reservation_list.php");
+                exit();
+            }
+            switch ($data->status) {
+                case "P":
+                    $statusStr = "Pending for Approval";
+                    break;
+                case "A":
+                    $statusStr = "Approved";
+                    break;
+                case "R":
+                    $statusStr = "Rejected";
+                    break;
+            }
+            $res_id_text = $data->reservationID;
+            $user_id = $data->userID;
+            $activity = $data->name;
+            $status = $data->status;
+            $participants = $data->num_participants;
+            $objectives = $data->description;
+            $program_id = $data->programID;
+            $venue_id = $data->venueID;
+            $start_date = $data->date_start;
+            $start_time = $data->time_start;
+            $end_date =  $data->date_end;
+            $end_time = $data->time_end;
+            $notes = $data->notes;
+            $material = $data->material;
+            $act_form_file = $data->act_form_file;
+            $letter_approve_file = $data->letter_approve_file;
+
+            $file_ext = explode(".", $act_form_file);
+            $act_form_file_ext = (strtolower(end($file_ext)) == "pdf") ? "application/" . strtolower(end($file_ext)) : "image/" . strtolower(end($file_ext));
+
+            $file_ext = explode(".", $letter_approve_file);
+            $letter_approve_file_ext = (strtolower(end($file_ext)) == "pdf") ? "application/" . strtolower(end($file_ext)) : "image/" . strtolower(end($file_ext));
+        }
+    }
+
+    if(!isset($_GET['queryStatus'])){
+        $_GET['queryStatus'] = 0;
+    }
 ?>
 <div class="container-fluid">
 
@@ -14,180 +191,12 @@ include 'notification_helper.php';
             <div class="d-sm-flex align-items-center justify-content-between mb-4">
                 <h1 class="h3 mb-2 text-gray-800">Update Reservation</h1>
             </div>
+            <div class="justify-content">
+                <div class="alert alert-success" role="alert" style="display:<?= (($_GET['queryStatus'] == 2) ? "block;" : "none;") ?>">Successfully created reservation</div>
+                <div class="alert alert-danger" role="alert" style="display:<?= (($_GET['queryStatus'] == 1) ? "block;" : "none;") ?>">Failed to save reservation. Error code: #</div>
+            </div>
             <div class="card shadow">
-
                 <div class="card-body">
-                    <?php
-                    if (isset($_POST['submit'])) {
-                        $adminID = $_SESSION['id'];
-                        $action = $_POST['action'];
-                        $res_id = $_POST['id'];
-                        $res_id_text = $_POST['resID'];
-                        $recipient = $_POST['userID'];
-                        $activity = $_POST['activity'];
-                        $participants = $_POST['participants'];
-                        $description = $_POST['description'];
-                        $venueID = $_POST['venue'];
-                        $programID = $_POST['program'];
-                        $startDate = $_POST['start_date'];
-                        $endDate = $_POST['end_date'];
-                        $startTime = $_POST['start_time'];
-                        $endTime = $_POST['end_time'];
-                        $notes = $_POST['notes'];
-                        $material = $_POST['material'];
-                        $status = $_POST['status'];
-
-                        if ($status != "A") {
-                            $query = "UPDATE `schedules` 
-                                SET venueID = '$venueID', programID = '$programID', date_start = '$startDate', date_end = '$endDate',
-                                    time_start = '$startTime', time_end = '$endTime', name = '$activity', description = '$description',
-                                    num_participants = '$participants'";
-
-                            //Check if approved or rejected
-                            if ($_SESSION["position"] == "DSA") {
-                                if ($action == "APPROVE") {
-                                    $query .= ", notes = '$notes',
-                                                    status = 'A',
-                                                    approvedByAdmin = '$adminID'
-                                                    WHERE id = '$res_id' OR reservationID = '$res_id'";
-                                } elseif ($action == "REJECT") {
-                                    $query .= ", notes = '$notes',
-                                                    status = 'R',
-                                                    rejectedByAdmin = '$adminID'
-                                                    WHERE id = '$res_id' OR reservationID = '$res_id'";
-                                } else {
-                                    $query .= ", notes = '$notes'
-                                                    WHERE id = '$res_id' OR reservationID = '$res_id'";
-                                }
-                            } else {
-                                //Prevent Student Officer from updating notes
-                                $query .= ($_SESSION['position'] != 'STO' ?
-                                    ", notes = '$notes', material = '$material' WHERE id = '$res_id' OR reservationID = '$res_id'" :
-                                    " WHERE id = '$res_id' OR reservationID = '$res_id'");
-                            }
-
-                            $update_reservation = $db->query($query);
-
-                            if (!$update_reservation) {
-                                echo '<script>
-                                            alert("Error updating reservation.");
-                                        </script>';
-                            } else {
-                                $notiHelper = new NotificationHelper();
-                                $user_id = $_SESSION['id'];
-                                $user_name =  $_SESSION['name2'];
-                                $redirectPage = "edit_reservation.php?reservation_id=" . $res_id_text;
-                                $approveRedirectPage = "view_reservation.php?reservation_id=" . $res_id_text;
-                                $addNotifQuery = "";
-
-                                if ($_SESSION['position'] == 'STO' || $_SESSION['position'] == 'PTC') {
-                                    $notificationContent = $notiHelper->createNotification($res_id_text, strtoupper($user_name), "UPDATE");
-                                    $addNotifQuery = "INSERT INTO `notifications` 
-                                                        (type, sourceUser, notifyToAllUserType, details, link, dateAdded) values
-                                                        ('UPDATE','$user_id','DSA','$notificationContent','$redirectPage',NOW())";
-                                    $add_notif = $db->query($addNotifQuery) or die($db->error);
-                                } else if ($_SESSION['position'] == 'DSA') {
-                                    if ($action == "APPROVE") {
-                                        $notificationContent = $notiHelper->createNotification($res_id_text, strtoupper($user_name), "APPROVE");
-                                        $addNotifQuery = "INSERT INTO `notifications` 
-                                                        (type,sourceUser, recipient, details, link, dateAdded) values
-                                                        ('APPROVE','$user_id','$recipient','$notificationContent','$approveRedirectPage',NOW())";
-                                        $add_notif = $db->query($addNotifQuery) or die($db->error);
-
-                                        $addNotifQuery = "INSERT INTO `notifications` 
-                                                        (type,sourceUser, notifyToAllUserType, details, link, dateAdded) values
-                                                        ('APPROVE','$user_id','PTC','$notificationContent','$redirectPage',NOW())";
-                                        $add_notif2 = $db->query($addNotifQuery) or die($db->error);
-                                    } elseif ($action == "REJECT") {
-                                        $notificationContent = $notiHelper->createNotification($res_id_text, strtoupper($user_name), "REJECT");
-                                        $addNotifQuery = "INSERT INTO `notifications` 
-                                                        (type,sourceUser, recipient, details, link, dateAdded) values
-                                                        ('REJECT','$user_id','$recipient', '$notificationContent','$redirectPage',NOW())";
-                                        $add_notif = $db->query($addNotifQuery) or die($db->error);
-                                    } else {
-                                        $notificationContent = $notiHelper->createNotification($res_id_text, strtoupper($user_name), "UPDATE");
-                                        $addNotifQuery = "INSERT INTO `notifications` 
-                                                        (type,sourceUser, recipient, details, link, dateAdded) values
-                                                        ('UPDATE','$user_id','$recipient','$notificationContent','$redirectPage',NOW())";
-                                        $add_notif = $db->query($addNotifQuery) or die($db->error);
-                                    }
-                                }
-
-                                //Alert message must correspond to action performed
-                                echo '<script>
-                                            alert("Successfully updated reservation.");
-                                        </script>';
-                            }
-                        }
-                    }
-                    if (isset($_GET['reservation_id'])) {
-                        $res_id = $_GET['reservation_id'];
-                        $user_id = "";
-                        $res_id_text = "";
-                        $activity = "";
-                        $participants = "";
-                        $objectives = "";
-                        $program_id = "";
-                        $venue_id = "";
-                        $start_date = "";
-                        $start_time = "";
-                        $end_date = "";
-                        $end_time = "";
-                        $act_form_file = "";
-                        $letter_approve_file = "";
-                        $act_form_file_ext = "";
-                        $letter_approve_file_ext = "";
-                        $status = "";
-                        $material = "";
-                        $statusStr = "Pending for Approval";
-
-                        $sequence = $db->query("SELECT * FROM schedules WHERE id = '$res_id' OR reservationID = '$res_id'");
-                        $fetch = $sequence->fetchAll(PDO::FETCH_OBJ);
-
-                        foreach ($fetch as $data) {
-                            //prevent studs to update record if approved
-                            if($data->status == 'A' && $_SESSION['position'] == 'STO'){
-                                //redirect somewhere
-                                header("location: reservation_list.php");
-                                exit();
-                            }
-                            switch ($data->status) {
-                                case "P":
-                                    $statusStr = "Pending for Approval";
-                                    break;
-                                case "A":
-                                    $statusStr = "Approved";
-                                    break;
-                                case "R":
-                                    $statusStr = "Rejected";
-                                    break;
-                            }
-                            $res_id_text = $data->reservationID;
-                            $user_id = $data->userID;
-                            $activity = $data->name;
-                            $status = $data->status;
-                            $participants = $data->num_participants;
-                            $objectives = $data->description;
-                            $program_id = $data->programID;
-                            $venue_id = $data->venueID;
-                            $start_date = $data->date_start;
-                            $start_time = $data->time_start;
-                            $end_date =  $data->date_end;
-                            $end_time = $data->time_end;
-                            $notes = $data->notes;
-                            $material = $data->material;
-                            $act_form_file = $data->act_form_file;
-                            $letter_approve_file = $data->letter_approve_file;
-
-                            $file_ext = explode(".", $act_form_file);
-                            $act_form_file_ext = (strtolower(end($file_ext)) == "pdf") ? "application/" . strtolower(end($file_ext)) : "image/" . strtolower(end($file_ext));
-
-                            $file_ext = explode(".", $letter_approve_file);
-                            $letter_approve_file_ext = (strtolower(end($file_ext)) == "pdf") ? "application/" . strtolower(end($file_ext)) : "image/" . strtolower(end($file_ext));
-                        }
-                    }
-
-                    ?>
                     <div class="table-responsive-lg">
                         <form role="form" method="post" enctype="multipart/form-data">
                             <div class="row">

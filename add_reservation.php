@@ -98,7 +98,6 @@ if (isset($_POST['submit'])) {
                     or die($db->error);
 
                 $queryStatus = 2;
-
                 header("location: add_reservation.php?queryStatus=".$queryStatus);
             }
         }
@@ -133,7 +132,6 @@ if(!isset($_GET['queryStatus'])){
         <div class="container-fluid">
             <div class="d-sm-flex align-items-center justify-content mb-4">
                 <h1 class="h3 mb-2 text-gray-800"> Reservation Form</h1>
-
             </div>
             <div class="justify-content">
                 <div class="alert alert-success" role="alert" style="display:<?= (($_GET['queryStatus'] == 2) ? "block;" : "none;") ?>">Successfully created reservation</div>
