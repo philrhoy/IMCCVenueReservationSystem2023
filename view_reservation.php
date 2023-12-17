@@ -36,7 +36,7 @@ include 'settings/topbar.php';
                         $letter_approve_file = "";
                         $letter_approve_file_ext = "";
 
-                        $sequence = $db->query("SELECT * FROM schedules WHERE id = '$res_id'");
+                        $sequence = $db->query("SELECT * FROM schedules WHERE id = '$res_id' OR reservationID = '$res_id'");
                         $fetch = $sequence->fetchAll(PDO::FETCH_OBJ);
 
                         foreach ($fetch as $data) {

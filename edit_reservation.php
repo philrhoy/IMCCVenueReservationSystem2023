@@ -96,7 +96,7 @@ include 'notification_helper.php';
 
                                         $addNotifQuery = "INSERT INTO `notifications` 
                                                         (type,sourceUser, notifyToAllUserType, details, link, dateAdded) values
-                                                        ('APPROVE','$user_id','PTC','$notificationContent','$approveRedirectPage',NOW())";
+                                                        ('APPROVE','$user_id','PTC','$notificationContent','$redirectPage',NOW())";
                                         $add_notif2 = $db->query($addNotifQuery) or die($db->error);
                                     } elseif ($action == "REJECT") {
                                         $notificationContent = $notiHelper->createNotification($res_id_text, strtoupper($user_name), "REJECT");
