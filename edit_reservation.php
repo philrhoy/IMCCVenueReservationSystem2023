@@ -6,6 +6,7 @@
     include 'settings/topbar.php';
     include 'notification_helper.php';
     $queryStatus = 0;
+    $tempID = "";
     /*
         0 = default/no query
         1 = error 
@@ -114,6 +115,7 @@
     }
     if (isset($_GET['reservation_id'])) {
         $res_id = $_GET['reservation_id'];
+        $tempID = $_GET['reservation_id'];
         $user_id = "";
         $res_id_text = "";
         $activity = "";
@@ -179,6 +181,22 @@
         }
     }
 
+    $queryStr = "";
+
+    if(!preg_match("/[a-z]/i", $tempID)){
+        $queryStr = "SELECT * FROM schedules 
+                    WHERE (status = 'A' OR status = 'P') AND
+                            (id != '$tempID')";
+    }else{
+        $queryStr = "SELECT * FROM schedules 
+                    WHERE (status = 'A' OR status = 'P') AND
+                            (reservationID != '$tempID')";
+    }
+
+    $reservationListQuery = $db->query($queryStr);
+                                            
+    $fetchReservations = $reservationListQuery->fetchAll(PDO::FETCH_OBJ);
+
     if(!isset($_GET['queryStatus'])){
         $_GET['queryStatus'] = 0;
     }
@@ -192,13 +210,13 @@
                 <h1 class="h3 mb-2 text-gray-800">Update Reservation</h1>
             </div>
             <div class="justify-content">
-                <div class="alert alert-success" role="alert" style="display:<?= (($_GET['queryStatus'] == 2) ? "block;" : "none;") ?>">Successfully created reservation</div>
-                <div class="alert alert-danger" role="alert" style="display:<?= (($_GET['queryStatus'] == 1) ? "block;" : "none;") ?>">Failed to save reservation. Error code: #</div>
+                <div class="alert alert-success" role="alert" style="display:<?= (($_GET['queryStatus'] == 2) ? "block;" : "none;") ?>">Successfully updated reservation</div>
+                <div class="alert alert-danger" role="alert" style="display:<?= (($_GET['queryStatus'] == 1) ? "block;" : "none;") ?>">Failed to update reservation. Error code: #</div>
             </div>
             <div class="card shadow">
                 <div class="card-body">
                     <div class="table-responsive-lg">
-                        <form role="form" method="post" enctype="multipart/form-data">
+                        <form role="form" method="post" id="form" enctype="multipart/form-data">
                             <div class="row">
                                 <div class="col-4">
                                     <div class="form-group">
@@ -209,7 +227,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label>Activity</label>
-                                        <input class="form-control" type="text" name="activity" value="<?= $activity ?>">
+                                        <input class="form-control" type="text" name="activity" value="<?= $activity ?>" required>
                                     </div>
                                     <div class="form-group">
                                         <label>Status</label>
@@ -218,7 +236,7 @@
 
                                     <div class="form-group">
                                         <label>Objectives</label>
-                                        <textarea class="form-control" id="exampleFormControlTextarea1" name="description" placeholder="Please specify the objectives" rows="3"><?= $objectives ?></textarea>
+                                        <textarea class="form-control" id="exampleFormControlTextarea1" name="description" placeholder="Please specify the objectives" rows="3" required><?= $objectives ?></textarea>
                                         <!-- <input class="form-control" type="number" placeholder="No. of participants" name="participants" required> -->
                                     </div>
                                     <div class="form-group">
@@ -248,7 +266,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label>Choose Venue</label>
-                                        <select class="form-control" name="venue">
+                                        <select class="form-control" name="venue" id="venue">
                                             <?php
                                             $fetchVenues = $db->query("SELECT * FROM `venues` ORDER BY name ASC");
 
@@ -274,23 +292,23 @@
                                     <div class="form-group row">
                                         <div class="col-6">
                                             <label>Start Date</label>
-                                            <input class="form-control" type="date" name='start_date' value="<?= $start_date ?>">
+                                            <input class="form-control" type="date" name='start_date' id="startDate"value="<?= $start_date ?>"required>
                                         </div>
 
                                         <div class="col-6">
                                             <label>Start Time</label>
-                                            <input class="form-control" type="time" name='start_time' value="<?= $start_time ?>">
+                                            <input class="form-control" type="time" name='start_time' id="startTime"value="<?= $start_time ?>"required>
                                         </div>
                                     </div>
 
                                     <div class="form-group row">
                                         <div class="col-6">
                                             <label>End Date</label>
-                                            <input class="form-control" type="date" name='end_date' value="<?= $end_date ?>">
+                                            <input class="form-control" type="date" name='end_date' id="endDate"value="<?= $end_date ?>"required>
                                         </div>
                                         <div class="col-6">
                                             <label>End Time</label>
-                                            <input class="form-control" type="time" name='end_time' value="<?= $end_time ?>">
+                                            <input class="form-control" type="time" name='end_time' id="endTime"value="<?= $end_time ?>"required>
                                         </div>
 
                                     </div>
@@ -299,7 +317,7 @@
                                 <div class="col-4">
                                     <div class="form-group">
                                         <label>Approximate No. of Participants</label>
-                                        <input class="form-control" type="number" name="participants" placeholder="No. of participants" value="<?= $participants ?>">
+                                        <input class="form-control" type="number" name="participants" placeholder="No. of participants" value="<?= $participants ?>" required>
                                     </div>
                                     <div class="form-group">
                                         <div class="imgUp">
@@ -382,18 +400,24 @@
                                                 </div>
                                                 <div class="modal-body"></div>
                                                 <div class="modal-footer">
-                                                    <button type="submit" name='submit' class="btn btn-success btn-icon-split btn-sm keychainify-checked">
+                                                    <button type="submit" name='submit' class="btn btn-success btn-icon-split btn-sm keychainify-checked" id='submitBtn'>
                                                         <span class="icon text-white-50">
                                                             <i class="fas fa-check"></i>
                                                         </span>
                                                         <span class="text">Proceed</span>
                                                     </button>
-                                                    <button class="btn btn-secondary btn-icon-split btn-sm keychainify-checked" type="button" data-dismiss="modal">
+                                                    <button class="btn btn-info btn-icon-split btn-sm keychainify-checked" id="reEdit" data-dismiss="modal">
+                                                        <span class="icon text-white-50">
+                                                            <i class="fas fa-edit"></i>
+                                                        </span>
+                                                        <span class="text">Re-edit reservation</span>
+                                                    </button>
+                                                    <!-- <button class="btn btn-secondary btn-icon-split btn-sm keychainify-checked" type="button" data-dismiss="modal">
                                                         <span class="icon text-white-50">
                                                             <i class="fas fa-window-close"></i>
                                                         </span>
                                                         <span class="text">Cancel</span>
-                                                    </button>
+                                                    </button> -->
 
                                                 </div>
                                             </div>
@@ -502,16 +526,158 @@
                                 });
 
                                 $(".confirmBtn").on("click", function() {
+                                    var form = $('#form');
                                     var confirmMsg = "Press PROCEED to apply updates to this record.";
                                     var perfActionVal = $("#performAction").val();
+                                    var isValidated = form[0].reportValidity();
+                                    var resConflict = checkScheduleConflict();
 
-                                    if (perfActionVal == "REJECT") {
-                                        confirmMsg = "Are you sure you want to REJECT this reservation?";
-                                    } else if (perfActionVal == "APPROVE") {
-                                        confirmMsg = "Are you sure you want to APPROVE this reservation?";
+                                    if(isValidated){
+                                        if (resConflict.length != 0){
+                                            $('.modal-header').prop({
+                                                class: "modal-header bg-warning"
+                                            });
+                                            $('.modal-title').html("Warning");
+                                            $('.modal-body').html("Warning: This reservation has conflicted with "+ resConflict[0][5] +" Reservation "
+                                                                    + resConflict[0][0] + ", conflict detected!<br><br> "+ resConflict[0][5] +" Reservation Details:<br><br> "
+                                                                    + "<b>ReservationID: </b>" + resConflict[0][0] + "<br>"
+                                                                    + "<b>Start Date: </b>" + resConflict[0][1] + "<br>"
+                                                                    + "<b>Start Time: </b>" + resConflict[0][2] + "<br>"
+                                                                    + "<b>End Date: </b>" + resConflict[0][3] + "<br>"
+                                                                    + "<b>End Time: </b>" + resConflict[0][4] + "<br>");
+                                            $('#submitBtn').prop({
+                                                hidden: true
+                                            });
+                                         
+                
+                                        }else{
+                                            if (perfActionVal == "REJECT") {
+                                                confirmMsg = "Are you sure you want to REJECT this reservation?";
+                                                $('.modal-header').prop({
+                                                    class: "modal-header bg-danger"
+                                                });
+                                                $('.modal-title').html("Confirm Update");
+                                            } else if (perfActionVal == "APPROVE") {
+                                                confirmMsg = "Are you sure you want to APPROVE this reservation?";
+                                                $('.modal-header').prop({
+                                                    class: "modal-header bg-success"
+                                                });
+                                                $('.modal-title').html("Confirm Update");
+                                            }else{
+                                                confirmMsg = "Are you sure you want to UPDATE this reservation?";
+                                                $('.modal-header').prop({
+                                                    class: "modal-header bg-success"
+                                                });
+                                                $('.modal-title').html("Confirm Update");
+                                            }
+
+                                            $(".modal-body").html(confirmMsg);
+                                            $('#submitBtn').prop({
+                                                hidden: false
+                                            });
+                                        }
                                     }
-                                    $(".modal-body").html(confirmMsg);
+
+                                    
                                 });
+
+                                function checkScheduleConflict () {
+                                    var reservationList = <?php echo json_encode($fetchReservations); ?>; 
+                                    var conflictCounter = 0;
+                                    var currentVenue = $("#venue").val();
+                                    var returnDetail = [];
+
+                                    console.log(reservationList.length);
+
+                                    for (let index = 0; index < reservationList.length; index++) {
+                                        if(reservationList[index]["venueID"] == currentVenue){
+                                            console.log("nisulod");
+                                            var convCurStartDate = new Date($('#startDate').val());
+                                            var convCurStartTime= $('#startTime').val();
+                                            var convCurEndDate = new Date($('#endDate').val());
+                                            var convCurEndTime = $('#endTime').val();
+
+                                            var approvedStartDate = new Date(reservationList[index]["date_start"]);
+                                            var approvedStartTime = reservationList[index]["time_start"];
+                                            var approvedEndDate = new Date(reservationList[index]["date_end"]);
+                                            var approvedEndTime = reservationList[index]["time_end"];
+
+                                            //To return
+                                            var reservationFlag = reservationList[index]["reservationID"];
+                                            var status = ((reservationList[index]["status"] == "A") ? "Approved" : "Pending");
+                                            var sTimeSplit = approvedStartTime.split(":");
+                                            var eTimeSplit = approvedEndTime.split(":");
+                                            returnDetail = [
+                                                [
+                                                    reservationFlag, 
+                                                    approvedStartDate.toDateString(), 
+                                                    ((sTimeSplit[0] > 12) ? (sTimeSplit[0] % 12) + ":" + sTimeSplit[1] : (approvedStartTime)) + " " + ((sTimeSplit[0] > 12) ? "PM" : "AM"),
+                                                    approvedEndDate.toDateString(),
+                                                    ((eTimeSplit[0] > 12) ? (eTimeSplit[0] % 12) + ":" + eTimeSplit[1] : (approvedEndTime)) + " " + ((eTimeSplit[0] > 12) ? "PM" : "AM"),
+                                                    status,
+                                                ]
+                                            ];
+
+                                            //If Approved Start Date is between current Data Range
+                                            var isApprovedStartDateBetweenCurrentDates = (approvedStartDate.getTime() > convCurStartDate.getTime()) 
+                                                && (approvedStartDate.getTime() < convCurEndDate.getTime());
+                                
+                                            //Vice versa
+                                            var isApprovedEndDateBetweenCurrentDates = (approvedEndDate.getTime() > convCurStartDate.getTime()) 
+                                                && (approvedEndDate.getTime() < convCurEndDate.getTime());
+
+                                            if((convCurStartDate.getTime() > approvedStartDate.getTime()) 
+                                                && (convCurStartDate.getTime() < approvedEndDate.getTime())) {
+                                                    console.log("1");
+                                                    conflictCounter++; break;
+                                            }
+                                            if((convCurStartDate.getTime() == approvedStartDate.getTime()) 
+                                                || (convCurStartDate.getTime() == approvedEndDate.getTime())) {
+                                                if((convCurStartTime >= approvedStartTime) && (convCurStartTime <= approvedEndTime)){
+                                                    console.log("2");
+                                                    conflictCounter++; break;
+                                                }else {
+                                                    if((approvedStartTime >= convCurStartTime) && (approvedStartTime <=  convCurEndTime)){
+                                                        console.log("2.1");
+                                                        conflictCounter++; break;
+                                                    }
+                                                    if((approvedEndTime >= convCurStartTime) && (approvedEndTime <= convCurEndTime)){
+                                                        console.log("2.2");
+                                                        conflictCounter++; break;
+                                                    }
+                                                }
+                                            }
+                                            if((convCurEndDate.getTime() > approvedStartDate.getTime()) 
+                                                && (convCurEndDate.getTime() < approvedEndDate.getTime())){
+                                                    console.log("3");
+                                                    conflictCounter++; break;
+                                            }
+                                            if((convCurEndDate.getTime() == approvedStartDate.getTime()) 
+                                                || (convCurEndDate.getTime() == approvedEndDate.getTime())){
+                                                if((convCurEndTime >= approvedStartTime) && (convCurEndTime <= approvedEndTime)){
+                                                    console.log("4");
+                                                    conflictCounter++; break;
+                                                }else {
+                                                    if((approvedStartTime >= convCurStartTime) && (approvedStartTime <=  convCurEndTime)){
+                                                        console.log("4.1");
+                                                        conflictCounter++; break;
+                                                    }
+                                                    if((approvedEndTime >= convCurStartTime) && (approvedEndTime <= convCurEndTime)){
+                                                        console.log("4.2");
+                                                        conflictCounter++; break;
+                                                    }
+                                                }
+                                            }
+                                            if(isApprovedStartDateBetweenCurrentDates && isApprovedEndDateBetweenCurrentDates) {
+                                                console.log("5");
+                                                conflictCounter ++; break;
+                                            }
+                                        }    
+                                    }
+                                    returnDetail = ((conflictCounter == 0) ? [] : returnDetail);
+                                    console.log("Counter: " + ((conflictCounter == 0) ? "No Conflicts" : "Conflict"));
+                                    return returnDetail;
+                                }
                             });
                         </script>
                     </div>

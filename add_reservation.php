@@ -158,7 +158,7 @@ if(!isset($_GET['queryStatus'])){
                                     </div>
                                     <div class="form-group">
                                         <label>Objectives</label>
-                                        <textarea class="form-control" id="exampleFormControlTextarea1" pattern="[A-Za-z]{1,25}" placeholder="Please specify the objectives" rows="3" name="description"></textarea>
+                                        <textarea class="form-control" id="exampleFormControlTextarea1" pattern="[A-Za-z]{1,25}" placeholder="Please specify the objectives" rows="3" name="description" requried></textarea>
                                         <!-- <input class="form-control" type="number" placeholder="No. of participants" name="participants" required> -->
                                     </div>
                                     <div class="form-group row">
