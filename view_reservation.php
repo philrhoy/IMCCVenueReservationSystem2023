@@ -40,6 +40,7 @@ include 'settings/topbar.php';
                         $fetch = $sequence->fetchAll(PDO::FETCH_OBJ);
 
                         foreach ($fetch as $data) {
+                            $res_dateadded = $data->date_added;
                             $res_id_text = $data->reservationID;
                             $activity = $data->name;
                             $participants = $data->num_participants;
@@ -86,10 +87,10 @@ include 'settings/topbar.php';
                             <div class="row">
                                 <div class="col-6">
                                     <div class="form-group row">
-                                        <div class="col-6">
+                                    <div class="col-6">
                                             <div class="form-group">
-                                                <label>ID</label>
-                                                <input class="form-control" type="text" name="resID" value="<?= $res_id_text ?>" readonly>
+                                                <label>Reservation Created On</label>
+                                                <input class="form-control" type="text" name="dateadded" value="<?= $res_dateadded ?>" readonly>
                                             </div>
                                         </div>
                                         <div class="col-6">
@@ -97,6 +98,12 @@ include 'settings/topbar.php';
                                                 <label>Status</label>
                                                 <br />
                                                 <span class="form-control badge <?= $statusColor ?>" style="padding-top:0.7em !important;"><?= $statusStr; ?></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="form-group">
+                                                <label>ID</label>
+                                                <input class="form-control" type="text" name="resID" value="<?= $res_id_text ?>" readonly>
                                             </div>
                                         </div>
                                     </div>

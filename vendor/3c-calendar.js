@@ -63,6 +63,7 @@ var cal = {
       document.getElementById("evtstart").value = `${year}-${month}-${day}`;
       document.getElementById("evtend").value = `${year}-${month}-${day}`;
       $("#evtvenue").val([]).trigger("change");
+      $("#evtprogram").val([]).trigger("change");
       document.getElementById("calformdel").style.display = "none";
     }
 
@@ -72,8 +73,11 @@ var cal = {
       document.getElementById("evtid").value = eid;
       document.getElementById("evtstart").value = edata['date_start'];
       document.getElementById("evtend").value = edata['date_end'];
+      document.getElementById("evtstime").value = edata['time_start'];
+      document.getElementById("evtetime").value = edata['time_end'];
       $("#evtvenue").val(edata['venueID']).trigger("change");
       document.getElementById("evtname").value = edata['name'];
+      $("#evtprogram").val(edata['programID']).trigger("change");
       $("#evtstatus").val(edata['status']).trigger("change");
       // document.getElementById("evtvenue").value = edata['venueID'];
       // document.getElementById("evtcontact").value = edata['contact'];
@@ -106,6 +110,7 @@ var cal = {
     data.append("start", document.getElementById("evtstart").value);
     data.append("end", document.getElementById("evtend").value);
     data.append("venueID", $('#evtvenue option:selected').val());
+    data.append("programID", $('#evtprogram option:selected').val());
 
     data.append("txt", document.getElementById("evttxt").value);
     // data.append("color", document.getElementById("evtcolor").value);

@@ -23,7 +23,8 @@ if (isset($_POST['status'])){
                             `program`.name AS 'PROGRAM_NAME',
                             `schedules`.date_start AS 'START_DATE',
                             `schedules`.date_end AS 'END_DATE',
-                            `schedules`.status AS 'STATUS' FROM `schedules` 
+                            `schedules`.status AS 'STATUS',
+                            `schedules`.date_added as 'DATE_ADDEDS' FROM `schedules` 
                         INNER JOIN `venues` 
                             ON `schedules`.venueID = `venues`.id
                         INNER JOIN `program` 
@@ -58,7 +59,7 @@ if (isset($_POST['status'])){
 <table class="table table-sm table-bordered table-hovered" width="100%" cellspacing="0">
     <thead>
         <tr>
-            <th>Reservation ID</th>
+            <th>Date Added</th>
             <th>Activity</th>
             <th>Schedule Date</th>
             <th>Program</th>
@@ -92,7 +93,7 @@ if (isset($_POST['status'])){
     
         ?>
             <tr>
-                <td><?= $row->RESERVATION_ID; ?></td>
+                <td><?= $row->DATE_ADDEDS; ?></td>
                 <td><?= '<a href="view_reservation.php?reservation_id='.$row->INT_RES_ID.'" target="_blank">' . $row->ACTIVITY. '</a>'; ?></td>
                 <td><?= $row->START_DATE . "-" . $row->END_DATE; ?></td>
                 <td><?= $row->PROGRAM_NAME; ?></td>

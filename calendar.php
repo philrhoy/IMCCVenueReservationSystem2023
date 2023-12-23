@@ -85,9 +85,39 @@ include 'settings/topbar.php';
             </div>
             <div class="form-group">
                 <div class="row">
+                    <div class="col-md-6">
+                        <label for="evtstart">Time Start</label>
+                        <input type="time" id="evtstime" class="form-control" readonly />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="evtend">Time End</label>
+                        <input type="time" id="evtetime" class="form-control" readonly />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
                     <div class="col-md-12">
                         <label for="evtname">Event Name</label>
                         <input type="text" id="evtname" class="form-control" readonly />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-12">
+                        <label for="evtvenue">Program</label>
+                        <select name="evtvenue" id="evtprogram" class="form-control" disabled readonly>
+                            <option value=""></option>
+                            <?php
+                            $getProgram = $db->query("SELECT * FROM program ORDER BY name ASC");
+                            $res = $getProgram->fetchAll(PDO::FETCH_OBJ);
+                            foreach ($res as $p) { ?>
+                                <option value="<?php echo $p->id; ?>" ?><?php echo $p->name; ?></option>
+                            <?php
+                            }
+                            ?>
+                        </select>
                     </div>
                 </div>
             </div>
