@@ -24,8 +24,8 @@ include 'settings/topbar.php';
                     <div class="form-group form-inline" <?php echo ($_SESSION["position"] == "STO" ? "hidden disabled" : "") ?>>
                         <label for=""><small>Sort by</small> &nbsp;&nbsp;</label>
                         <select class="form-control form-control-sm" name="orderBy" id="orderBy" style="width: 10%;">
-                            <option value="DESC">Latest to Oldest</option>
-                            <option value="ASC" selected>Oldest to Latest</option>
+                            <option value="ASC">Oldest to Latest</option>
+                            <option value="DESC" selected>Latest to Oldest</option>
                         </select>
                         &nbsp;&nbsp;
                         <label><small>Filter by Program</small> &nbsp;</label>
@@ -134,7 +134,7 @@ include 'settings/topbar.php';
                                 if ($_SESSION["position"] == "PTC") {
                                     $fetchReservations .= " WHERE `schedules`.status = 'A'";
                                 }
-
+                                $fetchReservations .= " ORDER BY `schedules`.date_added DESC";
                                 $reservations = $db->query($fetchReservations);
                                 // WHERE `schedules`.date_start BETWEEN '$filterStart' AND '$filterEnd'
                                 $row_reservations = $reservations->fetchAll(PDO::FETCH_OBJ);
