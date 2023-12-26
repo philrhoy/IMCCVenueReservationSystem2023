@@ -22,42 +22,15 @@ include 'settings/topbar.php';
             <div class="card shadow mb-4">
                 <div class="card-body">
                     <div class="form-group form-inline" <?php echo ($_SESSION["position"] == "STO" ? "hidden disabled" : "") ?>>
-                        <label for=""><small>Filter by Status</small> &nbsp;&nbsp;</label>
-                        <select class="form-control form-control-sm" name="filterByStatus" id="filterByStatus">
-                            <option value="0">No Selection</option>
-                            <option value="P">Pending</option>
-                            <option value="A" <?php echo ((($_SESSION["position"] == "PTC") ? "selected" : "")); ?>>Approved</option>
-                            <option value="R">Rejected</option>
-                            <!-- <option value="AA"<?php echo ($_SESSION["position"] != "DSA" ? "hidden disabled" : "") ?>>Approved by Admin</option>
-                            <option value="RA"<?php echo ($_SESSION["position"] != "DSA" ? "hidden disabled" : "") ?>>Rejected by Admin</option> -->
+                        <label for=""><small>Sort by</small> &nbsp;&nbsp;</label>
+                        <select class="form-control form-control-sm" name="orderBy" id="orderBy" style="width: 10%;">
+                            <option value="DESC">Latest to Oldest</option>
+                            <option value="ASC" selected>Oldest to Latest</option>
                         </select>
                         &nbsp;&nbsp;
-                        <label><small>Venue</small> &nbsp;</label>
-                        <select class="form-control form-control-sm" name="filterByVenue" id="filterByVenue">
-                            <option value="0" selected>No selection</option>
-                            <?php
-                            $fetchVenues = $db->query("SELECT * FROM `venues` ORDER BY name ASC");
-
-                            $row_donor = $fetchVenues->fetchAll(PDO::FETCH_OBJ);
-
-                            foreach ($row_donor as $row) {
-                                if (htmlentities($_POST['venue']) == $row->id) {
-                            ?>
-                                    <option value="<?php echo $row->id ?>" selected> <?php echo $row->name ?> </option>
-                                <?php
-                                } else {
-                                ?>
-                                    <option value="<?php echo $row->id ?>"> <?php echo $row->name ?> </option>
-                            <?php
-                                }
-                            }
-
-                            ?>
-                        </select>
-                        &nbsp;&nbsp;
-                        <label><small>Program</small> &nbsp;</label>
-                        <select class="form-control form-control-sm" name="filterByProgram" id="filterByProgram">
-                            <option value="0" selected>No selection</option>
+                        <label><small>Filter by Program</small> &nbsp;</label>
+                        <select class="form-control form-control-sm" name="filterByProgram" id="filterByProgram" style="width: 10%;">
+                            <option value="0" selected >All</option>
                             <?php
                             $fetchPrograms = $db->query("SELECT * FROM `program` ORDER BY name ASC");
 
@@ -78,11 +51,45 @@ include 'settings/topbar.php';
 
                         </select>
                         &nbsp;&nbsp;
+                        <label><small>Venue</small> &nbsp;</label>
+                        <select class="form-control form-control-sm" name="filterByVenue" id="filterByVenue"style="width: 10%;">
+                            <option value="0" selected>All</option>
+                            <?php
+                            $fetchVenues = $db->query("SELECT * FROM `venues` ORDER BY name ASC");
+
+                            $row_donor = $fetchVenues->fetchAll(PDO::FETCH_OBJ);
+
+                            foreach ($row_donor as $row) {
+                                if (htmlentities($_POST['venue']) == $row->id) {
+                            ?>
+                                    <option value="<?php echo $row->id ?>" selected> <?php echo $row->name ?> </option>
+                                <?php
+                                } else {
+                                ?>
+                                    <option value="<?php echo $row->id ?>"> <?php echo $row->name ?> </option>
+                            <?php
+                                }
+                            }
+
+                            ?>
+                        </select>
+                        &nbsp;&nbsp;
                         <label><small>User Type</small> &nbsp;</label>
-                        <select class="form-control form-control-sm" name="filterByUserType" id="filterByUserType">
-                            <option value="0" selected>No Selection</option>
+                        <select class="form-control form-control-sm" name="filterByUserType" id="filterByUserType" style="width: 10%;">
+                            <option value="0" selected>All User Type</option>
                             <option value="S">Student</option>
                             <option value="D">Admin</option>
+                        </select>
+                       
+                        &nbsp;&nbsp;
+                        <label for=""><small>Filter by Status</small> &nbsp;&nbsp;</label>
+                        <select class="form-control form-control-sm" name="filterByStatus" id="filterByStatus" style="width: 10%;">
+                            <option value="0">All</option>
+                            <option value="P">Pending</option>
+                            <option value="A" <?php echo ((($_SESSION["position"] == "PTC") ? "selected" : "")); ?>>Approved</option>
+                            <option value="R">Rejected</option>
+                            <!-- <option value="AA"<?php echo ($_SESSION["position"] != "DSA" ? "hidden disabled" : "") ?>>Approved by Admin</option>
+                            <option value="RA"<?php echo ($_SESSION["position"] != "DSA" ? "hidden disabled" : "") ?>>Rejected by Admin</option> -->
                         </select>
                         <div class="form-inline" style="margin-left: auto;">
                             <input class="form-control form-control-sm" type="text" name="filterSearch" id="filterSearch" placeholder="Search title" style="margin-left: auto;">
@@ -174,12 +181,14 @@ include 'settings/topbar.php';
                         </table>
                         <script>
                             $(document).ready(function() {
-                                $("#filterByStatus").on("change", function() {
-                                    var statusVal = $(this).val();
+                                $("#orderBy").on("change", function() {
+                                    var orderByVal = $(this).val();
+                                    var statusVal = $("#filterByStatus").val();
                                     var venueVal = $("#filterByVenue").val();
                                     var programVal = $("#filterByProgram").val();
                                     var searchVal = $("#filterSearch").val();
                                     var userTypeVal = $("#filterByUserType").val();
+
                                     $.ajax({
                                         url: "fetch_filtered_reservations.php",
                                         type: "POST",
@@ -188,7 +197,34 @@ include 'settings/topbar.php';
                                             venue: venueVal,
                                             program: programVal,
                                             userType: userTypeVal,
-                                            search: searchVal
+                                            search: searchVal,
+                                            orderBy: orderByVal
+                                        },
+                                        beforeSend: function() {
+
+                                        },
+                                        success: function(data) {
+                                            $(".table-responsive").html(data);
+                                        }
+                                    });
+                                });
+                                $("#filterByStatus").on("change", function() {
+                                    var statusVal = $(this).val();
+                                    var venueVal = $("#filterByVenue").val();
+                                    var programVal = $("#filterByProgram").val();
+                                    var searchVal = $("#filterSearch").val();
+                                    var userTypeVal = $("#filterByUserType").val();
+                                    var orderByVal = $("#orderBy").val();
+                                    $.ajax({
+                                        url: "fetch_filtered_reservations.php",
+                                        type: "POST",
+                                        data: {
+                                            status: statusVal,
+                                            venue: venueVal,
+                                            program: programVal,
+                                            userType: userTypeVal,
+                                            search: searchVal,
+                                            orderBy: orderByVal
                                         },
                                         beforeSend: function() {
 
@@ -204,6 +240,7 @@ include 'settings/topbar.php';
                                     var programVal = $("#filterByProgram").val();
                                     var searchVal = $("#filterSearch").val();
                                     var userTypeVal = $("#filterByUserType").val();
+                                    var orderByVal = $("#orderBy").val();
                                     var venueVal = $(this).val();
                                     $.ajax({
                                         url: "fetch_filtered_reservations.php",
@@ -213,7 +250,8 @@ include 'settings/topbar.php';
                                             venue: venueVal,
                                             program: programVal,
                                             userType: userTypeVal,
-                                            search: searchVal
+                                            search: searchVal,
+                                            orderBy: orderByVal
                                         },
                                         beforeSend: function() {
 
@@ -229,6 +267,7 @@ include 'settings/topbar.php';
                                     var venueVal = $("#filterByVenue").val();
                                     var searchVal = $("#filterSearch").val();
                                     var userTypeVal = $("#filterByUserType").val();
+                                    var orderByVal = $("#orderBy").val();
                                     var programVal = $(this).val();
                                     $.ajax({
                                         url: "fetch_filtered_reservations.php",
@@ -238,7 +277,8 @@ include 'settings/topbar.php';
                                             venue: venueVal,
                                             program: programVal,
                                             userType: userTypeVal,
-                                            search: searchVal
+                                            search: searchVal,
+                                            orderBy: orderByVal
                                         },
                                         beforeSend: function() {
 
@@ -254,6 +294,7 @@ include 'settings/topbar.php';
                                     var venueVal = $("#filterByVenue").val();
                                     var programVal = $("#filterByProgram").val();
                                     var userTypeVal = $("#filterByUserType").val();
+                                    var orderByVal = $("#orderBy").val();
                                     var searchVal = $(this).val();
                                     $.ajax({
                                         url: "fetch_filtered_reservations.php",
@@ -263,7 +304,8 @@ include 'settings/topbar.php';
                                             venue: venueVal,
                                             program: programVal,
                                             userType: userTypeVal,
-                                            search: searchVal
+                                            search: searchVal,
+                                            orderBy: orderByVal
                                         },
                                         beforeSend: function() {
 
@@ -279,6 +321,7 @@ include 'settings/topbar.php';
                                     var venueVal = $("#filterByVenue").val();
                                     var programVal = $("#filterByProgram").val();
                                     var searchVal = $("#filterSearch").val();
+                                    var orderByVal = $("#orderBy").val();
                                     var userTypeVal = $(this).val();
                                     $.ajax({
                                         url: "fetch_filtered_reservations.php",
@@ -288,7 +331,8 @@ include 'settings/topbar.php';
                                             venue: venueVal,
                                             program: programVal,
                                             userType: userTypeVal,
-                                            search: searchVal
+                                            search: searchVal,
+                                            orderBy: orderByVal
                                         },
                                         beforeSend: function() {
 

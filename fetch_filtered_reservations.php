@@ -9,6 +9,7 @@ if (isset($_POST['status'])){
     $filterProgram = $_POST['program'];
     $filterSearch = $_POST['search'];
     $filterUserType = $_POST['userType'];
+    $orderBy = $_POST['orderBy'];
     $appendAdminID = "";
 
     if($status == "AA" || $status == "RA"){
@@ -54,6 +55,7 @@ if (isset($_POST['status'])){
     if($filterSearch != ""){
         $fetchReservations .= "AND (`schedules`.name LIKE '%$filterSearch%')";
     }
+    $fetchReservations .=  " ORDER BY `schedules`.id $orderBy";
 
 ?>
 <table class="table table-sm table-bordered table-hovered" width="100%" cellspacing="0">
