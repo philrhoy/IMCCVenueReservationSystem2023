@@ -55,8 +55,7 @@ if (isset($_POST['status'])){
     if($filterSearch != ""){
         $fetchReservations .= "AND (`schedules`.name LIKE '%$filterSearch%')";
     }
-
-    $fetchReservations .=  " ORDER BY `schedules`.date_added $orderBy";
+    $fetchReservations .=  " ORDER BY `schedules`.id $orderBy";
 
 ?>
 <table class="table table-sm table-bordered table-hovered" width="100%" cellspacing="0">
