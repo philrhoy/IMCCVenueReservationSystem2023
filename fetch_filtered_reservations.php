@@ -48,7 +48,14 @@ if (isset($_POST['status'])){
     }
 
     if($filterUserType != "0"){
-        $position = (($filterUserType == "S") ? "STO" : "DSA");
+        if($filterUserType == "S"){
+            $position = "STO";
+        }elseif($filterUserType == "D"){
+            $position = "DSA";
+        }else{
+            $position = "PTC";
+        }
+        // $position = (($filterUserType == "S") ? "STO" : "DSA");
         $fetchReservations .= "AND (`users`.position = '$position')";
     }
 

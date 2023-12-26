@@ -74,16 +74,17 @@ include 'settings/topbar.php';
                             ?>
                         </select>
                         &nbsp;&nbsp;
-                        <label><small>User Type</small> &nbsp;</label>
+                        <label><small>User Submission</small> &nbsp;</label>
                         <select class="form-control form-control-sm" name="filterByUserType" id="filterByUserType" style="width: 10%;">
                             <option value="0" selected>All User Type</option>
-                            <option value="S">Student</option>
-                            <option value="D">Admin</option>
+                            <option value="S">Student Submissions</option>
+                            <option value="D">DSA Submissions</option>
+                            <option value="P">PTC Submissions</option>
                         </select>
                        
                         &nbsp;&nbsp;
                         <label for=""><small>Filter by Status</small> &nbsp;&nbsp;</label>
-                        <select class="form-control form-control-sm" name="filterByStatus" id="filterByStatus" style="width: 10%;">
+                        <select class="form-control form-control-sm" name="filterByStatus" id="filterByStatus" style="width: 7%;">
                             <option value="0">All</option>
                             <option value="P">Pending</option>
                             <option value="A" <?php echo ((($_SESSION["position"] == "PTC") ? "selected" : "")); ?>>Approved</option>
@@ -91,10 +92,9 @@ include 'settings/topbar.php';
                             <!-- <option value="AA"<?php echo ($_SESSION["position"] != "DSA" ? "hidden disabled" : "") ?>>Approved by Admin</option>
                             <option value="RA"<?php echo ($_SESSION["position"] != "DSA" ? "hidden disabled" : "") ?>>Rejected by Admin</option> -->
                         </select>
-                        <div class="form-inline" style="margin-left: auto;">
-                            <input class="form-control form-control-sm" type="text" name="filterSearch" id="filterSearch" placeholder="Search title" style="margin-left: auto;">
+                        <div class="form-inline" style="margin-left: auto; ">
+                            <input class="form-control form-control-sm" type="text" name="filterSearch" id="filterSearch" placeholder="Search title" style="margin-left: auto; ">
                         </div>
-
                     </div>
 
                     <div class="table-responsive">
@@ -352,4 +352,3 @@ include 'settings/topbar.php';
         </div>
     </div>
     <?php include 'settings/footer.php'; ?>
-    
