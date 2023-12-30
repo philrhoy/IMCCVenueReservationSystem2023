@@ -78,7 +78,7 @@ include 'settings/topbar.php';
                         <select class="form-control form-control-sm" name="filterByUserType" id="filterByUserType" style="width: 10%;">
                             <option value="0" selected>All User Type</option>
                             <option value="S">Student Submissions</option>
-                            <option value="D">DSA Submissions</option>
+                            <option value="D" <?php echo ($_SESSION["position"] == "DSA" ? "selected" : "")?>>DSA Submissions</option>
                             <option value="P">PTC Submissions</option>
                         </select>
                        
@@ -124,7 +124,9 @@ include 'settings/topbar.php';
                                                         INNER JOIN `venues` 
                                                         ON `schedules`.venueID = `venues`.id
                                                         INNER JOIN `program` 
-                                                        ON `schedules`.programID = `program`.id";
+                                                        ON `schedules`.programID = `program`.id
+                                                        INNER JOIN `users` 
+                                                        ON `users`.id  = `schedules`.userID";
 
                                 if ($_SESSION['position'] == 'STO') {
                                     $userID = $_SESSION['id'];
@@ -134,6 +136,12 @@ include 'settings/topbar.php';
                                 if ($_SESSION["position"] == "PTC") {
                                     $fetchReservations .= " WHERE `schedules`.status = 'A'";
                                 }
+
+                                if ($_SESSION["position"] == "DSA") {
+                                    $loggedUser = $_SESSION['id'];
+                                    $fetchReservations .= " WHERE `schedules`.userID = '$loggedUser'";
+                                }
+                                
                                 $fetchReservations .= " ORDER BY `schedules`.date_added DESC";
                                 $reservations = $db->query($fetchReservations);
                                 // WHERE `schedules`.date_start BETWEEN '$filterStart' AND '$filterEnd'
