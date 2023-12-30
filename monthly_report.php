@@ -12,7 +12,7 @@ $donor = null;
 
         <div class="container-fluid">
             <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                <h1 class="h3 mb-2 text-gray-800">Monthly Report</h1>
+                <h1 class="h3 mb-2 text-gray-800">Monthly Report of Activites</h1>
                 <!-- <a href="venue_add.php" class="btn btn-success btn-icon-split btn-sm keychainify-checked">
                     <span class="icon text-white-50">
                         <i class="fas fa-fw fa-plus"></i>

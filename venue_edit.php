@@ -31,12 +31,12 @@ include 'settings/topbar.php';
                         $update_venue = $db->query("UPDATE venues SET `name` = '$name', `capacity` = '$capacity', `dateUpdated` = NOW() WHERE `id`= $id") or die($db->error);
                         if (!$update_venue) {
                             echo '<script>
-    alert("Error updating venue data.");
-</script>';
+                                alert("Error updating venue data.");
+                            </script>';
                         } else {
                             echo '<script>
-    alert("Venue successfully updated.");
-</script>';
+                                alert("Venue successfully updated.");
+                            </script>';
                         }
                     }
 
@@ -64,13 +64,13 @@ include 'settings/topbar.php';
                             </div>
                             <div class="form-group">
                                 <label>Name</label>
-                                <input class="form-control" type="text" placeholder="Name" name="name" value="<?= $e_name ?>" required>
+                                <input class="form-control" type="text" placeholder="Name" name="name" value="<?= $e_name ?>" <?php echo ($_SESSION['position'] == 'DSA' ? "readonly" : ""); ?> required>
                             </div>
                             <div class="form-group">
                                 <label>Seat Capacity (Approx.)</label>
-                                <input class="form-control" type="text" placeholder="Seat Capacity" name="capacity" value="<?= $e_capacity ?>" required>
+                                <input class="form-control" type="text" placeholder="Seat Capacity" name="capacity" value="<?= $e_capacity ?>"  <?php echo ($_SESSION['position'] == 'DSA' ? "readonly" : ""); ?> required>
                             </div>
-                            <button type="submit" class="btn btn-success btn-icon-split btn-sm keychainify-checked">
+                            <button type="submit" class="btn btn-success btn-icon-split btn-sm keychainify-checked" style="display:<?php echo ($_SESSION['position'] == 'DSA' ? "none" : "block" )?>"> 
                                 <span class="icon text-white-50">
                                     <i class="fas fa-save"></i>
                                 </span>

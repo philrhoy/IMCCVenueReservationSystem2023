@@ -33,12 +33,12 @@ include 'settings/topbar.php';
 
                         if (!$update_program) {
                             echo '<script>
-    alert("Error updating college program data.");
-</script>';
+                                    alert("Error updating college program data.");
+                                </script>';
                         } else {
                             echo '<script>
-    alert("College program successfully updated.");
-</script>';
+                                    alert("College program successfully updated.");
+                                </script>';
                         }
                     }
                     if (!$_GET['id'] or empty($_GET['id']) or $_GET['id'] == '') {
@@ -66,17 +66,17 @@ include 'settings/topbar.php';
                             </div>
                             <div class="form-group">
                                 <label>Name</label>
-                                <input class="form-control" type="text" placeholder="Name" name="name" value="<?= $e_name ?>" required>
+                                <input class="form-control" type="text" placeholder="Name" name="name" value="<?= $e_name ?>" <?php echo ($_SESSION['position'] == 'DSA' ? "readonly" : ""); ?> required>
                             </div>  
                             <div class="form-group">
                                 <label>In-charge Organization</label>
-                                <input class="form-control" type="text"  name="org" value="<?= $e_org ?>" required>
+                                <input class="form-control" type="text"  name="org" value="<?= $e_org ?>" <?php echo ($_SESSION['position'] == 'DSA' ? "readonly" : ""); ?> required>
                             </div>
                             <div class="form-group">
                                 <label>Color</label>
-                                <input class="form-control" type="color" placeholder="" name="color" value="<?= $e_color ?>" required>
+                                <input class="form-control" type="color" placeholder="" name="color" value="<?= $e_color ?>" <?php echo ($_SESSION['position'] == 'DSA' ? "disabled" : ""); ?> required>
                             </div>
-                            <button type="submit" class="btn btn-success btn-icon-split btn-sm keychainify-checked">
+                            <button type="submit" class="btn btn-success btn-icon-split btn-sm keychainify-checked" style="display:<?php echo ($_SESSION['position'] == 'DSA' ? "none" : "block" )?>">
                                 <span class="icon text-white-50">
                                     <i class="fas fa-save"></i>
                                 </span>

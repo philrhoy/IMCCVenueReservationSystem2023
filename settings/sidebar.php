@@ -63,17 +63,8 @@
                         <span>Create Reservation</span></a>
                 </li>
             <?php
-            } else if($_SESSION['position'] == 'PTC') {
-            ?>
-                <li class="nav-item <?= $reservation; ?>">
-                    <a class="nav-link" href="reservation_list.php">
-                        <i class="fas fa-fw fa-bars"></i>
-                        <span>Reservations</span></a>
-                </li>
-            <?php
-            }
-
-            if ($_SESSION['position'] == 'DSA') {
+            
+            }else if ($_SESSION['position'] == 'DSA' || $_SESSION['position'] == 'PTC') {
             ?>
             <li class="nav-item <?= $reservation; ?>">
                     <a class="nav-link" href="add_reservation.php">
@@ -89,18 +80,17 @@
             <hr class="sidebar-divider">
 
             <!-- Heading -->
+            <?php if($_SESSION['position'] == 'DSA'){?>
             <div class="sidebar-heading">
                 Reports 
             </div>
             <li class="nav-item <?= $reservation; ?>">
                     <a class="nav-link" href="monthly_report.php">
                         <i class="fas fa-fw fa-print"></i>
-                        <span>Monthly Report</span></a>
+                        <span>Monthly Report of Activites</span></a>
                 </li>   
-                
-            <?php } ?>
             <hr class="sidebar-divider">
-
+            <?php } ?>
             <!-- Heading -->
             <div class="sidebar-heading">
                 Profiles
@@ -119,16 +109,14 @@
                     <i class="fas fa-fw fa-flag"></i>
                     <span>Programs</span></a>
             </li>
-            <?php
-            if ($_SESSION['position'] == 'DSA') {
-            ?>
-            <!-- Nav Item - Users -->
-            <li class="nav-item <?= $user; ?>">
+             <!-- Nav Item - Users -->
+             <li class="nav-item <?= $user; ?>">
                 <a class="nav-link" href="users.php">
                     <i class="fas fa-fw fa-users"></i>
                     <span>Users</span></a>
             </li>
             <?php } ?>
+   
             <!-- Nav Item - Pages Collapse Menu -->
             <!-- <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">

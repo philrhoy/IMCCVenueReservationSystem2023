@@ -60,12 +60,14 @@ include 'settings/topbar.php';
                                                 </span>
                                                 <span class="text">Edit</span>
                                             </a>
+                                            <?php if ($_SESSION['position'] === 'PTC') { ?>
                                             <a href="user_delete.php?id=<?php echo $row->id; ?>" onclick="return confirm('Are you sure you want to delete this user?')" class="btn btn-danger btn-icon-split btn-sm keychainify-checked">
                                                 <span class="icon text-white-50">
                                                     <i class="fas fa-trash"></i>
                                                 </span>
                                                 <span class="text">Delete</span>
                                             </a>
+                                            <?php } ?>
                                         </td>
                                     </tr>
                                 <?php } ?>

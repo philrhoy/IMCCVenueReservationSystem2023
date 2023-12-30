@@ -12,7 +12,7 @@ include 'settings/topbar.php';
         <div class="container-fluid">
             <div class="d-sm-flex align-items-center justify-content-between mb-4">
                 <h1 class="h3 mb-2 text-gray-800">Program List</h1>
-                <?php if ($_SESSION['position'] === 'DSA') { ?>
+                <?php if ($_SESSION['position'] === 'DSA' || $_SESSION['position'] === 'PTC') { ?>
                     <a href="program_add.php" class="btn btn-success btn-icon-split btn-sm keychainify-checked">
                         <span class="icon text-white-50">
                             <i class="fas fa-fw fa-plus"></i>
@@ -32,7 +32,7 @@ include 'settings/topbar.php';
                                     <th>Name</th>
                                     <th>In-charge Organization</th>
                                     <th>Color</th>
-                                    <?php if ($_SESSION['position'] === 'DSA') { ?>
+                                    <?php if ($_SESSION['position'] === 'PTC') { ?>
                                         <th>Actions</th>
                                     <?php } ?>
                                 </tr>
@@ -45,11 +45,11 @@ include 'settings/topbar.php';
                                 foreach ($row_donor as $row) {
                                 ?>
                                     <tr>
-                                        <td><?php echo ($_SESSION['position'] === 'DSA') ? '<a href="program_edit.php?id=' . $row->id . '">' . $row->programID . '</a>' : $row->programID; ?></td>
+                                        <td><a href="program_edit.php?id=<?php echo $row->id ?>"><?php echo $row->programID ?></a></td>
                                         <td><?= $row->name; ?></td>
                                         <td><?= $row->incharge_organization; ?></td>
                                         <td align="center"><i class="fas fa-circle" style="font-size:2rem;color:<?= $row->color; ?>"></i></td>
-                                        <?php if ($_SESSION['position'] === 'DSA') { ?>
+                                        <?php if ($_SESSION['position'] === 'PTC') { ?>
                                             <td align="center">
                                                 <a href="program_edit.php?id=<?php echo $row->id; ?>" class="btn btn-primary btn-icon-split btn-sm keychainify-checked">
                                                     <span class="icon text-white-50">
