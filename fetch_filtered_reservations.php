@@ -83,9 +83,13 @@ if (isset($_POST['status'])){
         // WHERE `schedules`.date_start BETWEEN '$filterStart' AND '$filterEnd'
         $row_reservations = $reservations->fetchAll(PDO::FETCH_OBJ);
         foreach ($row_reservations as $row) {
-            $statusStr = "Pending for Approval";
+            $statusStr = "Draft";
 
             switch($row->STATUS){
+                case "D":
+                    $statusColor = "badge-primary";
+                    $statusStr = "Draft";
+                    break;
                 case "P":
                     $statusColor = "badge-warning";
                     $statusStr = "Pending for Approval";

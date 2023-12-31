@@ -1,128 +1,82 @@
 <?php
-include 'settings/system.php';
-include 'session.php';
-include 'settings/header.php';
-include "settings/sidebar.php";
-include 'settings/topbar.php';
-include 'notification_helper.php';
-$queryStatus = 0;
-/*
-    0 = default/no query
-    1 = error 
-    2 = success
-*/
+    include 'settings/system.php';
+    include 'session.php';
+    include 'settings/header.php';
+    include "settings/sidebar.php";
+    include 'settings/topbar.php';
+    include 'notification_helper.php';
+    $queryStatus = 0;
+    /*
+        0 = default/no query
+        1 = error 
+        2 = success
+    */
 
-if (isset($_POST['submit'])) {
-    $id = $_POST['id'];
-    $res_id = $_POST['resID'];
-    $user_id = $_SESSION['id'];
-    $user_name = $_SESSION['username'];
-    $activity = $_POST['activity'];
-    $participants = $_POST['participants'];
-    $description = $_POST['description'];
-    $venueID = $_POST['venue'];
-    $programID = $_POST['program'];
-    $startDate = $_POST['start_date'];
-    $endDate = $_POST['end_date'];
-    $startTime = $_POST['start_time'];
-    $endTime = $_POST['end_time'];
-    $contact = $_POST['contact_no'];
+    if (isset($_POST['submit'])) {
+        $id = $_POST['id'];
+        $res_id = $_POST['resID'];
+        $user_id = $_SESSION['id'];
+        $user_name = $_SESSION['username'];
+        $activity = $_POST['activity'];
+        $participants = $_POST['participants'];
+        $description = $_POST['description'];
+        $venueID = $_POST['venue'];
+        $programID = $_POST['program'];
+        $startDate = $_POST['start_date'];
+        $endDate = $_POST['end_date'];
+        $startTime = $_POST['start_time'];
+        $endTime = $_POST['end_time'];
+        $contact = $_POST['contact_no'];
+        $sponsor = $_POST['sponsor'];
+        $contribution = $_POST['contribution'];
+        $incharge = $_POST['incharge'];
 
-    $imgForms = array();
-
-    if ($_FILES["activityFormImg"]["error"]) {
-        echo "<script> alert('Image does not exist')</script>";
-    } else {
-        //CHECK FOR IMAGE ERRORS:
-        $valid_extensions = ['jpeg', 'jpg', 'png', 'pdf'];
-        $check_error = 0;
-
-        foreach ($_FILES as $file) {
-            if ($file["name"] == "" || $file["size"] == "") continue;
-            $file_name = $file["name"];
-            $file_size = $file["size"];
-
-            $image_extension = explode(".", $file_name);
-            $image_extension = strtolower(end($image_extension));
-
-            if (!in_array($image_extension, $valid_extensions)) {
-                $queryStatus = 1;
-                $check_error++;
-            } elseif ($file_size > 10000000) {
-                $queryStatus = 1;
-                $check_error++;
-            }
-        }
-
-        //Upload image 
-        if ($check_error == 0) {
-
-            foreach ($_FILES as $file) {
-                if ($file["name"] == "" || $file_size == "") continue;
-                $file_name = $file["name"];
-                $tmp_name = $file["tmp_name"];
-                //$tmp_name = $_FILES['photo']['tmp_name'];
-                $fileerror = $file['error'];
-
-                $image_extension = explode(".", $file_name);
-                $image_extension = strtolower(end($image_extension));
-
-                $unique_img_name = uniqid();
-                $unique_img_name .= '.' . $image_extension;
-                $path = 'uploads/';
-                move_uploaded_file($tmp_name, $path . $unique_img_name);
-
-                array_push($imgForms, $unique_img_name);
-            }
-
-            $activity_form = $imgForms[0];
-            $letter_approval = ((sizeof($imgForms) > 1) ? $imgForms[1] : "");
-            $add_res = $db->query("INSERT INTO `schedules` 
-                    (reservationID,userID,venueID,programID,date_start,date_end,time_start,time_end,name,contact,description,num_participants,act_form_file,letter_approve_file) values
-                    ('$res_id','$user_id','$venueID','$programID','$startDate','$endDate','$startTime','$endTime','$activity','$contact','$description','$participants','$activity_form','$letter_approval')")
-                or die($db->error);
-            $update_sequence = $db->query("UPDATE number_sequence SET last_number = '$id' WHERE page_name='reservations'");
-
-            if (!$add_res) {
-                $queryStatus = 1;
-                header("location: add_reservation.php?queryStatus=".$queryStatus);
-            } else {
-                $notiHelper = new NotificationHelper();
-                $user_name = $_SESSION['name2'];
-                $notificationContent = $notiHelper->createNotification($res_id, strtoupper($user_name), "CREATE");
-                $redirectPage = "edit_reservation.php?reservation_id=" . $res_id;
-
-                $add_notif = $db->query("INSERT INTO `notifications` 
-                    (type, sourceUser, notifyToAllUserType, details, link, dateAdded) values
-                    ('CREATE','$user_id','DSA','$notificationContent','$redirectPage',NOW())")
+        $imgForms = array();
+        
+        $add_res = $db->query("INSERT INTO `schedules` 
+                        (reservationID,userID,venueID,programID,date_start,date_end,time_start,time_end,name,contact,description,num_participants,sponsor,contribution,incharge) values
+                        ('$res_id','$user_id','$venueID','$programID','$startDate','$endDate','$startTime','$endTime','$activity','$contact','$description','$participants','$sponsor','$contribution','$incharge')")
                     or die($db->error);
+        $update_sequence = $db->query("UPDATE number_sequence SET last_number = '$id' WHERE page_name='reservations'");
 
-                $queryStatus = 2;
-                header("location: add_reservation.php?queryStatus=".$queryStatus);
-            }
+        if (!$add_res) {
+            $queryStatus = 1;
+            header("location: add_reservation.php?queryStatus=".$queryStatus);
+        } else {
+            $notiHelper = new NotificationHelper();
+            $user_name = $_SESSION['name2'];
+            $notificationContent = $notiHelper->createNotification($res_id, strtoupper($user_name), "CREATE");
+            $redirectPage = "edit_reservation.php?reservation_id=" . $res_id;
+
+            $add_notif = $db->query("INSERT INTO `notifications` 
+                (type, sourceUser, notifyToAllUserType, details, link, dateAdded) values
+                ('CREATE','$user_id','DSA','$notificationContent','$redirectPage',NOW())")
+                or die($db->error);
+
+            $queryStatus = 2;
+            header("location: add_reservation.php?queryStatus=".$queryStatus);
         }
     }
-}
 
-$sequence = $db->query("SELECT * FROM number_sequence WHERE page_name = 'reservations'");
-$fetch = $sequence->fetchAll(PDO::FETCH_OBJ);
-foreach ($fetch as $data) {
-    $newID = $data->last_number + 1;
-    $lengthID = strlen((string)$newID);
-    if ($lengthID == 1) $ID = "00000" . $newID;
-    elseif ($lengthID == 2) $ID = "0000" . $newID;
-    elseif ($lengthID == 3) $ID = "000" . $newID;
-    elseif ($lengthID == 4) $ID = "00" . $newID;
-    elseif ($lengthID == 5) $ID = "0" . $newID;
-    else $ID = $newID;
+    $sequence = $db->query("SELECT * FROM number_sequence WHERE page_name = 'reservations'");
+    $fetch = $sequence->fetchAll(PDO::FETCH_OBJ);
+    foreach ($fetch as $data) {
+        $newID = $data->last_number + 1;
+        $lengthID = strlen((string)$newID);
+        if ($lengthID == 1) $ID = "00000" . $newID;
+        elseif ($lengthID == 2) $ID = "0000" . $newID;
+        elseif ($lengthID == 3) $ID = "000" . $newID;
+        elseif ($lengthID == 4) $ID = "00" . $newID;
+        elseif ($lengthID == 5) $ID = "0" . $newID;
+        else $ID = $newID;
 
-$reservationListQuery = $db->query("SELECT * FROM schedules WHERE status = 'A' OR status = 'P'");
-$fetchReservations = $reservationListQuery->fetchAll(PDO::FETCH_OBJ);
+        $reservationListQuery = $db->query("SELECT * FROM schedules WHERE status = 'A' OR status = 'P' OR status = 'D'");
+        $fetchReservations = $reservationListQuery->fetchAll(PDO::FETCH_OBJ);
 
-if(!isset($_GET['queryStatus'])){
-    $_GET['queryStatus'] = 0;
-}
-}
+        if(!isset($_GET['queryStatus'])){
+            $_GET['queryStatus'] = 0;
+        }
+    }
 
 ?>
 <div class="container-fluid">
@@ -231,6 +185,30 @@ if(!isset($_GET['queryStatus'])){
 
                                 <div class="col-7">
                                     <div class="form-group">
+                                            <label>Organiztion/Sponsor</label>
+                                            <input class="form-control" type="text" name="sponsor" value="" required>
+                                    </div>
+                                    <div class="form-group">
+                                            <label>Amount of Contribution per Student</label>
+                                            <input class="form-control" type="number" name="contribution" step="0.01" value="" required>
+                                    </div>
+                                    <div class="form-group">
+                                            <label>Person/s in-charge</label>
+                                            <input class="form-control" type="text" name="incharge" value="" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <b>
+                                            <p>You are now creating a reservation. Enter Activity Details and Proceed Save As Draft.
+                                                You can further edit your drafted reservation at “Reservations” tab.
+                                                Look for this Reservation with a Draft Status and click Update .</p>
+                                            <p>In editing your drafted reservation, you will have options of:<br>'Update Record Only' and 'Submit to Property Custodian'.</p>
+                                            <p>You are required to Print Student Activity Form (a Hyperlink is provided in your next edit of this reservation) and complete signing it by school staff for approval.</p>
+                                            <p>Once the Printed S.A.F. is completed (Fully-Signed), please scan and upload the Fully-Signed S.A.F file (.png / .jpg / .pdf) before proceeding ‘Submit to Property Custodian’.</p>
+                                            <p>Reservations submitted to Property Custodian are no longer editable and your reservation is set to ‘Pending’ status.</p>
+                                        </b>
+                                    </div>
+
+                                    <!-- <div class="form-group">
                                         <div class="imgUp">
                                             <label><b>Upload Fully Signed Student Activity Form:</b></label>
                                             <span class="invalidFormat" style="visibility: hidden; color: red">Invalid file format</span>
@@ -238,9 +216,9 @@ if(!isset($_GET['queryStatus'])){
                                             <iframe src="" type="" scrolling="auto" height="250px" width="100%" class="getImg"> </iframe>
                                             <a class="btn btn-sm btn-primary preview" id="0" hidden>Preview</a>
                                         </div>
-                                    </div>
+                                    </div> -->
 
-                                    <div class="form-group">
+                                    <!-- <div class="form-group">
                                         <div class="imgUp" style="overflow-y:scroll;">
                                             <label><b>Upload Letter of Approval:</b></label>
                                             <span class="invalidFormat" style="visibility: hidden; color: red">Invalid file format</span>
@@ -248,17 +226,15 @@ if(!isset($_GET['queryStatus'])){
                                             <iframe src="" type="" scrolling="auto" height="250px" width="100%" class=" getImg"> </iframe>
                                             <a class="btn btn-sm btn-primary preview" id="1" hidden>Preview</a>
                                         </div>
-                                    </div>
-
-                                </div>
-
+                                    </div> -->
+                                </div> 
                             </div>
                             <!-- data-toggle="modal" data-target="#emptyFormModal" -->
                             <a class="btn btn-success btn-icon-split btn-sm keychainify-checked confirmBtn1" href="">
                                 <span class="icon text-white-50">
                                     <i class="fas fa-plus"></i>
                                 </span>
-                                <span class="text">SUBMIT</span>
+                                <span class="text">SAVE AS DRAFT</span>
                             </a>
 
                             <!-- FOR STUDENT FORM MODAL & ERRORS -->
@@ -305,177 +281,21 @@ if(!isset($_GET['queryStatus'])){
                                 var curStartDate = $('#startDate').val();
                                 var curStartTime = $('#startTime').val();
 
-                                $(document).on("change", ".uploadFile", function() {
-                                    var uploadFile = $(this);
-                                    var files = !!this.files ? this.files : [];
-                                    var fileExt = (files[0].type).split("/")[1];
-                                    const allowedExt = ["pdf", "png", "jpg", "jpeg"];
-                                    if (!files.length || !window.FileReader) return; // no file selected, or no FileReader support
-
-                                    var reader = new FileReader();
-                                    reader.readAsDataURL(files[0]);
-
-                                    // console.log(());
-                                    if (fileExt == null) {
-                                        uploadFile.prop({
-                                            ariaLabel: "1"
-                                        });
-                                        errors++;
-                                        uploadFile.closest(".imgUp").find('.getImg').attr('src', '');
-                                        uploadFile.closest(".imgUp").find('.invalidFormat').css({
-                                            visibility: "visible"
-                                        });
-                                        uploadFile.css({
-                                            color: "red",
-                                        });
-                                    } else {
-                                        if (!(allowedExt.includes(fileExt.toLowerCase()))) {
-                                            uploadFile.prop({
-                                                ariaLabel: "1"
-                                            });
-                                            errors++;
-                                            uploadFile.closest(".imgUp").find('.getImg').attr('src', '');
-                                            uploadFile.closest(".imgUp").find('.invalidFormat').css({
-                                                visibility: "visible"
-                                            });
-                                            uploadFile.css({
-                                                color: "red",
-                                            });
-
-                                        } else {
-                                            uploadFile.prop({
-                                                ariaLabel: "0"
-                                            });
-                                            uploadFile.closest(".imgUp").find('.invalidFormat').css({
-                                                visibility: "hidden"
-                                            });
-                                            uploadFile.css({
-                                                color: "black"
-                                            });
-
-                                            reader.onloadend = function() { // set image data as background of div
-                                                uploadFile.closest(".imgUp").find('.getImg').attr('src', this.result);
-                                                if (uploadFile.attr("name") == "activityFormImg") {
-                                                    $(".getImg").first().attr("src", this.result);
-                                                    $(".getImg").first().attr("type", files[0].type);
-                                                    $(".preview").first().attr("hidden", false);
-                                                } else if (uploadFile.attr("name") == "letterApprovalImg") {
-                                                    $(".getImg").last().attr("src", this.result);
-                                                    $(".getImg").last().attr("type", files[0].type);
-                                                    $(".preview").last().attr("hidden", false);
-                                                }
-                                            }
-                                        }
-                                    }
-
-                                    // if (/^image/.test( files[0].type) || /^pdf/.test( files[0].type)){ // only image file
-                                    //     var reader = new FileReader(); // instance of the FileReader
-                                    //     reader.readAsDataURL(files[0]); // read the local file
-
-                                    //     reader.onloadend = function(){ // set image data as background of div
-                                    //         //alert(uploadFile.closest(".upimage").find('.imagePreview').length);
-                                    //         // css("src", "url("+this.result+")");
-                                    //         uploadFile.closest(".imgUp").find('.getImg').attr('src',this.result);
-                                    //         $(".test").attr("src",this.result);
-                                    //         console.log($(".test"));
-                                    //         console.log(this.result);
-                                    //     }
-                                    // }
-
-                                });
-
-                                $('.preview').click(function() {
-                                    var isFirst = $(this).attr("id") == "0";
-                                    var fileObject = (isFirst) ? $('.getImg').first() : $('.getImg').last();
-                                    var fileObjectSrc = fileObject.attr('src');
-                                    var fileObjectType = fileObject.attr('type');
-                                    var modal;
-                                    var modal2;
-                                    var closeBtn;
-
-                                    function removeModal() {
-                                        modal.remove();
-                                        modal2.remove();
-                                        $('body').off('keyup.modal-close');
-                                    }
-
-                                    modal2 = $('<iframe>').attr('src', fileObjectSrc).css({
-                                        background: 'RGBA(0,0,0,.5)',
-                                        width: '100%',
-                                        height: '100%',
-                                        padding: '5%',
-                                        position: 'fixed',
-                                        zIndex: '10000',
-                                        top: '0',
-                                        left: '0'
-                                    }).click(function() {
-                                        removeModal();
-                                    });
-
-                                    modal = $('<div>').css({
-                                        background: 'RGBA(0,0,0,.5) url(' + fileObjectSrc + ') no-repeat center',
-                                        backgroundSize: 'contain',
-                                        width: '100%',
-                                        height: '100%',
-                                        position: 'fixed',
-                                        zIndex: '10000',
-                                        top: '0',
-                                        left: '0',
-                                        cursor: 'zoom-out'
-                                    }).click(function() {
-                                        removeModal();
-                                    })
-                                    //handling ESC
-                                    $('body').on('keyup.modal-close', function(e) {
-                                        if (e.key === 'Escape') {
-                                            removeModal();
-                                        }
-                                    });
-
-                                    if (/^image/.test(fileObjectType)) {
-                                        modal.appendTo('body');
-                                        // closeBtn.appendTo('body');
-                                    } else if (/^application/.test(fileObjectType)) {
-                                        modal2.appendTo('body');
-                                        // closeBtn.appendTo('body');
-                                    }
-
-                                });
-
                                 $('.confirmBtn1').click(function(e) {
                                     e.preventDefault();
                                     //Check fields
                                     var form = $('#form');
-                                    var activityForm = $('#activityForm');
-                                    var letterOfApproval = $('#letterApproval');
                                     var isValidated = form[0].reportValidity();
                                     var curStartDate = $('#startDate');
-                                    var curStartTime = $('#startTime');
+                                    var curStartTime = $('#startTime'); 
                                     var curEndDate = $('#endDate');
                                     var curEndTime = $('#endTime');
 
                                     if (isValidated) {
                                         //Check for errors
-                                        var isFirst = $(this).attr("id") == "0";
-                                        var fileObject = (isFirst) ? $('.getImg').first() : $('.getImg').last();
                                         var resConflict = checkScheduleConflict();
 
-                                        if (activityForm.attr("aria-label") != "0" || letterOfApproval.attr("aria-label") != "0") {
-                                            $('.modal-header').prop({
-                                                class: "modal-header bg-danger"
-                                            });
-                                            $('.modal-title').html("Error");
-                                            $('.modal-body').html("There were erros upon submitting reservation. Please review your changes.");
-                                            $('#submitBtn').prop({
-                                                hidden: true
-                                            });
-                                            $('#backToHome').prop({
-                                                hidden: false
-                                            });
-                                            $('#emptyFormModal').modal({
-                                                show: true
-                                            });
-                                        } else if (resConflict.length != 0){
+                                        if (resConflict.length != 0){
                                             $('.modal-header').prop({
                                                 class: "modal-header bg-warning"
                                             });
@@ -492,21 +312,6 @@ if(!isset($_GET['queryStatus'])){
                                             });
                                             $('#backToHome').prop({
                                                 hidden: false
-                                            });
-                                            $('#emptyFormModal').modal({
-                                                show: true
-                                            });
-                                        }else if (letterOfApproval.val() == '') {
-                                            $('.modal-header').prop({
-                                                class: "modal-header bg-warning"
-                                            });
-                                            $('.modal-title').html("Warning");
-                                            $('.modal-body').html("This reservation does not have a Letter of Approval. Do you wish to..");
-                                            $('#submitBtn').prop({
-                                                hidden: false
-                                            });
-                                            $('#backToHome').prop({
-                                                hidden: true
                                             });
                                             $('#emptyFormModal').modal({
                                                 show: true

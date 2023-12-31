@@ -86,6 +86,7 @@ include 'settings/topbar.php';
                         <label for=""><small>Filter by Status</small> &nbsp;&nbsp;</label>
                         <select class="form-control form-control-sm" name="filterByStatus" id="filterByStatus" style="width: 7%;">
                             <option value="0">All</option>
+                            <option value="D">Drafts</option>
                             <option value="P">Pending</option>
                             <option value="A" <?php echo ((($_SESSION["position"] == "PTC") ? "selected" : "")); ?>>Approved</option>
                             <option value="R">Rejected</option>
@@ -147,9 +148,13 @@ include 'settings/topbar.php';
                                 // WHERE `schedules`.date_start BETWEEN '$filterStart' AND '$filterEnd'
                                 $row_reservations = $reservations->fetchAll(PDO::FETCH_OBJ);
                                 foreach ($row_reservations as $row) {
-                                    $statusStr = "Pending for Approval";
+                                    $statusStr = "Draft";
                                     $statusColor = "";
                                     switch ($row->STATUS) {
+                                        case "D":
+                                            $statusColor = "badge-primary";
+                                            $statusStr = "Draft";
+                                            break;
                                         case "P":
                                             $statusColor = "badge-warning";
                                             $statusStr = "Pending for Approval";
