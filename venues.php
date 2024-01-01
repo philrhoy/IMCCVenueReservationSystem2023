@@ -44,10 +44,14 @@ include 'settings/topbar.php';
                                 foreach ($row_donor as $row) {
                                 ?>
                                     <tr>
-                                        <td><a href="venue_edit.php?id=<?php echo $row->id ?>"><?php echo $row->venueID ?></a></td>
+                                        <?php if ($_SESSION['position'] == 'STO') {?>
+                                            <td><?php echo $row->venueID ?></td>
+                                        <?php }else{?>
+                                            <td><a href="venue_edit.php?id=<?php echo $row->id ?>"><?php echo $row->venueID ?></a></td>     
+                                        <?php }?>
                                         <td><?= $row->name; ?></td>
                                         <td><?= $row->capacity; ?></td>
-                                        <?php if ($_SESSION['position'] === 'PTC') { ?>
+                                        <?php if ($_SESSION['position'] == 'PTC') { ?>
                                             <td align="center">
                                                 <a href="venue_edit.php?id=<?php echo $row->id; ?>" class="btn btn-primary btn-icon-split btn-sm keychainify-checked">
                                                     <span class="icon text-white-50">

@@ -45,7 +45,11 @@ include 'settings/topbar.php';
                                 foreach ($row_donor as $row) {
                                 ?>
                                     <tr>
-                                        <td><a href="program_edit.php?id=<?php echo $row->id ?>"><?php echo $row->programID ?></a></td>
+                                        <?php if ($_SESSION['position'] == 'STO') {?>
+                                            <td><?php echo $row->programID ?></td>
+                                        <?php }else{?>
+                                            <td><a href="program_edit.php?id=<?php echo $row->id ?>"><?php echo $row->programID ?></a></td>    
+                                        <?php }?>
                                         <td><?= $row->name; ?></td>
                                         <td><?= $row->incharge_organization; ?></td>
                                         <td align="center"><i class="fas fa-circle" style="font-size:2rem;color:<?= $row->color; ?>"></i></td>

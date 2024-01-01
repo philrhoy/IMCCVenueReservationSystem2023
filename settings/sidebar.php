@@ -50,8 +50,7 @@
             </div>
 
             <!-- Nav Item - Reservations -->
-            <?php
-            if ($_SESSION['position'] == 'STO') { ?>
+            <?php if ($_SESSION['position'] == 'STO') { ?>
                 <li class="nav-item <?= $reservation; ?>">
                     <a class="nav-link" href="reservation_list.php">
                         <i class="fas fa-fw fa-bars"></i>
@@ -62,39 +61,54 @@
                         <i class="fas fa-fw fa-plus"></i>
                         <span>Create Reservation</span></a>
                 </li>
-            <?php
-            
-            }else if ($_SESSION['position'] == 'DSA' || $_SESSION['position'] == 'PTC') {
-            ?>
-            <li class="nav-item <?= $reservation; ?>">
-                    <a class="nav-link" href="add_reservation.php">
-                        <i class="fas fa-fw fa-plus"></i>
-                        <span>Create Reservation</span></a>
-            </li>
-            <li class="nav-item <?= $reservation; ?>">
-                <a class="nav-link" href="reservation_list.php">
-                    <i class="fas fa-fw fa-bars"></i>
-                    <span>Reservations</span></a>
-            </li>
-            <!-- Divider -->
-            <hr class="sidebar-divider">
+                 <!-- Heading -->
+                <div class="sidebar-heading">
+                    Profiles
+                </div>
+
+                <!-- Nav Item - Venues -->
+                <li class="nav-item <?= $venue; ?>">
+                    <a class="nav-link" href="venues.php">
+                        <i class="fas fa-fw fa-building"></i>
+                        <span>Venues</span></a>
+                </li>
+
+                <!-- Nav Item - Programs -->
+                <li class="nav-item <?= $program; ?>">
+                    <a class="nav-link" href="programs.php">
+                        <i class="fas fa-fw fa-flag"></i>
+                        <span>Programs</span></a>
+                </li>
+            <?php }else if ($_SESSION['position'] == 'DSA' || $_SESSION['position'] == 'PTC') { ?>
+                <li class="nav-item <?= $reservation; ?>">
+                        <a class="nav-link" href="add_reservation.php">
+                            <i class="fas fa-fw fa-plus"></i>
+                            <span>Create Reservation</span></a>
+                </li>
+                <li class="nav-item <?= $reservation; ?>">
+                    <a class="nav-link" href="reservation_list.php">
+                        <i class="fas fa-fw fa-bars"></i>
+                        <span>Reservations</span></a>
+                </li>
+                <!-- Divider -->
+                <hr class="sidebar-divider">
 
             <!-- Heading -->
             <?php if($_SESSION['position'] == 'DSA'){?>
-            <div class="sidebar-heading">
-                Reports 
-            </div>
-            <li class="nav-item <?= $reservation; ?>">
+                <div class="sidebar-heading">
+                    Reports 
+                </div>
+                <li class="nav-item <?= $reservation; ?>">
                     <a class="nav-link" href="monthly_report.php">
-                        <i class="fas fa-fw fa-print"></i>
-                        <span>Monthly Report of Activites</span></a>
+                    <i class="fas fa-fw fa-print"></i>
+                    <span>Monthly Report of Activites</span></a>
                 </li>   
-            <hr class="sidebar-divider">
+                <hr class="sidebar-divider">
             <?php } ?>
-            <!-- Heading -->
-            <div class="sidebar-heading">
-                Profiles
-            </div>
+                <!-- Heading -->
+                <div class="sidebar-heading">
+                    Profiles
+                </div>
 
             <!-- Nav Item - Venues -->
             <li class="nav-item <?= $venue; ?>">
