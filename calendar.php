@@ -71,25 +71,21 @@ include 'settings/topbar.php';
             <input type="hidden" id="evtid" />
             <div class="form-group">
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-3">
                         <label for="evtstart">Date Start</label>
                         <input type="hidden" id="RID" value="0" class="form-control" required />
                         <input type="hidden" id="reservationID" value="0" class="form-control" required />
                         <input type="date" id="evtstart" class="form-control" readonly />
                     </div>
-                    <div class="col-md-6">
-                        <label for="evtend">Date End</label>
-                        <input type="date" id="evtend" class="form-control" readonly />
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-3">
                         <label for="evtstart">Time Start</label>
                         <input type="time" id="evtstime" class="form-control" readonly />
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-3">
+                        <label for="evtend">Date End</label>
+                        <input type="date" id="evtend" class="form-control" readonly />
+                    </div>
+                    <div class="col-md-3">
                         <label for="evtend">Time End</label>
                         <input type="time" id="evtetime" class="form-control" readonly />
                     </div>
@@ -105,7 +101,7 @@ include 'settings/topbar.php';
             </div>
             <div class="form-group">
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-6">
                         <label for="evtvenue">Program</label>
                         <select name="evtvenue" id="evtprogram" class="form-control" disabled readonly>
                             <option value=""></option>
@@ -119,11 +115,7 @@ include 'settings/topbar.php';
                             ?>
                         </select>
                     </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-6">
                         <label for="evtvenue">Venue</label>
                         <select name="evtvenue" id="evtvenue" class="form-control" disabled readonly>
                             <option value=""></option>
@@ -212,7 +204,6 @@ include 'settings/topbar.php';
         window.location.reload();
 
     });
-
 </script>
 
 <?php include 'settings/footer.php'; ?>
