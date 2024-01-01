@@ -85,10 +85,10 @@ include 'settings/topbar.php';
                         &nbsp;&nbsp;
                         <label for=""><small>Filter by Status</small> &nbsp;&nbsp;</label>
                         <select class="form-control form-control-sm" name="filterByStatus" id="filterByStatus" style="width: 7%;">
-                            <option value="0">All</option>
+                            <option value="0" <?php echo ((($_SESSION["position"] == "PTC") ? "selected" : "")); ?>>All</option>
                             <option value="D">Drafts</option>
                             <option value="P">Pending</option>
-                            <option value="A" <?php echo ((($_SESSION["position"] == "PTC") ? "selected" : "")); ?>>Approved</option>
+                            <option value="A">Approved</option>
                             <option value="R">Rejected</option>
                             <!-- <option value="AA"<?php echo ($_SESSION["position"] != "DSA" ? "hidden disabled" : "") ?>>Approved by Admin</option>
                             <option value="RA"<?php echo ($_SESSION["position"] != "DSA" ? "hidden disabled" : "") ?>>Rejected by Admin</option> -->
@@ -134,10 +134,6 @@ include 'settings/topbar.php';
                                     $fetchReservations .= " WHERE `schedules`.userID = '$userID'";
                                 }
 
-                                if ($_SESSION["position"] == "PTC") {
-                                    $fetchReservations .= " WHERE `schedules`.status = 'A'";
-                                }
-
                                 if ($_SESSION["position"] == "DSA") {
                                     $loggedUser = $_SESSION['id'];
                                     $fetchReservations .= " WHERE `schedules`.userID = '$loggedUser'";
@@ -180,7 +176,7 @@ include 'settings/topbar.php';
                                             <a href='edit_reservation.php?reservation_id=<?= $row->INT_RES_ID ?>' 
                                                 class="btn btn-primary btn-icon-split btn-sm keychainify-checked" 
                                                 target="_blank" 
-                                                style="<?php echo ($row->STATUS == 'A' && $_SESSION['position'] == 'STO' ? "visibility: hidden;" : "");?>">
+                                                style="<?php echo ($row->STATUS != 'D' && $_SESSION['position'] != 'PTC' ? "visibility: hidden;" : "");?>">
                                                 
                                                 <span class="icon text-white-50">
                                                     <i class="fas fa-edit"></i>

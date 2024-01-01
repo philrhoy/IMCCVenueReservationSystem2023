@@ -31,6 +31,7 @@ include 'settings/topbar.php';
                         $end_date = "";
                         $end_time = "";
                         $notes = "";
+                        $material = "";
                         $act_form_file = "";
                         $act_form_file_ext = "";
                         $letter_approve_file = "";
@@ -52,6 +53,7 @@ include 'settings/topbar.php';
                             $end_date =  $data->date_end;
                             $end_time = $data->time_end;
                             $notes = $data->notes;
+                            $material = $data->material;
                             $act_form_file = $data->act_form_file;
                             $letter_approve_file = $data->letter_approve_file;
                             $contact = $data->contact;
@@ -62,9 +64,13 @@ include 'settings/topbar.php';
                             $file_ext = explode(".", $letter_approve_file);
                             $letter_approve_file_ext = (strtolower(end($file_ext)) == "pdf") ? "application/" . strtolower(end($file_ext)) : "image/" . strtolower(end($file_ext));
 
-                            $statusStr = "Pending for Approval";
+                            $statusStr = "Draft";
                             $statusColor = "";
                             switch ($data->status) {
+                                case "D":
+                                    $statusColor = "badge-primary";
+                                    $statusStr = "Draft";
+                                    break;
                                 case "P":
                                     $statusColor = "badge-warning";
                                     $statusStr = "Pending for Approval";
@@ -221,17 +227,18 @@ include 'settings/topbar.php';
 
                                     <div class="form-group">
                                         <label>Notes</label>
-                                        <textarea class="form-control" id="exampleFormControlTextarea1" name='notes' placeholder="Notes will be provided by Property Custodian or Admin" rows="3" <?= (($_SESSION['position'] == 'STO' ? 'disabled' : '')); ?> readonly><?= $notes ?></textarea>
+                                        <textarea class="form-control" id="exampleFormControlTextarea1" name='notes' placeholder="Notes will be provided by Property Custodian" rows="3" <?= (($_SESSION['position'] == 'STO' ? 'disabled' : '')); ?> readonly><?= $notes ?></textarea>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Materials</label>
+                                        <textarea class="form-control" id="exampleFormControlTextarea1" name='material' placeholder="Notes will be provided by Property Custodian" rows="3" <?= (($_SESSION['position'] == 'STO' ? 'disabled' : '')); ?> readonly><?= $material ?></textarea>
                                     </div>
 
                                 </div>
 
-                                <div class="col-4">
-
-                                    <div>
-
-                                    </div>
-
+                                <div class="col-4"> <div>
+                            </div>
                         </form>
 
                         <script>

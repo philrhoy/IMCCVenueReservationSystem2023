@@ -31,35 +31,117 @@
         $notes = $_POST['notes'];
         $material = $_POST['material'];
         $status = $_POST['status'];
+        $sponsor = $_POST['sponsor'];
+        $contribution = $_POST['contribution'];
+        $incharge = $_POST['incharge'];
+    
+        $imgForms = array();
 
         if ($status != "A") {
-            $query = "UPDATE `schedules` 
-                SET venueID = '$venueID', programID = '$programID', date_start = '$startDate', date_end = '$endDate',
-                    time_start = '$startTime', time_end = '$endTime', name = '$activity', description = '$description',
-                    num_participants = '$participants'";
+            /************UPLOAD FILES***********/
+            //CHECK FOR IMAGE ERRORS:
+            $valid_extensions = ['jpeg', 'jpg', 'png', 'pdf'];
+            $check_error = 0;
+   
+            echo isset($_FILES["letterApprovalImg"]);
+            foreach ($_FILES as $file) {
+                if ($file["name"] == "" || $file["size"] == "") continue;
+                $file_name = $file["name"];
+                $file_size = $file["size"];
 
-            //Check if approved or rejected
-            if ($_SESSION["position"] == "DSA") {
-                if ($action == "APPROVE") {
-                    $query .= ", notes = '$notes',
-                                    status = 'A',
-                                    approvedByAdmin = '$adminID'
-                                    WHERE id = '$res_id' OR reservationID = '$res_id'";
-                } elseif ($action == "REJECT") {
-                    $query .= ", notes = '$notes',
-                                    status = 'R',
-                                    rejectedByAdmin = '$adminID'
-                                    WHERE id = '$res_id' OR reservationID = '$res_id'";
-                } else {
-                    $query .= ", notes = '$notes'
-                                    WHERE id = '$res_id' OR reservationID = '$res_id'";
+                $image_extension = explode(".", $file_name);
+                $image_extension = strtolower(end($image_extension));
+
+                if (!in_array($image_extension, $valid_extensions)) {
+                    $queryStatus = 1;
+                    $check_error++;
+                } elseif ($file_size > 5000000) {
+                    $queryStatus = 1;
+                    $check_error++;
                 }
-            } else {
-                //Prevent Student Officer from updating notes
-                $query .= ($_SESSION['position'] != 'STO' ?
-                    ", notes = '$notes', material = '$material' WHERE id = '$res_id' OR reservationID = '$res_id'" :
-                    " WHERE id = '$res_id' OR reservationID = '$res_id'");
             }
+
+            // $origActForm = $_POST['origActForm'];
+            // $origLetterApproval = $_POST['origLetterApproval'];
+
+            if ($check_error == 0) {
+
+                $checkCounter = 0;
+        
+                foreach ($_FILES as $file) {
+                    if ($file["name"] == "" || $file_size == "") continue;
+                    $file_name = $file["name"];
+                    $tmp_name = $file["tmp_name"];
+                    $fileerror = $file['error'];
+
+                    $image_extension = explode(".", $file_name);
+                    $image_extension = strtolower(end($image_extension));
+    
+                    $unique_img_name = uniqid();
+                    $unique_img_name .= '.' . $image_extension;
+                    $path = 'uploads/';
+                    move_uploaded_file($tmp_name, $path . $unique_img_name);
+    
+                    array_push($imgForms, $unique_img_name);
+                }
+            }
+
+            /**********UPDATE SCHEDULE*********/
+            $query = "UPDATE `schedules` 
+                      SET date_start = '$startDate', date_end = '$endDate',
+                        time_start = '$startTime', time_end = '$endTime', name = '$activity', description = '$description',
+                        num_participants = '$participants', sponsor = '$sponsor', contribution = '$contribution', incharge = '$incharge' ";
+            
+            $activity_form = "";
+            $letter_approval = "";
+
+            if(isset($_FILES["activityFormImg"])){
+                if($_FILES["activityFormImg"]["name"] != ""){
+                    if(isset($_POST['origActForm'])){
+                        unlink("uploads/" . $_POST['origActForm']);
+                    }
+                    $activity_form = $imgForms[0];
+                    $query .= ",act_form_file = '$activity_form'";
+                }
+            }
+
+            if(isset($_FILES["letterApprovalImg"])){
+                if($_FILES["letterApprovalImg"]["name"] != ""){
+                    if(isset($_POST['origLetterApproval'])){
+                        unlink("uploads/" . $_POST['origLetterApproval']);
+                    }
+                    $letter_approval = ((sizeof($imgForms) > 1) ? $imgForms[1] : $imgForms[0]);
+                    $query .= ",letter_approve_file = '$letter_approval'";
+                }
+            }
+
+            if(isset($_POST['programID'])) $query .= ",programID = '$programID'";
+            if(isset($_POST['venueID'])) $query .= ",venueID = '$venueID'";
+            if(isset($_POST['notes'])) $query .= ",notes = '$notes'";
+            if(isset($_POST['material'])) $query .= ",material = '$material'";
+
+            //Check if approved or rejected or update only
+            if ($action == "APPROVE" && $_SESSION["position"] == "PTC") {
+                $query .= ",status = 'A',
+                            approvedByAdmin = '$adminID' 
+                            WHERE id = '$res_id' OR reservationID = '$res_id'";
+            } elseif ($action == "REJECT"  && $_SESSION["position"] == "PTC") {
+                $query .= ",status = 'R',
+                            rejectedByAdmin = '$adminID' 
+                            WHERE id = '$res_id' OR reservationID = '$res_id'";
+            } else if($action == "SUBMIT"){
+                $query .= ",status = 'P'  
+                            WHERE id = '$res_id' OR reservationID = '$res_id'";
+            } else {
+                $query .= " WHERE id = '$res_id' OR reservationID = '$res_id'";
+            }
+            
+            // if($_SESSION["position"] == "STO"){
+            //     //Prevent Student Officer from updating notes
+            //     $query .= ($_SESSION['position'] != 'STO' ?
+            //         ", notes = '$notes', material = '$material' WHERE id = '$res_id' OR reservationID = '$res_id'" :
+            //         " WHERE id = '$res_id' OR reservationID = '$res_id'");
+            // }
 
             $update_reservation = $db->query($query);
 
@@ -127,13 +209,17 @@
         $start_time = "";
         $end_date = "";
         $end_time = "";
+        $sponsor = "";
+        $contribution = "";
+        $incharge = "";
         $act_form_file = "";
         $letter_approve_file = "";
         $act_form_file_ext = "";
         $letter_approve_file_ext = "";
         $status = "";
         $material = "";
-        $statusStr = "Pending for Approval";
+        $statusStr = "Draft";
+        $statusID = "D";
 
         $sequence = $db->query("SELECT * FROM schedules WHERE id = '$res_id' OR reservationID = '$res_id'");
         $fetch = $sequence->fetchAll(PDO::FETCH_OBJ);
@@ -146,6 +232,9 @@
                 exit();
             }
             switch ($data->status) {
+                case "D":
+                    $statusStr = "Draft";
+                    break;
                 case "P":
                     $statusStr = "Pending for Approval";
                     break;
@@ -168,8 +257,12 @@
             $start_time = $data->time_start;
             $end_date =  $data->date_end;
             $end_time = $data->time_end;
+            $sponsor = $data->sponsor;
+            $contribution = $data->contribution;
+            $incharge = $data->incharge;
             $notes = $data->notes;
             $material = $data->material;
+            $statusID = $data->status;
             $act_form_file = $data->act_form_file;
             $letter_approve_file = $data->letter_approve_file;
 
@@ -185,11 +278,11 @@
 
     if(!preg_match("/[a-z]/i", $tempID)){
         $queryStr = "SELECT * FROM schedules 
-                    WHERE (status = 'A' OR status = 'P') AND
+                    WHERE (status = 'A' OR status = 'P' OR status = 'D') AND
                             (id != '$tempID')";
     }else{
         $queryStr = "SELECT * FROM schedules 
-                    WHERE (status = 'A' OR status = 'P') AND
+                    WHERE (status = 'A' OR status = 'P' OR status = 'D') AND
                             (reservationID != '$tempID')";
     }
 
@@ -227,21 +320,20 @@
                                     </div>
                                     <div class="form-group">
                                         <label>Activity</label>
-                                        <input class="form-control" type="text" name="activity" value="<?= $activity ?>" required>
+                                        <input class="form-control" type="text" name="activity" value="<?= $activity ?>" required <?php echo ($statusID != "D" ? "readonly" : "");?>>
                                     </div>
                                     <div class="form-group">
                                         <label>Status</label>
                                         <input class="form-control" type="text" name="status" value="<?= $statusStr ?>" readonly>
                                     </div>
-
                                     <div class="form-group">
                                         <label>Objectives</label>
-                                        <textarea class="form-control" id="exampleFormControlTextarea1" name="description" placeholder="Please specify the objectives" rows="3" required><?= $objectives ?></textarea>
+                                        <textarea class="form-control" id="exampleFormControlTextarea1" name="description" placeholder="Please specify the objectives" rows="3" required <?php echo ($statusID != "D" ? "readonly" : "");?>><?= $objectives ?></textarea>
                                         <!-- <input class="form-control" type="number" placeholder="No. of participants" name="participants" required> -->
                                     </div>
                                     <div class="form-group">
                                         <label>Program</label>
-                                        <select class="form-control" name="program">
+                                        <select class="form-control" name="program" <?php echo ($statusID != "D" ? "disabled" : "");?>>
                                             <?php
                                             $fetchPrograms = $db->query("SELECT * FROM `program` ORDER BY name ASC");
 
@@ -258,15 +350,13 @@
                                                 <option value="<?php echo $row->id ?>"> <?php echo $row->name ?> </option>
                                             <?php
                                             }
-
                                             ?>
-
                                         </select>
 
                                     </div>
                                     <div class="form-group">
                                         <label>Choose Venue</label>
-                                        <select class="form-control" name="venue" id="venue">
+                                        <select class="form-control" name="venue" id="venue" <?php echo ($statusID != "D" ? "disabled" : "");?>>
                                             <?php
                                             $fetchVenues = $db->query("SELECT * FROM `venues` ORDER BY name ASC");
 
@@ -292,56 +382,66 @@
                                     <div class="form-group row">
                                         <div class="col-6">
                                             <label>Start Date</label>
-                                            <input class="form-control" type="date" name='start_date' id="startDate"value="<?= $start_date ?>"required>
+                                            <input class="form-control" type="date" name='start_date' id="startDate"value="<?= $start_date ?>"required <?php echo ($statusID != "D" ? "readonly" : "");?>>
                                         </div>
 
                                         <div class="col-6">
                                             <label>Start Time</label>
-                                            <input class="form-control" type="time" name='start_time' id="startTime"value="<?= $start_time ?>"required>
+                                            <input class="form-control" type="time" name='start_time' id="startTime"value="<?= $start_time ?>"required <?php echo ($statusID != "D" ? "readonly" : "");?>>
                                         </div>
                                     </div>
 
                                     <div class="form-group row">
                                         <div class="col-6">
                                             <label>End Date</label>
-                                            <input class="form-control" type="date" name='end_date' id="endDate"value="<?= $end_date ?>"required>
+                                            <input class="form-control" type="date" name='end_date' id="endDate"value="<?= $end_date ?>"required <?php echo ($statusID != "D" ? "readonly" : "");?>>
                                         </div>
                                         <div class="col-6">
                                             <label>End Time</label>
-                                            <input class="form-control" type="time" name='end_time' id="endTime"value="<?= $end_time ?>"required>
+                                            <input class="form-control" type="time" name='end_time' id="endTime"value="<?= $end_time ?>"required <?php echo ($statusID != "D" ? "readonly" : "");?>>
                                         </div>
-
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Approximate No. of Participants</label>
+                                        <input class="form-control" type="number" name="participants" placeholder="No. of participants" value="<?= $participants ?>" required <?php echo ($statusID != "D" ? "readonly" : "");?>>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Organiztion/Sponsor</label>
+                                        <input class="form-control" type="text" name="sponsor" value="<?= $sponsor ?>" required <?php echo ($statusID != "D" ? "readonly" : "");?>>
                                     </div>
                                 </div>
 
                                 <div class="col-4">
                                     <div class="form-group">
-                                        <label>Approximate No. of Participants</label>
-                                        <input class="form-control" type="number" name="participants" placeholder="No. of participants" value="<?= $participants ?>" required>
+                                            <label>Amount of Contribution per Student</label>
+                                            <input class="form-control" type="number" name="contribution" step="0.01" value="<?= $contribution ?>" required <?php echo ($statusID != "D" ? "readonly" : "");?>>
                                     </div>
                                     <div class="form-group">
-                                        <div class="imgUp">
-                                            <label><b>Uploaded Fully Signed Student Activity Form:</b></label>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <div class="imgUp">
-                                            <iframe src="uploads/<?= $act_form_file ?>" type="<?= $act_form_file_ext ?>" scrolling="auto" height="220px" width="100%" class="getImg"> </iframe>
-                                            <a class="btn btn-sm btn-primary preview" id="0">Preview</a>
-                                        </div>
+                                            <label>Person/s in-charge</label>
+                                            <input class="form-control" type="text" name="incharge" value="<?= $incharge ?>" required <?php echo ($statusID != "D" ? "readonly" : "");?>>
                                     </div>
 
                                     <div class="form-group">
                                         <div class="imgUp">
-                                            <label><b>Uploaded Letter of Approval:</b></label>
+                                            <input type="<?php echo (($act_form_file == "" || $statusID != "D") ? "hidden" : "checkbox"); ?>" name="chk[]" class="check" id="chk1" style="width: 15px; height: 15px;" value="chk1">
+                                            <input type="hidden" value="<?php echo $act_form_file; ?>" name="origActForm" readonly>
+                                            <label><b>Upload Fully Signed Student Activity Form:</b></label>
+                                            <span class="invalidFormat" style="visibility: hidden; color: red">Invalid file format</span>
+                                            <input type="file" class="form-control uploadFile img" name="activityFormImg" accept="image/jpeg, image/png, application/pdf" id="activityForm" aria-label="0" required <?php echo (($act_form_file != "" || $statusID != "D") ? "disabled" : ""); ?>>
+                                            <iframe src="uploads/<?=(($act_form_file == "") ? "no-file-icon.png" :$act_form_file)?>" type="<?= $act_form_file_ext ?>" scrolling="auto" height="250px" width="100%" class="getImg"> </iframe>
+                                            <a class="btn btn-sm btn-primary preview" id="0" <?php echo (($act_form_file == "") ? "hidden" : ""); ?>>Preview</a>
                                         </div>
-                                    </div>
+                                    </div> 
 
                                     <div class="form-group">
-                                        <div class="imgUp">
-                                            <iframe src="uploads/<?= (($letter_approve_file == "") ? "no-file-icon.png" : $letter_approve_file) ?>" type="<?= $letter_approve_file_ext ?>" scrolling="auto" height="220px" width="100%" class="getImg"> </iframe>
-                                            <a class="btn btn-sm btn-primary preview" id="1">Preview</a>
+                                        <div class="imgUp" style="overflow-y:scroll;">
+                                            <input type="<?php echo (($act_form_file == "" || $statusID != "D") ? "hidden" : "checkbox"); ?>" name="chk[]" class="check" id="chk2"style="width: 15px; height: 15px;" value="chk2" >
+                                            <input type="hidden" value="<?php echo $letter_approve_file; ?>" name="origLetterApproval" readonly>
+                                            <label><b>Upload Letter of Approval:</b></label>
+                                            <span class="invalidFormat" style="visibility: hidden; color: red">Invalid file format</span>
+                                            <input type="file" class="form-control uploadFile img" name="letterApprovalImg" id="letterApproval" accept="image/jpeg, image/png, application/pdf" aria-label="0" <?php echo (($act_form_file != "" || $statusID != "D") ? "disabled" : ""); ?>>
+                                            <iframe src="uploads/<?= (($letter_approve_file == "") ? "no-file-icon.png" : $letter_approve_file) ?>" type="<?= $letter_approve_file_ext ?>" scrolling="auto" height="250px" width="100%" class="getImg"> </iframe>
+                                            <a class="btn btn-sm btn-primary preview" id="1" <?php echo (($letter_approve_file == "") ? "hidden" : ""); ?>>Preview</a>
                                         </div>
                                     </div>
                                 </div>
@@ -349,11 +449,11 @@
                                 <div class="col-4">
                                     <div class="form-group note-form-group">
                                         <label>Notes</label>
-                                        <textarea class="form-control" id="noteTextArea" name='notes' placeholder="Notes will be provided by Property Custodian or Admin" rows="3" <?= (($_SESSION['position'] != 'PTC' ? 'readonly' : '')); ?>><?= $notes ?></textarea>
+                                        <textarea class="form-control" id="noteTextArea" name='notes' placeholder="Notes will be provided by Property Custodian" rows="3" <?= (($_SESSION['position'] != 'PTC' ? 'readonly' : '')); ?>><?= $notes ?></textarea>
                                     </div>
                                     <div class="form-group note-form-group">
-                                        <label>Materials will be provided by Property Custodian. (i.e MIcrophone (1pc) / Projector (1pc))</label>
-                                        <textarea class="form-control" id="noteTextArea" name='material' placeholder="Notes will be provided by Property Custodian or Admin" rows="3" <?= (($_SESSION['position'] != 'PTC' ? 'readonly' : '')); ?>><?= $material ?></textarea>
+                                        <label>Materials will be provided by Property Custodian. (i.e Microphone (1pc) / Projector (1pc))</label>
+                                        <textarea class="form-control" id="noteTextArea" name='material' placeholder="Materials will be provided by Property Custodian" rows="3" <?= (($_SESSION['position'] != 'PTC' ? 'readonly' : '')); ?>><?= $material ?></textarea>
                                         <!-- <select class="form-control" name="material">
                                             <option value="M1"<?php //echo (($material == "M1") ? "selected" : ""); 
                                                                 ?>>Microphone (1pc)</option>
@@ -369,86 +469,183 @@
                                                                     ?>>Plastic Chairs (100 pcs)</option>
                                         </select> -->
                                     </div>
-
-                                    <div class="form-group" <?= (($_SESSION['position'] != 'DSA' ? 'hidden' : '')); ?>>
+                                            
+                                    <div class="form-group" >
                                         <label>Choose action to perform</label>
                                         <select class="form-control" id="performAction" name="action">
                                             <option value='UPDATE' selected>Update Record Only</option>
+                                            <?php if($statusID == "D") { ?>
+                                            <option value='SUBMIT'>Submit to Property Custodian</option>
+                                            <?php } if($statusID == "P" && $_SESSION["position"] == "PTC") { ?>
                                             <option value='APPROVE'>Approve</option>
                                             <option value='REJECT'>Reject</option>
+                                            <?php } ?>
                                         </select>
                                     </div>
-                                    <div>
+                                <div>
 
-                                    </div>
-                                    <a class="btn btn-success btn-icon-split btn-sm keychainify-checked confirmBtn" href="#" data-toggle="modal" data-target="#confirmModal">
-                                        <span class="icon text-white-50">
-                                            <i class="fas fa-check"></i>
-                                        </span>
-                                        <span class="text">APPLY UPDATES</span>
-                                    </a>
+                            </div>
+                            <a class="btn btn-success btn-icon-split btn-sm keychainify-checked confirmBtn" href="">
+                                <span class="icon text-white-50">
+                                    <i class="fas fa-check"></i>
+                                </span>
+                                <span class="text">APPLY UPDATES</span>
+                            </a>
+                            
+                            <div class="form-group mt-5" <?php echo (($statusID != "D")? "hidden" : "");?>>
+                                <p>Please <a href="" target="_blank">print your SAF here</a> (with details included) and Complete Approval before Upload.</p>
+                            </div>
 
-                                    <!-- Confirm Update Modal-->
-                                    <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header bg-danger">
-                                                    <h5 class="modal-title text-white" id="exampleModalLabel">Confirm Action</h5>
-                                                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">×</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body"></div>
-                                                <div class="modal-footer">
-                                                    <button type="submit" name='submit' class="btn btn-success btn-icon-split btn-sm keychainify-checked" id='submitBtn'>
-                                                        <span class="icon text-white-50">
-                                                            <i class="fas fa-check"></i>
-                                                        </span>
-                                                        <span class="text">Proceed</span>
-                                                    </button>
-                                                    <button class="btn btn-info btn-icon-split btn-sm keychainify-checked" id="reEdit" data-dismiss="modal">
-                                                        <span class="icon text-white-50">
-                                                            <i class="fas fa-edit"></i>
-                                                        </span>
-                                                        <span class="text">Re-edit reservation</span>
-                                                    </button>
-                                                    <!-- <button class="btn btn-secondary btn-icon-split btn-sm keychainify-checked" type="button" data-dismiss="modal">
-                                                        <span class="icon text-white-50">
-                                                            <i class="fas fa-window-close"></i>
-                                                        </span>
-                                                        <span class="text">Cancel</span>
-                                                    </button> -->
+                            <!-- Confirm Update Modal-->
+                            <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header bg-danger">
+                                            <h5 class="modal-title text-white" id="exampleModalLabel">Confirm Action</h5>
+                                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">×</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body"></div>
+                                        <div class="modal-footer">
+                                            <button type="submit" name='submit' class="btn btn-success btn-icon-split btn-sm keychainify-checked" id='submitBtn'>
+                                                <span class="icon text-white-50">
+                                                    <i class="fas fa-check"></i>
+                                                </span>
+                                                <span class="text">Proceed</span>
+                                            </button>
+                                            <button class="btn btn-info btn-icon-split btn-sm keychainify-checked" id="reEdit" data-dismiss="modal">
+                                                <span class="icon text-white-50">
+                                                    <i class="fas fa-edit"></i>
+                                                </span>
+                                                <span class="text">Re-edit reservation</span>
+                                            </button>
+                                            <!-- <button class="btn btn-secondary btn-icon-split btn-sm keychainify-checked" type="button" data-dismiss="modal">
+                                                <span class="icon text-white-50">
+                                                    <i class="fas fa-window-close"></i>
+                                                </span>
+                                                <span class="text">Cancel</span>
+                                            </button> -->
 
-                                                </div>
-                                            </div>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
 
                         </form>
 
                         <script>
                             $(function() {
-                                // var imageContainer = $(".imgUp").css("height", "30%");
+                                var errors = 0;
+                                var curStartDate = $('#startDate').val();
+                                var curStartTime = $('#startTime').val();
+    
+                                $(document).on("click",".check", function(){
+                                    var check1 = $("#chk1");
+                                    var check2 = $("#chk2");
+                                    var checks = $(".check");
+                                    var activityForm = $("#activityForm");
+                                    var letterApproval = $("#letterApproval");
+
+                                    if(check1.is(":checked")){
+                                        activityForm.prop({
+                                            disabled: false,
+                                            required: true
+                                        });
+                                    }else{
+                                        activityForm.prop({
+                                            disabled: true,
+                                            required: false
+                                        });
+                                    }
+                                    
+                                    if(check2.is(":checked")){
+                                        letterApproval.prop({
+                                            disabled: false
+                                        });
+                                    }else{
+                                        letterApproval.prop({
+                                            disabled: true
+                                        });
+                                    }
+                                    
+                                });
 
                                 $(document).on("change", ".uploadFile", function() {
                                     var uploadFile = $(this);
                                     var files = !!this.files ? this.files : [];
-                                    var getCurrentUpload = $(".imagePreview");
+                                    var fileExt = (files[0].type).split("/")[1];
+                                    const allowedExt = ["pdf", "png", "jpg", "jpeg"];
                                     if (!files.length || !window.FileReader) return; // no file selected, or no FileReader support
 
-                                    reader.onloadend = function() { // set image data as background of div
-                                        uploadFile.closest(".imgUp").find('.getImg').attr('src', this.result);
+                                    var reader = new FileReader();
+                                    reader.readAsDataURL(files[0]);
 
-                                        if (uploadFile.attr("name") == "activityFormImg") {
-                                            $(".getImg").first().attr("src", this.result);
-                                            $(".getImg").first().attr("type", files[0].type);
-                                            $(".preview").first().attr("hidden", false);
-                                        } else if (uploadFile.attr("name") == "letterApprovalImg") {
-                                            $(".getImg").last().attr("src", this.result);
-                                            $(".getImg").last().attr("type", files[0].type);
-                                            $(".preview").last().attr("hidden", false);
+                                    if (fileExt == null) {
+                                        uploadFile.prop({
+                                            ariaLabel: "1"
+                                        });
+                                        errors++;
+                                        uploadFile.closest(".imgUp").find('.getImg').attr('src', '');
+                                        uploadFile.closest(".imgUp").find('.invalidFormat').css({
+                                            visibility: "visible"
+                                        });
+                                        uploadFile.css({
+                                            color: "red",
+                                        });
+                                    } else {
+                                        if (!(allowedExt.includes(fileExt.toLowerCase()))) {
+                                            uploadFile.prop({
+                                                ariaLabel: "1"
+                                            });
+                                            errors++;
+                                            uploadFile.closest(".imgUp").find('.getImg').attr('src', '');
+                                            uploadFile.closest(".imgUp").find('.invalidFormat').css({
+                                                visibility: "visible"
+                                            });
+                                            uploadFile.css({
+                                                color: "red",
+                                            });
+
+                                        } else {
+                                            uploadFile.prop({
+                                                ariaLabel: "0"
+                                            });
+                                            uploadFile.closest(".imgUp").find('.invalidFormat').css({
+                                                visibility: "hidden"
+                                            });
+                                            uploadFile.css({
+                                                color: "black"
+                                            });
+
+                                            reader.onloadend = function() { // set image data as background of div
+                                                uploadFile.closest(".imgUp").find('.getImg').attr('src', this.result);
+                                                if (uploadFile.attr("name") == "activityFormImg") {
+                                                    $(".getImg").first().attr("src", this.result);
+                                                    $(".getImg").first().attr("type", files[0].type);
+                                                    $(".preview").first().attr("hidden", false);
+                                                } else if (uploadFile.attr("name") == "letterApprovalImg") {
+                                                    $(".getImg").last().attr("src", this.result);
+                                                    $(".getImg").last().attr("type", files[0].type);
+                                                    $(".preview").last().attr("hidden", false);
+                                                }
+                                            }
                                         }
                                     }
+
+                                    // if (/^image/.test( files[0].type) || /^pdf/.test( files[0].type)){ // only image file
+                                    //     var reader = new FileReader(); // instance of the FileReader
+                                    //     reader.readAsDataURL(files[0]); // read the local file
+
+                                    //     reader.onloadend = function(){ // set image data as background of div
+                                    //         //alert(uploadFile.closest(".upimage").find('.imagePreview').length);
+                                    //         // css("src", "url("+this.result+")");
+                                    //         uploadFile.closest(".imgUp").find('.getImg').attr('src',this.result);
+                                    //         $(".test").attr("src",this.result);
+                                    //         console.log($(".test"));
+                                    //         console.log(this.result);
+                                    //     }
+                                    // }
 
                                 });
 
@@ -525,15 +722,31 @@
                                     }
                                 });
 
-                                $(".confirmBtn").on("click", function() {
+                                $(".confirmBtn").on("click", function(e) {
+                                    e.preventDefault();
                                     var form = $('#form');
                                     var confirmMsg = "Press PROCEED to apply updates to this record.";
                                     var perfActionVal = $("#performAction").val();
+                                    var activityForm = $('#activityForm');
+                                    var letterOfApproval = $('#letterApproval');
                                     var isValidated = form[0].reportValidity();
                                     var resConflict = checkScheduleConflict();
+                                    console.log(isValidated);
 
                                     if(isValidated){
-                                        if (resConflict.length != 0){
+                                        if (activityForm.attr("aria-label") != "0" || letterOfApproval.attr("aria-label") != "0") {
+                                            $('.modal-header').prop({
+                                                class: "modal-header bg-danger"
+                                            });
+                                            $('.modal-title').html("Error");
+                                            $('.modal-body').html("There were erros upon submitting reservation. Please review your changes.");
+                                            $('#submitBtn').prop({
+                                                hidden: true
+                                            });
+                                            $('#confirmModal').modal({
+                                                show: true
+                                            });
+                                        }else if (resConflict.length != 0){
                                             $('.modal-header').prop({
                                                 class: "modal-header bg-warning"
                                             });
@@ -548,6 +761,14 @@
                                             $('#submitBtn').prop({
                                                 hidden: true
                                             });
+
+                                            // $('#reEdit').prop({
+                                            //     hidden: false
+                                            // });
+
+                                            $('#confirmModal').modal({
+                                                show: true
+                                            });
                                          
                 
                                         }else{
@@ -557,23 +778,44 @@
                                                     class: "modal-header bg-danger"
                                                 });
                                                 $('.modal-title').html("Confirm Update");
+                                                $('#confirmModal').modal({
+                                                    show: true
+                                                });
                                             } else if (perfActionVal == "APPROVE") {
                                                 confirmMsg = "Are you sure you want to APPROVE this reservation?";
                                                 $('.modal-header').prop({
                                                     class: "modal-header bg-success"
                                                 });
                                                 $('.modal-title').html("Confirm Update");
+                                                $('#confirmModal').modal({
+                                                    show: true
+                                                });
+                                            } else if (perfActionVal == "SUBMIT") {
+                                                confirmMsg = "Are you sure you want to SUBMIT this reservation?";
+                                                $('.modal-header').prop({
+                                                    class: "modal-header bg-primary"
+                                                });
+                                                $('.modal-title').html("Confirm Submit");
+                                                $('#confirmModal').modal({
+                                                    show: true
+                                                });
                                             }else{
                                                 confirmMsg = "Are you sure you want to UPDATE this reservation?";
                                                 $('.modal-header').prop({
                                                     class: "modal-header bg-success"
                                                 });
                                                 $('.modal-title').html("Confirm Update");
+                                                $('#confirmModal').modal({
+                                                    show: true
+                                                });
                                             }
 
                                             $(".modal-body").html(confirmMsg);
                                             $('#submitBtn').prop({
                                                 hidden: false
+                                            });
+                                            $('#confirmModal').modal({
+                                                show: true
                                             });
                                         }
                                     }
@@ -591,7 +833,6 @@
 
                                     for (let index = 0; index < reservationList.length; index++) {
                                         if(reservationList[index]["venueID"] == currentVenue){
-                                            console.log("nisulod");
                                             var convCurStartDate = new Date($('#startDate').val());
                                             var convCurStartTime= $('#startTime').val();
                                             var convCurEndDate = new Date($('#endDate').val());
@@ -678,6 +919,20 @@
                                     console.log("Counter: " + ((conflictCounter == 0) ? "No Conflicts" : "Conflict"));
                                     return returnDetail;
                                 }
+
+                                // else if (letterOfApproval.val() == '') {
+                                //             $('.modal-header').prop({
+                                //                 class: "modal-header bg-warning"
+                                //             });
+                                //             $('.modal-title').html("Warning");
+                                //             $('.modal-body').html("This reservation does not have a Letter of Approval. Do you wish to..");
+                                //             $('#submitBtn').prop({
+                                //                 hidden: false
+                                //             });
+                                //             $('#confirmModal').modal({
+                                //                 show: true
+                                //             });
+                                //         } 
                             });
                         </script>
                     </div>

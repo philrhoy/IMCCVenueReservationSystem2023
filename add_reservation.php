@@ -197,15 +197,15 @@
                                             <input class="form-control" type="text" name="incharge" value="" required>
                                     </div>
                                     <div class="form-group">
-                                        <b>
-                                            <p>You are now creating a reservation. Enter Activity Details and Proceed Save As Draft.
+                                        <strong>
+                                            <p>You are now creating a reservation. Enter Activity Details and Proceed <b class="bg-success text-white">Save As Draft</b>.
                                                 You can further edit your drafted reservation at “Reservations” tab.
-                                                Look for this Reservation with a Draft Status and click Update .</p>
-                                            <p>In editing your drafted reservation, you will have options of:<br>'Update Record Only' and 'Submit to Property Custodian'.</p>
+                                                Look for this Reservation with a <b class="bg-primary text-white">Draft</b> Status and click <b class="bg-primary text-white">Update</b> .</p>
+                                            <p>In editing your drafted reservation, you will have options of:<br><b class="bg-secondary text-white">'Update Record Only'</b> and <b class="bg-success text-white">'Submit to Property Custodian'.</b></p>
                                             <p>You are required to Print Student Activity Form (a Hyperlink is provided in your next edit of this reservation) and complete signing it by school staff for approval.</p>
-                                            <p>Once the Printed S.A.F. is completed (Fully-Signed), please scan and upload the Fully-Signed S.A.F file (.png / .jpg / .pdf) before proceeding ‘Submit to Property Custodian’.</p>
-                                            <p>Reservations submitted to Property Custodian are no longer editable and your reservation is set to ‘Pending’ status.</p>
-                                        </b>
+                                            <p>Once the Printed S.A.F. is completed (Fully-Signed), please scan and upload the Fully-Signed S.A.F file (.png / .jpg / .pdf) before proceeding <b class="bg-success text-white">‘Submit to Property Custodian’</b>.</p>
+                                            <p>Reservations submitted to Property Custodian are no longer editable and your reservation is set to <b class="bg-warning text-white">‘Pending’</b> status.</p>
+                                        </strong>
                                     </div>
 
                                     <!-- <div class="form-group">
