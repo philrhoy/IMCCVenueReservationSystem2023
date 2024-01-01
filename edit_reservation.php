@@ -406,7 +406,7 @@
                                         <input class="form-control" type="number" name="participants" placeholder="No. of participants" value="<?= $participants ?>" required <?php echo ($statusID != "D" ? "readonly" : "");?>>
                                     </div>
                                     <div class="form-group">
-                                        <label>Organiztion/Sponsor</label>
+                                        <label>Organization/Sponsor</label>
                                         <input class="form-control" type="text" name="sponsor" value="<?= $sponsor ?>" required <?php echo ($statusID != "D" ? "readonly" : "");?>>
                                     </div>
                                 </div>
@@ -493,7 +493,7 @@
                             </a>
                             
                             <div class="form-group mt-5" <?php echo (($statusID != "D")? "hidden" : "");?>>
-                                <p>Please <a href="" target="_blank">print your SAF here</a> (with details included) and Complete Approval before Upload.</p>
+                                <p>Please <a href="SAF.php?reservation_id=<?= $res_id ?>" target="_blank">print your SAF here</a> (with details included) and Complete Approval before Upload.</p>
                             </div>
 
                             <!-- Confirm Update Modal-->
