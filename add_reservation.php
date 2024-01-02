@@ -185,7 +185,7 @@
 
                                 <div class="col-7">
                                     <div class="form-group">
-                                            <label>Organiztion/Sponsor</label>
+                                            <label>Organization/Sponsor</label>
                                             <input class="form-control" type="text" name="sponsor" value="" required>
                                     </div>
                                     <div class="form-group">
