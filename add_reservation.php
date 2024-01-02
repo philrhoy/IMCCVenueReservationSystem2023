@@ -261,13 +261,12 @@
                                                 </span>
                                                 <span class="text">Re-edit reservation</span>
                                             </button>
-                                            <a class="btn btn-secondary btn-icon-split btn-sm keychainify-checked" id="backToHome" data-dismiss="modal">
+                                            <a href="calendar.php" class="btn btn-secondary btn-icon-split btn-sm keychainify-checked" id="backToHome">
                                                 <span class="icon text-white-50">
                                                     <i class="fas fa-window-close"></i>
                                                 </span>
                                                 <span class="text">Back to homepage</span>
                                             </a>
-
                                         </div>
                                     </div>
                                 </div>
