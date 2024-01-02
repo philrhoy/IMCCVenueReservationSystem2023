@@ -87,12 +87,12 @@ if (isset($_GET['reservation_id'])) {
                 <img src="img/head_report.png" width="100%">
                 <br />
                 <br />
-                <table class="table">
+                <table >
                     <tbody>
                         <tr>
-                            <td style="border: 0px solid white;">SAS FORM 14-A</td>
-                            <td width="5%" style="border: 0px solid white;">Date:</td>
-                            <td width="20%" style="border-bottom:1px solid black; border-top: 0px solid white;"></td>
+                            <td width="80%" style="border: 0px solid white;">SAS FORM 14-A</td>
+                            <td width="0%" style="border: 0px solid white;">Date:</td>
+                            <td width="30%" style="border-bottom:1px solid black; border-top: 0px solid white;"></td>
                         </tr>
                         <tr>
                             <td style="border: 0px solid white;">Co-Curricular Activities</td>
@@ -100,11 +100,9 @@ if (isset($_GET['reservation_id'])) {
                     </tbody>
                 </table>
                 <br />
-                <br />
                 <center>
                     <h4><b>STUDENT ACTIVITY FORM</b></h4>
                 </center>
-                <br />
                 <br />
                 <table class="table">
                     <tbody>
@@ -124,9 +122,9 @@ if (isset($_GET['reservation_id'])) {
                         </tr>
                         <tr>
                             <td width="20%" style="border: 0px solid white;">Date of Implementation:</td>
-                            <td width="50%" style="border-bottom:1px solid black"><?= $start_date ?></td>
+                            <td width="45%" style="border-bottom:1px solid black"><?= date('M d, Y', strtotime($start_date)).' - '.date('M d, Y', strtotime($end_date)) ?></td>
                             <td width="5%" style="border: 0px solid white;">Time:</td>
-                            <td width="15%" style="border-bottom:1px solid black"><?= $start_time ?></td>
+                            <td width="20%" style="border-bottom:1px solid black"><?= date('H:i a', strtotime($start_time)).' - '.date('H:i a', strtotime($end_time)) ?></td>
                         </tr>
                         <tr>
                             <td width="20%" style="border: 0px solid white;">Venue:</td>
@@ -152,8 +150,6 @@ if (isset($_GET['reservation_id'])) {
                 </table>
                 <br />
                 <br />
-                <br />
-                <br />
                 <table class="table">
                     <tbody>
                         <tr>
@@ -172,9 +168,6 @@ if (isset($_GET['reservation_id'])) {
                 </table>
                 <br />
                 <br />
-                <br />
-                <br />
-                <br />
                 <table class="table">
                     <tbody>
                         <tr>
@@ -188,6 +181,24 @@ if (isset($_GET['reservation_id'])) {
                             <td style="text-align:center;border: 0px solid white;">Adviser/Department Head</td>
                             <td style="border: 0px solid white;"></td>
                             <td width="35%" colspan="2" style="text-align:center;border: 0px solid white;">Head, Student Affairs</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <br />
+                <br />
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <td width="15%" style="border: 0px solid white;">Approved By:</td>
+                            <td width="30%" style="border-bottom:1px solid black; border-top: 0px solid white;"></td>
+                            <td style="border: 0px solid white;"></td>
+                            <td width="35%" colspan="2" style="border-bottom:1px solid black; border-top: 0px solid white;"></td>
+                        </tr>
+                        <tr>
+                            <td style="border: 0px solid white;"></td>
+                            <td style="text-align:center;border: 0px solid white;">ODAA/ Comptroller</td>
+                            <td style="border: 0px solid white;"></td>
+                            <td width="35%" colspan="2" style="text-align:center;border: 0px solid white;">President</td>
                         </tr>
                     </tbody>
                 </table>
