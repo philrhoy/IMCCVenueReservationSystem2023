@@ -4,27 +4,32 @@ include 'settings/header.php';
 ?>
 
 <body class="login-bg-gradient-imcc">
-<img src="img/imcc2.png" style="position: absolute; top:6%; left:7%; width:300px;">
+    <!--<img src="img/imcc2.png" style="position: absolute; top:6%; left:7%; width:300px;">-->
     <div class="container">
-        
+
         <!-- Outer Row -->
         <div class="row justify-content-center">
             <div class="col-xl-10 col-lg-12 col-md-9">
-                <div class="card o-hidden border-0 shadow-lg my-imcc">
+                <div class="card o-hidden border-0 shadow-lg my-imcc" style="border-radius: 50px;">
                     <div class="card-body p-0">
                         <!-- Nested Row within Card Body -->
                         <div class="row">
                             <div class="col-lg-6 d-none d-lg-block">
-                                    <div class="text-center text-main p-5" style="margin-top:20%;">
-                                        <h1 class="h1 text-gray-900 mb-3">Venue Reservation System</h1>
-                                        <h6 class="h56 text-gray-900">This site is exclusively used for reservation processing of student activities and events within the IMCC Institution.</h6>
-                                    </div>
+                                <div class="text-center text-main p-5" style="margin-top:20%;">
+                                    <h1 class="h1 text-gray-900 mb-3">Venue Reservation System</h1>
+                                    <h6 class="h56 text-gray-900">This site is exclusively used for reservation processing of student activities and events within the IMCC Institution.</h6>
+                                </div>
+                                <div class="text-center">
+                                    <img src="img/calendar.png" style="width:230px;height:150px;">
+                                </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="p-5">
                                     <div class="text-center">
-                                        <h1 class="h4 text-gray-900 mb-5">Welcome Back!</h1>
+                                        <img src="img/imcc2.png" style="width:150px;height:150px;">
                                     </div>
+                                    <br />
+                                    <br />
                                     <form class="user" method="post">
                                         <div class="form-group">
                                             <input type="text" class="form-control form-control-user" id="username" name="username" aria-describedby="emailHelp" required placeholder="Username" autofocus>
@@ -94,7 +99,20 @@ include 'settings/header.php';
         </div>
 
     </div>
-
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <!-- Footer -->
+    <footer class="sticky-footer bg-white">
+        <div class="container my-auto">
+            <div class="copyright text-center my-auto">
+                <span>Copyright C* 2023 IMCC Revenue Reservation System of Activities </span>
+            </div>
+        </div>
+    </footer>
+    <!-- End of Footer -->
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
