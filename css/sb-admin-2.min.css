@@ -10693,8 +10693,8 @@ button.bg-dark:hover {
     }
 
     .my-imcc {
-        margin-top: 0rem !important;
-        margin-bottom: 0rem !important;
+        margin-top: 1rem !important;
+        margin-bottom: 1rem !important;
     }
 }
 
@@ -10712,8 +10712,8 @@ button.bg-dark:hover {
     }
 
     .my-imcc {
-        margin-top: 1rem !important;
-        margin-bottom: 10rem !important;
+        margin-top: 2rem !important;
+        margin-bottom: 3rem !important;
     }
 }
 
@@ -10731,27 +10731,30 @@ button.bg-dark:hover {
     }
 
     .my-imcc {
-        margin-top: 3rem !important;
-        margin-bottom: 3rem !important;
+        margin-top: 2rem !important;
+        margin-bottom: 1rem !important;
       
     }
 }
 
 @media (min-width:1500px) {
     .my-imcc {
-        margin-top: 7rem !important;
+        margin-top: 3rem !important;
+        margin-bottom: 1rem !important;
     }
 }
 
 @media (min-width:1700px) {
     .my-imcc {
-        margin-top: 9rem !important;
+        margin-top: 5rem !important;
+        margin-bottom: 1rem !important;
     }
 }
 
 @media (min-width:1900px) {
     .my-imcc {
-        margin-top: 12rem !important;
+        margin-top: 7rem !important;
+        margin-bottom: 1rem !important;
     }
 }
 
