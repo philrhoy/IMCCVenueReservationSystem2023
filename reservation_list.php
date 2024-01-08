@@ -161,7 +161,7 @@ include 'settings/topbar.php';
                                             break;
                                         case "R":
                                             $statusColor = "badge-danger";
-                                            $statusStr = "Rejected";
+                                            $statusStr = "Disapproved";
                                             break;
                                     }
                                 ?>

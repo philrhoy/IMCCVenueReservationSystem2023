@@ -100,7 +100,7 @@ if (isset($_POST['status'])){
                     break;
                 case "R":
                     $statusColor = "badge-danger";
-                    $statusStr = "Rejected";
+                    $statusStr = "Disapproved";
                     break;
             }
         ?>

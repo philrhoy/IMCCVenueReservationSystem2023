@@ -159,7 +159,8 @@ include 'settings/topbar.php';
                         <label for="evttxt">Status</label>
                         <select name="evtstatus" id="evtstatus" class="form-control" disabled readonly>
                             <option value="A">Approved</option>
-                            <option value="R">Rejected</option>
+                            <option value="R">Disapproved</option>
+                            <option value="D">Draft</option>
                             <option value="P">Pending for Approval</option>
                         </select>
                     </div>
