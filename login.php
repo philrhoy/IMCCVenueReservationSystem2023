@@ -108,7 +108,7 @@ include 'settings/header.php';
     <footer class="sticky-footer bg-white">
         <div class="container my-auto">
             <div class="copyright text-center my-auto">
-                <span>Copyright C* 2023 IMCC Venue Reservation System of Activities </span>
+                <span>Copyright © 2023 IMCC Venue Reservation System of Activities </span>
             </div>
         </div>
     </footer>
