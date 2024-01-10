@@ -241,34 +241,34 @@ include 'settings/topbar.php';
                                         <div class="col-6">
                                             <div class="input-group mb-3">
                                                 <div class="input-group-text">
-                                                    <input class="form-check-input mt-0  sound" type="checkbox" <?php echo ($statusID != "D" ? "disabled" : ""); ?> <?php if ($soundsystem != NULL) {
-                                                                                                                                                                        echo "checked";
-                                                                                                                                                                    } ?> value="" name="sound-check" id="sound-check">
+                                                    <input class="form-check-input mt-0  sound" type="checkbox" disabled <?php if ($soundsystem != NULL) {
+                                                                                                                                echo "checked";
+                                                                                                                            } ?> value="" name="sound-check" id="sound-check">
                                                     Sound System
                                                 </div>
-                                                <input type="number" class="form-control" <?php echo ($statusID != "D" ? "readonly" : ""); ?> <?php if ($soundsystem == NULL) {
-                                                                                                                                                    echo "disabled";
-                                                                                                                                                } ?> id="sound" value="<?= $soundsystem ?>" name="sound">
+                                                <input type="number" class="form-control" readonly <?php if ($soundsystem == NULL) {
+                                                                                                        echo "disabled";
+                                                                                                    } ?> id="sound" value="<?= $soundsystem ?>" name="sound">
                                             </div>
                                         </div>
                                         <div class="col-6">
                                             <div class="input-group mb-3">
                                                 <div class="input-group-text">
-                                                    <input class="form-check-input mt-0 mic" <?php echo ($statusID != "D" ? "disabled" : ""); ?> type="checkbox" value="" <?php if ($microphone != NULL) {
-                                                                                                                                                                                echo "checked";
-                                                                                                                                                                            } ?> name="mic-check" id="mic-check">
+                                                    <input class="form-check-input mt-0 mic" disabled type="checkbox" value="" <?php if ($microphone != NULL) {
+                                                                                                                                    echo "checked";
+                                                                                                                                } ?> name="mic-check" id="mic-check">
                                                     Microphone &nbsp;&nbsp;&nbsp;&nbsp;
                                                 </div>
-                                                <input type="number" <?php echo ($statusID != "D" ? "readonly" : ""); ?> <?php if ($microphone == NULL) {
-                                                                                                                                echo "disabled";
-                                                                                                                            } ?> class="form-control" id="mic" name="mic" value="<?= $microphone ?>">
+                                                <input type="number" readonly <?php if ($microphone == NULL) {
+                                                                                    echo "disabled";
+                                                                                } ?> class="form-control" id="mic" name="mic" value="<?= $microphone ?>">
                                             </div>
                                         </div>
 
                                     </div>
                                     <div class="form-group">
                                         <label>Others, Please specify:</label>
-                                        <textarea class="form-control" id="noteTextArea" name='material' rows="3" <?php echo ($statusID != "D" ? "readonly" : ""); ?>><?= $material ?></textarea>
+                                        <textarea class="form-control" id="noteTextArea" name='material' rows="3" readonly><?= $material ?></textarea>
                                     </div>
                                 </div>
 
