@@ -473,7 +473,7 @@ if (!isset($_GET['queryStatus'])) {
                                     </div>
                                     <div class="form-group note-form-group">
                                         <label>Others, Please specify:</label>
-                                        <textarea class="form-control" id="noteTextArea"  name='material' rows="3" <?= (($_SESSION['position'] != 'STO' ? 'readonly' : '')); ?>><?= $material ?></textarea>
+                                        <textarea class="form-control" id="noteTextArea"  name='material' rows="3" <?php echo ($statusID != "D" ? "readonly" : ""); ?>><?= $material ?></textarea>
                                     </div>
                                     <div class="form-group note-form-group">
                                         <label>Notes</label>
