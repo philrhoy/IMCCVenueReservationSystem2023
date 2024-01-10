@@ -36,6 +36,8 @@ include 'settings/topbar.php';
                         $act_form_file_ext = "";
                         $letter_approve_file = "";
                         $letter_approve_file_ext = "";
+                        $soundsystem = "";
+                        $microphone = "";
 
                         $sequence = $db->query("SELECT * FROM schedules WHERE id = '$res_id' OR reservationID = '$res_id'");
                         $fetch = $sequence->fetchAll(PDO::FETCH_OBJ);
@@ -54,6 +56,8 @@ include 'settings/topbar.php';
                             $end_time = $data->time_end;
                             $notes = $data->notes;
                             $material = $data->others_material;
+                            $soundsystem = $data->sound_system;
+                            $microphone = $data->microphone;
                             $act_form_file = $data->act_form_file;
                             $letter_approve_file = $data->letter_approve_file;
                             $contact = $data->contact;
@@ -93,7 +97,7 @@ include 'settings/topbar.php';
                             <div class="row">
                                 <div class="col-6">
                                     <div class="form-group row">
-                                    <div class="col-6">
+                                        <div class="col-6">
                                             <div class="form-group">
                                                 <label>Reservation Created On</label>
                                                 <input class="form-control" type="text" name="dateadded" value="<?= $res_dateadded ?>" readonly>
@@ -231,14 +235,46 @@ include 'settings/topbar.php';
                                     </div>
 
                                     <div class="form-group">
-                                        <label>Materials</label>
-                                        <textarea class="form-control" id="exampleFormControlTextarea1" name='material' placeholder="Notes will be provided by Property Custodian" rows="3" <?= (($_SESSION['position'] == 'STO' ? 'disabled' : '')); ?> readonly><?= $material ?></textarea>
+                                        <label>Materials to reserve:</label>
                                     </div>
+                                    <div class="form-group row">
+                                        <div class="col-6">
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-text">
+                                                    <input class="form-check-input mt-0  sound" type="checkbox" <?php echo ($statusID != "D" ? "disabled" : ""); ?> <?php if ($soundsystem != NULL) {
+                                                                                                                                                                        echo "checked";
+                                                                                                                                                                    } ?> value="" name="sound-check" id="sound-check">
+                                                    Sound System
+                                                </div>
+                                                <input type="number" class="form-control" <?php echo ($statusID != "D" ? "readonly" : ""); ?> <?php if ($soundsystem == NULL) {
+                                                                                                                                                    echo "disabled";
+                                                                                                                                                } ?> id="sound" value="<?= $soundsystem ?>" name="sound">
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-text">
+                                                    <input class="form-check-input mt-0 mic" <?php echo ($statusID != "D" ? "disabled" : ""); ?> type="checkbox" value="" <?php if ($microphone != NULL) {
+                                                                                                                                                                                echo "checked";
+                                                                                                                                                                            } ?> name="mic-check" id="mic-check">
+                                                    Microphone &nbsp;&nbsp;&nbsp;&nbsp;
+                                                </div>
+                                                <input type="number" <?php echo ($statusID != "D" ? "readonly" : ""); ?> <?php if ($microphone == NULL) {
+                                                                                                                                echo "disabled";
+                                                                                                                            } ?> class="form-control" id="mic" name="mic" value="<?= $microphone ?>">
+                                            </div>
+                                        </div>
 
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Others, Please specify:</label>
+                                        <textarea class="form-control" id="noteTextArea" name='material' rows="3" <?php echo ($statusID != "D" ? "readonly" : ""); ?>><?= $material ?></textarea>
+                                    </div>
                                 </div>
 
-                                <div class="col-4"> <div>
-                            </div>
+                                <div class="col-4">
+                                    <div>
+                                    </div>
                         </form>
 
                         <script>
