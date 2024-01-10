@@ -48,7 +48,6 @@ if (isset($_GET['reservation_id'])) {
         $end_date =  $data->date_end;
         $end_time = $data->time_end;
         $notes = $data->notes;
-        $material = $data->material;
         $act_form_file = $data->act_form_file;
         $letter_approve_file = $data->letter_approve_file;
         $contact = $data->contact;
