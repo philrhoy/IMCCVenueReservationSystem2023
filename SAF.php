@@ -113,18 +113,18 @@ if (isset($_GET['reservation_id'])) {
                             <td width="90%" colspan="3" style="border-bottom:1px solid black; border-top: 0px solid white;text-transform:uppercase;"><?= $activity ?></td>
                         </tr>
                         <tr>
-                            <td width="20%" style="border: 0px solid white;">Number of Participants:</td>
+                            <td width="20%" style="border-bottom: 1px solid black; border-top: 0px solid white;">Number of Participants:</td>
                             <td width="60%" colspan="3" style="border-bottom:1px solid black"><?= $participants ?></td>
                         </tr>
-                        <tr style="border: 1px solid black;">
-                            <td width="20%" style="border: 1px solid white;">Objectives:</td>
+                        <tr style="border: 1px solid black !important;">
+                            <td width="20%" style="border-right: 1px solid white;">Objectives:</td>
                             <td colspan="2" height="100" style="text-transform:uppercase;"><?= $objectives ?></td>
                         </tr>
                         <tr>
-                            <td width="20%" style="border: 0px solid white;">Date of Implementation:</td>
-                            <td width="45%" style="border-bottom:1px solid black"><?= date('M d, Y', strtotime($start_date)) . ' - ' . date('M d, Y', strtotime($end_date)) ?></td>
-                            <td width="5%" style="border: 0px solid white;">Time:</td>
-                            <td width="20%" style="border-bottom:1px solid black"><?= date('H:i a', strtotime($start_time)) . ' - ' . date('H:i a', strtotime($end_time)) ?></td>
+                            <td width="20%" style="border-top: 1px solid black;">Date of Implementation:</td>
+                            <td width="45%" style="border-bottom:1px solid black; border-top: 1px solid black;"><?= date('M d, Y', strtotime($start_date)) . ' - ' . date('M d, Y', strtotime($end_date)) ?></td>
+                            <td width="5%" style="border: 0px solid black;">Time:</td>
+                            <td width="20%" style="border-bottom:1px solid black; border-top: 1px solid black;"><?= date('H:i a', strtotime($start_time)) . ' - ' . date('H:i a', strtotime($end_time)) ?></td>
                         </tr>
                         <tr>
                             <td width="20%" style="border: 0px solid white;">Venue:</td>
@@ -169,10 +169,10 @@ if (isset($_GET['reservation_id'])) {
                     <tbody>
                         <tr>
                             <td width="15%" style="border: 0px solid white;">Submitted By:</td>
-                            <td width="30%" style="border-bottom:1px solid black; border-top: 0px solid white;text-align:center;"><?= $name ?></td>
+                            <td width="30%" style="border-bottom:1px solid black; border-top: 0px solid white;text-align:center;"><?php if ($position == "STO") echo $name; ?></td>
                             <td style="border: 0px solid white;"></td>
                             <td width="10%" style="border: 0px solid white;">Position:</td>
-                            <td width="25%" style="border-bottom:1px solid black; border-top: 0px solid white;"><?= $position ?></td>
+                            <td width="25%" style="border-bottom:1px solid black; border-top: 0px solid white;"><?php if ($position == "STO") echo $position ?></td>
                         </tr>
                         <tr>
                             <td style="border: 0px solid white;"></td>
