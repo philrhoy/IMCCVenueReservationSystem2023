@@ -88,10 +88,12 @@ include 'settings/topbar.php';
                             <option value="0">All</option>
                             <option value="D">Drafts</option>
                             <option value="P">Pending</option>
-                            <option value="A" <?php echo ((($_SESSION["position"] == "PTC") ? "selected" : "")); ?>>Approved</option>
+                            <option value="A"  <?php echo ((($_SESSION["position"] == "PTC") ? "selected" : "")) ?>>Approved</option>
                             <option value="R">Rejected</option>
-                            <!-- <option value="AA"<?php echo ($_SESSION["position"] != "DSA" ? "hidden disabled" : "") ?>>Approved by Admin</option>
-                            <option value="RA"<?php echo ($_SESSION["position"] != "DSA" ? "hidden disabled" : "") ?>>Rejected by Admin</option> -->
+                            <!-- <option value="AA"<?php //echo ($_SESSION["position"] != "DSA" ? "hidden disabled" : "") 
+                                                    ?>>Approved by Admin</option>
+                            <option value="RA"<?php //echo ($_SESSION["position"] != "DSA" ? "hidden disabled" : "") 
+                                                ?>>Rejected by Admin</option> -->
                         </select>
                         <div class="form-inline" style="margin-left: auto; ">
                             <input class="form-control form-control-sm" type="text" name="filterSearch" id="filterSearch" placeholder="Search title" style="margin-left: auto; ">
@@ -137,6 +139,9 @@ include 'settings/topbar.php';
                                 if ($_SESSION["position"] == "DSA") {
                                     $loggedUser = $_SESSION['id'];
                                     $fetchReservations .= " WHERE `schedules`.userID = '$loggedUser'";
+                                }
+                                if ($_SESSION["position"] == "PTC") {
+                                    $fetchReservations .= " WHERE `schedules`.status = 'A'";
                                 }
 
                                 $fetchReservations .= " ORDER BY `schedules`.date_added DESC";
@@ -188,14 +193,13 @@ include 'settings/topbar.php';
                         <script>
                             $(document).ready(function() {
                                 var orderByVal = $(this).val();
-                                var statusVal = $("#filterByStatus").val();
+                                var statusVal = $(this).val();//$("#filterByStatus").val();
                                 var venueVal = $("#filterByVenue").val();
                                 var programVal = $("#filterByProgram").val();
                                 var searchVal = $("#filterSearch").val();
                                 var userTypeVal = $("#filterByUserType").val();
 
                                
-
                                 $("#orderBy").on("change", function() {
                                     var orderByVal = $(this).val();
                                     var statusVal = $("#filterByStatus").val();
