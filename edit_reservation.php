@@ -459,25 +459,25 @@ if (!isset($_GET['queryStatus'])) {
                                     </div>
                                     <div class="input-group mb-3">
                                         <div class="input-group-text">
-                                            <input class="form-check-input mt-0  sound" type="checkbox" <?php if ($soundsystem != NULL) { echo "checked"; } ?> value="" name="sound-check" id="sound-check">
+                                            <input class="form-check-input mt-0  sound" type="checkbox" <?php echo ($statusID != "D" ? "disabled" : ""); ?> <?php if ($soundsystem != NULL) { echo "checked"; } ?> value="" name="sound-check" id="sound-check">
                                             Sound System
                                         </div>
-                                        <input type="number" class="form-control" <?php if ($soundsystem == NULL) { echo "disabled"; } ?> id="sound" value="<?= $soundsystem ?>" name="sound">
+                                        <input type="number" class="form-control" <?php echo ($statusID != "D" ? "readonly" : ""); ?> <?php if ($soundsystem == NULL) { echo "disabled"; } ?> id="sound" value="<?= $soundsystem ?>" name="sound">
                                     </div>
                                     <div class="input-group mb-3">
                                         <div class="input-group-text">
-                                            <input class="form-check-input mt-0 mic" type="checkbox" value="" <?php if ($micro != NULL) { echo "checked"; } ?> name="mic-check" id="mic-check">
+                                            <input class="form-check-input mt-0 mic" <?php echo ($statusID != "D" ? "disabled" : ""); ?> type="checkbox" value="" <?php if ($micro != NULL) { echo "checked"; } ?> name="mic-check" id="mic-check">
                                             Microphone &nbsp;&nbsp;&nbsp;&nbsp;
                                         </div>
-                                        <input type="number" <?php if ($micro == NULL) { echo "disabled"; } ?> class="form-control" id="mic" name="mic" value="<?= $micro ?>">
+                                        <input type="number" <?php echo ($statusID != "D" ? "readonly" : ""); ?> <?php if ($micro == NULL) { echo "disabled"; } ?> class="form-control" id="mic" name="mic" value="<?= $micro ?>">
                                     </div>
                                     <div class="form-group note-form-group">
                                         <label>Others, Please specify:</label>
-                                        <textarea class="form-control" id="noteTextArea" name='material' rows="3" <?= (($_SESSION['position'] != 'PTC' ? 'readonly' : '')); ?>><?= $material ?></textarea>
+                                        <textarea class="form-control" id="noteTextArea"  name='material' rows="3" <?= (($_SESSION['position'] != 'STO' ? 'readonly' : '')); ?>><?= $material ?></textarea>
                                     </div>
                                     <div class="form-group note-form-group">
                                         <label>Notes</label>
-                                        <textarea class="form-control" id="noteTextArea" name='notes' placeholder="Notes will be provided by Property Custodian" rows="3" <?= (($_SESSION['position'] != 'PTC' ? 'readonly' : '')); ?>><?= $notes ?></textarea>
+                                        <textarea class="form-control" id="noteTextArea" name='notes' placeholder="Notes will be provided by Property Custodian" rows="3" <?= (($_SESSION['position'] == 'STO' ? 'readonly' : '')); ?>><?= $notes ?></textarea>
                                     </div>
                                     <div class="form-group">
                                         <label>Choose action to perform</label>
@@ -486,7 +486,7 @@ if (!isset($_GET['queryStatus'])) {
                                             <?php if ($statusID == "D") { ?>
                                                 <option value='SUBMIT'>Submit to Property Custodian</option>
                                             <?php }
-                                            if ($statusID == "P" && $_SESSION["position"] == "PTC") { ?>
+                                            if ($statusID == "P" && $_SESSION["position"] == "DSA") { ?>
                                                 <option value='APPROVE'>Approve</option>
                                                 <option value='REJECT'>Reject</option>
                                             <?php } ?>

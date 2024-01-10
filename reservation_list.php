@@ -85,10 +85,10 @@ include 'settings/topbar.php';
                         &nbsp;&nbsp;
                         <label for=""><small>Filter by Status</small> &nbsp;&nbsp;</label>
                         <select class="form-control form-control-sm" name="filterByStatus" id="filterByStatus" style="width: 7%;">
-                            <option value="0" <?php echo ((($_SESSION["position"] == "PTC") ? "selected" : "")); ?>>All</option>
+                            <option value="0">All</option>
                             <option value="D">Drafts</option>
                             <option value="P">Pending</option>
-                            <option value="A">Approved</option>
+                            <option value="A" <?php echo ((($_SESSION["position"] == "PTC") ? "selected" : "")); ?>>Approved</option>
                             <option value="R">Rejected</option>
                             <!-- <option value="AA"<?php echo ($_SESSION["position"] != "DSA" ? "hidden disabled" : "") ?>>Approved by Admin</option>
                             <option value="RA"<?php echo ($_SESSION["position"] != "DSA" ? "hidden disabled" : "") ?>>Rejected by Admin</option> -->
@@ -176,7 +176,7 @@ include 'settings/topbar.php';
                                             <a href='edit_reservation.php?reservation_id=<?= $row->INT_RES_ID ?>' 
                                                 class="btn btn-primary btn-icon-split btn-sm keychainify-checked" 
                                                 target="_blank" 
-                                                style="<?php echo ($row->STATUS != 'D' && $_SESSION['position'] != 'PTC' ? "visibility: hidden;" : "");?>">
+                                                style="<?php echo ($row->STATUS != 'D' && $_SESSION['position'] == 'STO' ? "visibility: hidden;" : "");?>">
                                                 
                                                 <span class="icon text-white-50">
                                                     <i class="fas fa-edit"></i>
@@ -190,6 +190,32 @@ include 'settings/topbar.php';
                         </table>
                         <script>
                             $(document).ready(function() {
+                                var orderByVal = $(this).val();
+                                    var statusVal = $("#filterByStatus").val();
+                                    var venueVal = $("#filterByVenue").val();
+                                    var programVal = $("#filterByProgram").val();
+                                    var searchVal = $("#filterSearch").val();
+                                    var userTypeVal = $("#filterByUserType").val();
+
+                                    $.ajax({
+                                        url: "fetch_filtered_reservations.php",
+                                        type: "POST",
+                                        data: {
+                                            status: statusVal,
+                                            venue: venueVal,
+                                            program: programVal,
+                                            userType: userTypeVal,
+                                            search: searchVal,
+                                            orderBy: orderByVal
+                                        },
+                                        beforeSend: function() {
+
+                                        },
+                                        success: function(data) {
+                                            $(".table-responsive").html(data);
+                                        }
+                                    });
+                                    
                                 $("#orderBy").on("change", function() {
                                     var orderByVal = $(this).val();
                                     var statusVal = $("#filterByStatus").val();
