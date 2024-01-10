@@ -116,7 +116,7 @@ if (isset($_GET['reservation_id'])) {
                             <td width="20%" style="border: 0px solid white;">Number of Participants:</td>
                             <td width="60%" colspan="3" style="border-bottom:1px solid black"><?= $participants ?></td>
                         </tr>
-                        <tr style="border: 2px solid black;">
+                        <tr style="border: 1px solid black;">
                             <td width="20%" style="border: 1px solid white;">Objectives:</td>
                             <td colspan="2" height="100" style="text-transform:uppercase;"><?= $objectives ?></td>
                         </tr>
