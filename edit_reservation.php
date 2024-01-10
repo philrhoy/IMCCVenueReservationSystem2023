@@ -434,7 +434,7 @@ if (!isset($_GET['queryStatus'])) {
                                             <input type="hidden" value="<?php echo $act_form_file; ?>" name="origActForm" readonly>
                                             <label><b>Upload Fully Signed Student Activity Form:</b></label>
                                             <span class="invalidFormat" style="visibility: hidden; color: red">Invalid file format</span>
-                                            <input type="file" class="form-control uploadFile img" name="activityFormImg" accept="image/jpeg, image/png, application/pdf" id="activityForm" aria-label="0" required <?php echo (($act_form_file != "" || $statusID != "D") ? "disabled" : ""); ?>>
+                                            <input type="file" class="form-control uploadFile img activityForm" name="activityFormImg" accept="image/jpeg, image/png, application/pdf" id="activityForm" aria-label="0" <?php echo (($act_form_file != "" || $statusID != "D") ? "disabled" : ""); ?>>
                                             <iframe src="uploads/<?= (($act_form_file == "") ? "no-file-icon.png" : $act_form_file) ?>" type="<?= $act_form_file_ext ?>" scrolling="auto" height="250px" width="100%" class="getImg"> </iframe>
                                             <a class="btn btn-sm btn-primary preview" id="0" <?php echo (($act_form_file == "") ? "hidden" : ""); ?>>Preview</a>
                                         </div>
@@ -459,21 +459,29 @@ if (!isset($_GET['queryStatus'])) {
                                     </div>
                                     <div class="input-group mb-3">
                                         <div class="input-group-text">
-                                            <input class="form-check-input mt-0  sound" type="checkbox" <?php echo ($statusID != "D" ? "disabled" : ""); ?> <?php if ($soundsystem != NULL) { echo "checked"; } ?> value="" name="sound-check" id="sound-check">
+                                            <input class="form-check-input mt-0  sound" type="checkbox" <?php echo ($statusID != "D" ? "disabled" : ""); ?> <?php if ($soundsystem != NULL) {
+                                                                                                                                                                echo "checked";
+                                                                                                                                                            } ?> value="" name="sound-check" id="sound-check">
                                             Sound System
                                         </div>
-                                        <input type="number" class="form-control" <?php echo ($statusID != "D" ? "readonly" : ""); ?> <?php if ($soundsystem == NULL) { echo "disabled"; } ?> id="sound" value="<?= $soundsystem ?>" name="sound">
+                                        <input type="number" class="form-control" <?php echo ($statusID != "D" ? "readonly" : ""); ?> <?php if ($soundsystem == NULL) {
+                                                                                                                                            echo "disabled";
+                                                                                                                                        } ?> id="sound" value="<?= $soundsystem ?>" name="sound">
                                     </div>
                                     <div class="input-group mb-3">
                                         <div class="input-group-text">
-                                            <input class="form-check-input mt-0 mic" <?php echo ($statusID != "D" ? "disabled" : ""); ?> type="checkbox" value="" <?php if ($micro != NULL) { echo "checked"; } ?> name="mic-check" id="mic-check">
+                                            <input class="form-check-input mt-0 mic" <?php echo ($statusID != "D" ? "disabled" : ""); ?> type="checkbox" value="" <?php if ($micro != NULL) {
+                                                                                                                                                                        echo "checked";
+                                                                                                                                                                    } ?> name="mic-check" id="mic-check">
                                             Microphone &nbsp;&nbsp;&nbsp;&nbsp;
                                         </div>
-                                        <input type="number" <?php echo ($statusID != "D" ? "readonly" : ""); ?> <?php if ($micro == NULL) { echo "disabled"; } ?> class="form-control" id="mic" name="mic" value="<?= $micro ?>">
+                                        <input type="number" <?php echo ($statusID != "D" ? "readonly" : ""); ?> <?php if ($micro == NULL) {
+                                                                                                                        echo "disabled";
+                                                                                                                    } ?> class="form-control" id="mic" name="mic" value="<?= $micro ?>">
                                     </div>
                                     <div class="form-group note-form-group">
                                         <label>Others, Please specify:</label>
-                                        <textarea class="form-control" id="noteTextArea"  name='material' rows="3" <?php echo ($statusID != "D" ? "readonly" : ""); ?>><?= $material ?></textarea>
+                                        <textarea class="form-control" id="noteTextArea" name='material' rows="3" <?php echo ($statusID != "D" ? "readonly" : ""); ?>><?= $material ?></textarea>
                                     </div>
                                     <div class="form-group note-form-group">
                                         <label>Notes</label>
@@ -549,6 +557,16 @@ if (!isset($_GET['queryStatus'])) {
                                 var errors = 0;
                                 var curStartDate = $('#startDate').val();
                                 var curStartTime = $('#startTime').val();
+
+                                $('#performAction').change(function() {
+                                    if ($(this).val() == "UPDATE") {
+                                        $('#activityForm').attr('required', false)
+                                    } else {
+                                        $('#activityForm').attr('required', true)
+                                    }
+                                })
+
+                              
 
                                 $(document).on("click", ".sound", function() {
                                     let soundsystem = document.getElementById("sound-check");
