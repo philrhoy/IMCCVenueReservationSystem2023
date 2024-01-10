@@ -123,11 +123,11 @@ if (isset($_POST['submit'])) {
         if (isset($_POST['material'])) $query .= ",others_material = '$material'";
 
         //Check if approved or rejected or update only
-        if ($action == "APPROVE" && $_SESSION["position"] == "PTC") {
+        if ($action == "APPROVE" && $_SESSION["position"] == "DSA") {
             $query .= ",status = 'A',
                             approvedByAdmin = '$adminID' 
                             WHERE id = '$res_id' OR reservationID = '$res_id'";
-        } elseif ($action == "REJECT"  && $_SESSION["position"] == "PTC") {
+        } elseif ($action == "REJECT"  && $_SESSION["position"] == "DSA") {
             $query .= ",status = 'R',
                             rejectedByAdmin = '$adminID' 
                             WHERE id = '$res_id' OR reservationID = '$res_id'";
