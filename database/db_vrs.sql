@@ -2,8 +2,8 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Dec 31, 2023 at 04:19 AM
+-- Host: localhost
+-- Generation Time: Jan 10, 2024 at 07:22 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -47,15 +47,15 @@ INSERT INTO `notifications` (`id`, `type`, `details`, `sourceUser`, `recipient`,
 (2, 'CREATE', 'DIMPLE NORMADINATION created a new reservation [RES000020]. Please review.', 6, NULL, 'DSA', 1, 'edit_reservation.php?reservation_id=20', '2023-12-12 19:39:18'),
 (3, 'CREATE', 'DIMPLE NORMADINATION created a new reservation [RES000021]. Please review.', 6, NULL, 'DSA', 1, 'edit_reservation.php?reservation_id=21', '2023-12-12 19:41:47'),
 (4, 'UPDATE', 'DIMPLE NORMADINATION updated reservation [RES000020]. Please review the updates.', 6, NULL, 'DSA', 1, 'edit_reservation.php?reservation_id=23', '2023-12-12 19:42:35'),
-(5, 'REJECT', 'Reservation [RES000020] was Rejected by Admin JOHN DOE. Please review and update the reservation.', 4, 6, NULL, 0, 'edit_reservation.php?reservation_id=23', '2023-12-12 19:43:28'),
-(6, 'APPROVE', 'Reservation [RES000021] was Approved by Admin JOHN DOE.', 4, 6, NULL, 0, 'edit_reservation.php?reservation_id=24', '2023-12-12 19:46:00'),
+(5, 'REJECT', 'Reservation [RES000020] was Rejected by Admin JOHN DOE. Please review and update the reservation.', 4, 6, NULL, 1, 'edit_reservation.php?reservation_id=23', '2023-12-12 19:43:28'),
+(6, 'APPROVE', 'Reservation [RES000021] was Approved by Admin JOHN DOE.', 4, 6, NULL, 1, 'edit_reservation.php?reservation_id=24', '2023-12-12 19:46:00'),
 (7, 'APPROVE', 'Reservation [RES000021] was Approved by Admin JOHN DOE.', 4, NULL, 'PTC', 0, 'edit_reservation.php?reservation_id=24', '2023-12-12 19:46:00'),
-(8, 'UPDATE', 'JOHN DOE updated reservation [RES000021]. Please review the updates.', 4, 6, NULL, 0, 'edit_reservation.php?reservation_id=24', '2023-12-12 19:47:01'),
+(8, 'UPDATE', 'JOHN DOE updated reservation [RES000021]. Please review the updates.', 4, 6, NULL, 1, 'edit_reservation.php?reservation_id=24', '2023-12-12 19:47:01'),
 (9, 'APPROVE', 'Reservation [RES000021] was Approved by Admin ADMINISTRATOR .', 4, NULL, 'PTC', 0, 'edit_reservation.php?reservation_id=24', '2023-12-14 14:09:12'),
-(10, 'APPROVE', 'Reservation [RES000021] was Approved by Admin ADMINISTRATOR .', 4, 6, NULL, 0, 'edit_reservation.php?reservation_id=24', '2023-12-14 14:11:19'),
+(10, 'APPROVE', 'Reservation [RES000021] was Approved by Admin ADMINISTRATOR .', 4, 6, NULL, 1, 'edit_reservation.php?reservation_id=24', '2023-12-14 14:11:19'),
 (11, 'APPROVE', 'Reservation [RES000021] was Approved by Admin ADMINISTRATOR .', 4, NULL, 'PTC', 1, 'edit_reservation.php?reservation_id=24', '2023-12-14 14:11:19'),
-(12, 'REJECT', 'ADMINISTRATOR  updated reservation [RES000021]. Please review the updates.', 4, 6, NULL, 0, 'edit_reservation.php?reservation_id=24', '2023-12-14 14:11:24'),
-(13, 'REJECT', 'Reservation [RES000021] was Rejected by Admin ADMINISTRATOR . Please review and update the reservation.', 4, 6, NULL, 0, 'edit_reservation.php?reservation_id=24', '2023-12-14 14:12:56'),
+(12, 'REJECT', 'ADMINISTRATOR  updated reservation [RES000021]. Please review the updates.', 4, 6, NULL, 1, 'edit_reservation.php?reservation_id=24', '2023-12-14 14:11:24'),
+(13, 'REJECT', 'Reservation [RES000021] was Rejected by Admin ADMINISTRATOR . Please review and update the reservation.', 4, 6, NULL, 1, 'edit_reservation.php?reservation_id=24', '2023-12-14 14:12:56'),
 (14, 'UPDATE', 'DIMPLE NORMADINATION updated reservation [RES000021]. Please review the updates.', 6, NULL, 'DSA', 0, 'edit_reservation.php?reservation_id=24', '2023-12-14 14:14:23'),
 (15, 'UPDATE', 'DIMPLE NORMADINATION updated reservation [RES000021]. Please review the updates.', 6, NULL, 'DSA', 0, 'edit_reservation.php?reservation_id=24', '2023-12-14 14:15:06'),
 (16, 'UPDATE', 'DIMPLE NORMADINATION updated reservation [RES000021]. Please review the updates.', 6, NULL, 'DSA', 0, 'edit_reservation.php?reservation_id=24', '2023-12-14 14:15:34'),
@@ -64,12 +64,18 @@ INSERT INTO `notifications` (`id`, `type`, `details`, `sourceUser`, `recipient`,
 (19, 'APPROVE', 'Reservation [RES000022] was Approved by Admin JOHN DOE.', 4, 4, NULL, 0, 'edit_reservation.php?reservation_id=25', '2023-12-14 14:44:59'),
 (20, 'APPROVE', 'Reservation [RES000022] was Approved by Admin JOHN DOE.', 4, NULL, 'PTC', 0, 'edit_reservation.php?reservation_id=25', '2023-12-14 14:44:59'),
 (21, 'CREATE', 'JOHN DOE created a new reservation [RES000023]. Please review.', 4, NULL, 'DSA', 0, 'edit_reservation.php?reservation_id=RES000023', '2023-12-26 22:37:39'),
-(22, 'CREATE', 'JOHN DOE created a new reservation [RES000024]. Please review.', 4, NULL, 'DSA', 0, 'edit_reservation.php?reservation_id=RES000024', '2023-12-31 03:12:14'),
-(23, 'APPROVE', 'Reservation [RES000024] was Approved by Admin JOHN DOE.', 4, 4, NULL, 0, 'view_reservation.php?reservation_id=RES000024', '2023-12-31 03:31:30'),
+(22, 'CREATE', 'JOHN DOE created a new reservation [RES000024]. Please review.', 4, NULL, 'DSA', 1, 'edit_reservation.php?reservation_id=RES000024', '2023-12-31 03:12:14'),
+(23, 'APPROVE', 'Reservation [RES000024] was Approved by Admin JOHN DOE.', 4, 4, NULL, 1, 'view_reservation.php?reservation_id=RES000024', '2023-12-31 03:31:30'),
 (24, 'APPROVE', 'Reservation [RES000024] was Approved by Admin JOHN DOE.', 4, NULL, 'PTC', 0, 'edit_reservation.php?reservation_id=RES000024', '2023-12-31 03:31:31'),
-(25, 'CREATE', 'MARK MONTER created a new reservation [RES000025]. Please review.', 7, NULL, 'DSA', 0, 'edit_reservation.php?reservation_id=RES000025', '2023-12-31 05:22:33'),
-(26, 'CREATE', 'MARK MONTER created a new reservation [RES000026]. Please review.', 7, NULL, 'DSA', 0, 'edit_reservation.php?reservation_id=RES000026', '2023-12-31 11:06:44'),
-(27, 'CREATE', 'JOHN DOE created a new reservation [RES000027]. Please review.', 4, NULL, 'DSA', 0, 'edit_reservation.php?reservation_id=RES000027', '2023-12-31 11:10:10');
+(25, 'CREATE', 'MARK MONTER created a new reservation [RES000025]. Please review.', 7, NULL, 'DSA', 1, 'edit_reservation.php?reservation_id=RES000025', '2023-12-31 05:22:33'),
+(26, 'CREATE', 'MARK MONTER created a new reservation [RES000026]. Please review.', 7, NULL, 'DSA', 1, 'edit_reservation.php?reservation_id=RES000026', '2023-12-31 11:06:44'),
+(27, 'CREATE', 'JOHN DOE created a new reservation [RES000027]. Please review.', 4, NULL, 'DSA', 1, 'edit_reservation.php?reservation_id=RES000027', '2023-12-31 11:10:10'),
+(28, 'UPDATE', 'JOHN DOE updated reservation [RES000027]. Please review the updates.', 4, 4, NULL, 1, 'edit_reservation.php?reservation_id=RES000027', '2024-01-09 00:33:24'),
+(29, 'UPDATE', 'MARK MONTER updated reservation [RES000027]. Please review the updates.', 7, NULL, 'DSA', 1, 'edit_reservation.php?reservation_id=RES000027', '2024-01-09 00:34:17'),
+(30, 'UPDATE', 'MARK MONTER updated reservation [RES000025]. Please review the updates.', 7, NULL, 'DSA', 0, 'edit_reservation.php?reservation_id=RES000025', '2024-01-11 01:15:28'),
+(31, 'UPDATE', 'MARK MONTER updated reservation [RES000025]. Please review the updates.', 7, NULL, 'DSA', 0, 'edit_reservation.php?reservation_id=RES000025', '2024-01-11 01:20:15'),
+(32, 'UPDATE', 'MARK MONTER updated reservation [RES000025]. Please review the updates.', 7, NULL, 'DSA', 0, 'edit_reservation.php?reservation_id=RES000025', '2024-01-11 01:21:32'),
+(33, 'UPDATE', 'MARK MONTER updated reservation [RES000024]. Please review the updates.', 7, NULL, 'DSA', 0, 'edit_reservation.php?reservation_id=RES000024', '2024-01-11 01:24:57');
 
 -- --------------------------------------------------------
 
@@ -155,7 +161,9 @@ CREATE TABLE `schedules` (
   `act_form_file` varchar(255) NOT NULL,
   `letter_approve_file` varchar(255) NOT NULL,
   `notes` text DEFAULT NULL,
-  `material` text DEFAULT NULL,
+  `sound_system` varchar(2) DEFAULT NULL,
+  `microphone` varchar(2) DEFAULT NULL,
+  `others_material` text DEFAULT NULL,
   `date_added` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
@@ -163,16 +171,16 @@ CREATE TABLE `schedules` (
 -- Dumping data for table `schedules`
 --
 
-INSERT INTO `schedules` (`id`, `reservationID`, `userID`, `venueID`, `programID`, `status`, `date_start`, `date_end`, `time_start`, `time_end`, `name`, `contact`, `description`, `num_participants`, `sponsor`, `contribution`, `incharge`, `notified`, `last_notified`, `cancelled`, `deleted`, `rejectedByAdmin`, `approvedByAdmin`, `act_form_file`, `letter_approve_file`, `notes`, `material`, `date_added`) VALUES
-(23, 'RES000020', 6, 1, 5, 'R', '2023-12-12', '2023-12-12', '19:38', '20:38', 'TEST NOTIFY ADMIN', '09090909090', 'SHOULD NOTIFY ADMIN - TEST STUDENT UPDATE', 10, '', 0, '', 0, NULL, 0, 0, 4, 0, '6578466613838.pdf', '', 'TEST REJECT', '', '2023-12-24 01:30:15'),
-(24, 'RES000021', 6, 2, 5, 'R', '2023-12-12', '2023-12-12', '21:40', '22:40', 'TEST NOTIFY ADMIN 2', '09090909090', '1. SHOULD INCREMENT ADMIN NOTIFICATION COUNTER\r\n\r\n2. SHOULD NOTIFY STUDENT', 9, '', 0, '', 0, NULL, 0, 0, 4, 4, '657846fb236d8.pdf', '657846fb23884.png', 'yuyu', '', '2023-12-24 01:30:15'),
-(25, 'RES000022', 4, 5, 5, 'A', '2023-12-14', '2023-12-14', '14:31', '14:31', 'test', '09125455451', '\"\" test \"\" ', 45, '', 0, '', 0, NULL, 0, 0, 0, 4, '657aa13479f5d.pdf', '657aa1347a54d.png', '', NULL, '2023-12-24 01:30:15'),
-(26, 'RES000022', 4, 5, 5, 'P', '2023-12-14', '2023-12-14', '14:31', '14:31', 'test', '09125455451', '\"\" test \"\" ', 45, '', 0, '', 0, NULL, 0, 0, 0, 0, '657aa19f75051.pdf', '657aa19f7565e.png', NULL, NULL, '2023-12-24 01:30:15'),
-(27, 'RES000023', 4, 1, 5, 'P', '2023-12-27', '2023-12-27', '10:37', '22:37', 'TEST DATE ADDED TIME', '09090909090', 'TEST DATE ADDED TIME', 12, '', 0, '', 0, NULL, 0, 0, 0, 0, '658ae5331cc5a.pdf', '', NULL, NULL, '2023-12-26 22:37:39'),
-(28, 'RES000024', 4, 5, 5, 'A', '2024-01-01', '2024-01-01', '03:11', '15:11', 'TEST JANUARY SCHED', '09090909090', 'JAN SCHED', 5, '', 0, '', 0, NULL, 0, 0, 0, 4, '65906b8ebc0ba.pdf', '', '', NULL, '2023-12-31 03:12:14'),
-(29, 'RES000025', 7, 5, 7, 'P', '2024-01-02', '2024-01-02', '05:21', '17:21', 'x', '09090909090', 'x', 2, '', 0, '', 0, NULL, 0, 0, 0, 0, '65908a190a373.pdf', '', NULL, NULL, '2023-12-31 05:22:33'),
-(30, 'RES000026', 7, 1, 5, 'D', '2024-01-02', '2024-01-02', '11:05', '23:05', 'TEST CREATE NEW RES', '09090909090', 'TEST CREATE NEW RES', 5, 'TEST SPONSOR', 101, 'TEST INCHARGE', 0, NULL, 0, 0, 0, 0, '', '', NULL, NULL, '2023-12-31 11:06:44'),
-(31, 'RES000027', 4, 8, 7, 'D', '2024-01-03', '2024-01-03', '11:09', '23:09', 'TEST NEW RES + STATUS DRAFTED', '09090909090', 'TEST NEW RES + STATUS DRAFTED', 5, 'SPONSOR1', 500, 'PERSON1', 0, NULL, 0, 0, 0, 0, '', '', NULL, NULL, '2023-12-31 11:10:10');
+INSERT INTO `schedules` (`id`, `reservationID`, `userID`, `venueID`, `programID`, `status`, `date_start`, `date_end`, `time_start`, `time_end`, `name`, `contact`, `description`, `num_participants`, `sponsor`, `contribution`, `incharge`, `notified`, `last_notified`, `cancelled`, `deleted`, `rejectedByAdmin`, `approvedByAdmin`, `act_form_file`, `letter_approve_file`, `notes`, `sound_system`, `microphone`, `others_material`, `date_added`) VALUES
+(23, 'RES000020', 6, 1, 5, 'R', '2023-12-12', '2023-12-12', '19:38', '20:38', 'TEST NOTIFY ADMIN', '09090909090', 'SHOULD NOTIFY ADMIN - TEST STUDENT UPDATE', 10, '', 0, '', 0, NULL, 0, 0, 4, 0, '6578466613838.pdf', '', 'TEST REJECT', NULL, NULL, '', '2023-12-24 01:30:15'),
+(24, 'RES000021', 6, 2, 5, 'R', '2023-12-12', '2023-12-12', '21:40', '22:40', 'TEST NOTIFY ADMIN 2', '09090909090', '1. SHOULD INCREMENT ADMIN NOTIFICATION COUNTER\r\n\r\n2. SHOULD NOTIFY STUDENT', 9, '', 0, '', 0, NULL, 0, 0, 4, 4, '657846fb236d8.pdf', '657846fb23884.png', 'yuyu', NULL, NULL, '', '2023-12-24 01:30:15'),
+(25, 'RES000022', 4, 5, 5, 'A', '2023-12-14', '2023-12-14', '14:31', '14:31', 'test', '09125455451', '\"\" test \"\" ', 45, '', 0, '', 0, NULL, 0, 0, 0, 4, '657aa13479f5d.pdf', '657aa1347a54d.png', '', NULL, NULL, NULL, '2023-12-24 01:30:15'),
+(26, 'RES000022', 4, 5, 5, 'P', '2023-12-14', '2023-12-14', '14:31', '14:31', 'test', '09125455451', '\"\" test \"\" ', 45, '', 0, '', 0, NULL, 0, 0, 0, 0, '657aa19f75051.pdf', '657aa19f7565e.png', NULL, NULL, NULL, NULL, '2023-12-24 01:30:15'),
+(27, 'RES000023', 4, 1, 5, 'P', '2023-12-27', '2023-12-27', '10:37', '22:37', 'TEST DATE ADDED TIME', '09090909090', 'TEST DATE ADDED TIME', 12, '', 0, '', 0, NULL, 0, 0, 0, 0, '658ae5331cc5a.pdf', '', NULL, NULL, NULL, NULL, '2023-12-26 22:37:39'),
+(28, 'RES000024', 4, 5, 5, 'A', '2024-01-01', '2024-01-01', '03:11', '15:11', 'TEST JANUARY SCHED', '09090909090', 'JAN SCHED', 5, '', 0, '', 0, NULL, 0, 0, 0, 4, '65906b8ebc0ba.pdf', '', '', '', '', '', '2023-12-31 03:12:14'),
+(29, 'RES000025', 7, 5, 7, 'P', '2024-01-02', '2024-01-02', '05:21', '17:21', 'x', '09090909090', 'x', 2, '', 0, '', 0, NULL, 0, 0, 0, 0, '65908a190a373.pdf', '', '', '12', '2', 'Test', '2023-12-31 05:22:33'),
+(30, 'RES000026', 7, 1, 5, 'D', '2024-01-02', '2024-01-02', '11:05', '23:05', 'TEST CREATE NEW RES', '09090909090', 'TEST CREATE NEW RES', 5, 'TEST SPONSOR', 101, 'TEST INCHARGE', 0, NULL, 0, 0, 0, 0, '', '', NULL, '1', '2', 'test', '2023-12-31 11:06:44'),
+(31, 'RES000027', 4, 8, 7, 'R', '2024-01-03', '2024-01-03', '11:09', '23:09', 'TEST NEW RES + STATUS DRAFTED', '09090909090', 'TEST NEW RES + STATUS DRAFTED', 5, 'SPONSOR1', 500, 'PERSON1', 0, NULL, 0, 0, 7, 0, '659c23d44226b.png', '', 'test', NULL, NULL, '', '2023-12-31 11:10:10');
 
 -- --------------------------------------------------------
 
@@ -284,7 +292,7 @@ ALTER TABLE `venues`
 -- AUTO_INCREMENT for table `notifications`
 --
 ALTER TABLE `notifications`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT for table `number_sequence`
