@@ -55,6 +55,9 @@ if (isset($_GET['reservation_id'])) {
         $sponsor = $data->sponsor;
         $contribution = $data->contribution;
         $incharge = $data->incharge;
+        $soundsystem = $data->sound_system;
+        $microphone = $data->microphone;
+        $material = $data->others_material;
         $name = $data->first_name . ' ' . $data->middle_name . ' ' . $data->last_name;
 
         $file_ext = explode(".", $act_form_file);
@@ -87,12 +90,12 @@ if (isset($_GET['reservation_id'])) {
                 <img src="img/head_report.png" width="100%">
                 <br />
                 <br />
-                <table >
+                <table>
                     <tbody>
                         <tr>
                             <td width="80%" style="border: 0px solid white;">SAS FORM 14-A</td>
                             <td width="0%" style="border: 0px solid white;">Date:</td>
-                            <td width="30%" style="border-bottom:1px solid black; border-top: 0px solid white;"></td>
+                            <td width="30%" style="border-bottom:1px solid black; border-top: 0px solid white;"><?= date('M d, Y H:i a', strtotime($res_dateadded)) ?></td>
                         </tr>
                         <tr>
                             <td style="border: 0px solid white;">Co-Curricular Activities</td>
@@ -108,48 +111,61 @@ if (isset($_GET['reservation_id'])) {
                     <tbody>
                         <tr style="border: 1px solid white;">
                             <td width="10%" style="border: 0px solid white;">Activity:</td>
-                            <td width="90%" colspan="3" style="border-bottom:1px solid black; border-top: 0px solid white;"><?= $activity ?></td>
+                            <td width="90%" colspan="3" style="border-bottom:1px solid black; border-top: 0px solid white;text-transform:uppercase;"><?= $activity ?></td>
                         </tr>
                         <tr>
                             <td width="20%" style="border: 0px solid white;">Number of Participants:</td>
                             <td width="60%" colspan="3" style="border-bottom:1px solid black"><?= $participants ?></td>
                         </tr>
-                        <tr>
-                            <td colspan="3" width="20%" style="border: 1px solid white;">Objectives:</td>
-                        </tr>
                         <tr style="border: 2px solid black;">
-                            <td colspan="3" height="100"><?= $objectives ?></td>
+                            <td width="20%" style="border: 1px solid white;">Objectives:</td>
+                            <td colspan="2" height="100" style="text-transform:uppercase;"><?= $objectives ?></td>
                         </tr>
                         <tr>
                             <td width="20%" style="border: 0px solid white;">Date of Implementation:</td>
-                            <td width="45%" style="border-bottom:1px solid black"><?= date('M d, Y', strtotime($start_date)).' - '.date('M d, Y', strtotime($end_date)) ?></td>
+                            <td width="45%" style="border-bottom:1px solid black"><?= date('M d, Y', strtotime($start_date)) . ' - ' . date('M d, Y', strtotime($end_date)) ?></td>
                             <td width="5%" style="border: 0px solid white;">Time:</td>
-                            <td width="20%" style="border-bottom:1px solid black"><?= date('H:i a', strtotime($start_time)).' - '.date('H:i a', strtotime($end_time)) ?></td>
+                            <td width="20%" style="border-bottom:1px solid black"><?= date('H:i a', strtotime($start_time)) . ' - ' . date('H:i a', strtotime($end_time)) ?></td>
                         </tr>
                         <tr>
                             <td width="20%" style="border: 0px solid white;">Venue:</td>
-                            <td width="80%" colspan="3" style="border-bottom:1px solid black; border-top: 0px solid white;"><?= $venue_id ?></td>
+                            <td width="80%" colspan="3" style="border-bottom:1px solid black; border-top: 0px solid white;text-transform:uppercase;"><?= $venue_id ?></td>
                         </tr>
                         <tr>
                             <td width="20%" style="border: 0px solid white;">Organization/Sponsor:</td>
-                            <td width="80%" colspan="3" style="border-bottom:1px solid black"><?= $sponsor ?></td>
+                            <td width="80%" colspan="3" style="border-bottom:1px solid black;text-transform:uppercase;"><?= $sponsor ?></td>
                         </tr>
                         <tr>
                             <td colspan="1" style="width:30% !important;border: 0px solid white;">Amount of Contribution per Student:</td>
-                            <td colspan="3" style="border-bottom:1px solid black"><?= $contribution ?></td>
+                            <td colspan="3" style="border-bottom:1px solid black;text-transform:uppercase;"><?= $contribution ?></td>
                         </tr>
                         <tr>
                             <td width="20%" style="border: 0px solid white;">Person/s in-charge:</td>
-                            <td colspan="3" style="border-bottom:1px solid black"><?= $incharge ?></td>
+                            <td colspan="3" style="border-bottom:1px solid black;text-transform:uppercase;"><?= $incharge ?></td>
                         </tr>
-                        <tr>
-                            <td colspan="4" height="50" style="border-bottom:1px solid black; border-top: 0px solid white;"></td>
-                        </tr>
-
                     </tbody>
                 </table>
-                <br />
-                <br />
+                <table class="table">
+                    <tbody>
+                        <tr style="border-top: 2px solid black;border-left: 2px solid black;border-right: 2px solid black;">
+                            <td width="10%" style="border: 1px solid white;"><b>Please Reserve the following: </b></td>
+                            <td width="10%" colspan="2" style="border: 1px solid white;">Venue: ( <?php if ($venue_id != '') echo '✓'; ?> ) <label style="width:86% ;border-bottom: 1px solid black;text-transform:uppercase;"><?= $venue_id ?></label> </td>
+
+                        </tr>
+                        <tr style="border-top: 0px solid white;border-bottom: 0px solid white;border-left: 2px solid black;border-right: 2px solid black;">
+                            <td width="10%" style="border: 1px solid white;">( <?php if ($soundsystem != '') echo '✓';
+                                                                                else echo "&nbsp;&nbsp;"; ?> )<label style="border-bottom: 1px solid black;text-transform:uppercase;"><?= "&nbsp;&nbsp;&nbsp;&nbsp;" . $soundsystem . "&nbsp;&nbsp;&nbsp;&nbsp;" ?></label> Sound System</td>
+                            <td width="25%" colspan="2" style="border: 1px solid white;">( <?php if ($microphone != '') echo '✓';
+                                                                                            else echo "&nbsp;&nbsp;"; ?> ) <label style="border-bottom: 1px solid black;text-transform:uppercase;"><?= "&nbsp;&nbsp;&nbsp;&nbsp;" . $microphone . "&nbsp;&nbsp;&nbsp;&nbsp;" ?></label> Microphone</td>
+
+                        </tr>
+                        <tr  style="border-top: 0px solid white;border-bottom: 2px solid black;border-left: 2px solid black;border-right: 2px solid black;">
+                            <td width="10%" height="50" style="border: 1px solid white;">Others, please specify: </td>
+                            <td width="25%"><label style="width:100% !important;border-bottom: 1px solid black;text-transform:uppercase;"><?= $material ?></label></td>
+                            
+                        </tr>
+                    </tbody>
+                </table>
                 <table class="table">
                     <tbody>
                         <tr>
@@ -166,8 +182,6 @@ if (isset($_GET['reservation_id'])) {
                         </tr>
                     </tbody>
                 </table>
-                <br />
-                <br />
                 <table class="table">
                     <tbody>
                         <tr>
@@ -184,8 +198,6 @@ if (isset($_GET['reservation_id'])) {
                         </tr>
                     </tbody>
                 </table>
-                <br />
-                <br />
                 <table class="table">
                     <tbody>
                         <tr>
@@ -199,6 +211,22 @@ if (isset($_GET['reservation_id'])) {
                             <td style="text-align:center;border: 0px solid white;">ODAA/ Comptroller</td>
                             <td style="border: 0px solid white;"></td>
                             <td width="35%" colspan="2" style="text-align:center;border: 0px solid white;">President</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <td width="15%" style="border: 0px solid white;">Reservation Reviewed By:</td>
+                            <td width="30%" style="border-bottom:1px solid black; border-top: 0px solid white;"></td>
+                            <td style="border: 0px solid white;"></td>
+                            <td width="35%" colspan="2" style="border-bottom:1px solid white; border-top: 0px solid white;"></td>
+                        </tr>
+                        <tr>
+                            <td style="border: 0px solid white;"></td>
+                            <td style="text-align:center;border: 0px solid white;">Property Custodian</td>
+                            <td style="border: 0px solid white;"></td>
+                            <td width="35%" colspan="2" style="text-align:center;border: 0px solid white;"></td>
                         </tr>
                     </tbody>
                 </table>
