@@ -30,7 +30,7 @@ include 'settings/topbar.php';
                         &nbsp;&nbsp;
                         <label><small>Filter by Program</small> &nbsp;</label>
                         <select class="form-control form-control-sm" name="filterByProgram" id="filterByProgram" style="width: 10%;">
-                            <option value="0" selected >All</option>
+                            <option value="0" selected>All</option>
                             <?php
                             $fetchPrograms = $db->query("SELECT * FROM `program` ORDER BY name ASC");
 
@@ -52,7 +52,7 @@ include 'settings/topbar.php';
                         </select>
                         &nbsp;&nbsp;
                         <label><small>Venue</small> &nbsp;</label>
-                        <select class="form-control form-control-sm" name="filterByVenue" id="filterByVenue"style="width: 10%;">
+                        <select class="form-control form-control-sm" name="filterByVenue" id="filterByVenue" style="width: 10%;">
                             <option value="0" selected>All</option>
                             <?php
                             $fetchVenues = $db->query("SELECT * FROM `venues` ORDER BY name ASC");
@@ -78,10 +78,10 @@ include 'settings/topbar.php';
                         <select class="form-control form-control-sm" name="filterByUserType" id="filterByUserType" style="width: 10%;">
                             <option value="0" selected>All User Type</option>
                             <option value="S">Student Submissions</option>
-                            <option value="D" <?php echo ($_SESSION["position"] == "DSA" ? "selected" : "")?>>DSA Submissions</option>
+                            <option value="D" <?php echo ($_SESSION["position"] == "DSA" ? "selected" : "") ?>>DSA Submissions</option>
                             <option value="P">PTC Submissions</option>
                         </select>
-                       
+
                         &nbsp;&nbsp;
                         <label for=""><small>Filter by Status</small> &nbsp;&nbsp;</label>
                         <select class="form-control form-control-sm" name="filterByStatus" id="filterByStatus" style="width: 7%;">
@@ -138,7 +138,7 @@ include 'settings/topbar.php';
                                     $loggedUser = $_SESSION['id'];
                                     $fetchReservations .= " WHERE `schedules`.userID = '$loggedUser'";
                                 }
-                                
+
                                 $fetchReservations .= " ORDER BY `schedules`.date_added DESC";
                                 $reservations = $db->query($fetchReservations);
                                 // WHERE `schedules`.date_start BETWEEN '$filterStart' AND '$filterEnd'
@@ -173,11 +173,8 @@ include 'settings/topbar.php';
                                         <td><?= $row->VENUE_NAME; ?></td>
                                         <td align="center"><span class="badge <?= $statusColor ?>"><?= $statusStr; ?></span></td>
                                         <td align="center">
-                                            <a href='edit_reservation.php?reservation_id=<?= $row->INT_RES_ID ?>' 
-                                                class="btn btn-primary btn-icon-split btn-sm keychainify-checked" 
-                                                target="_blank" 
-                                                style="<?php echo ($row->STATUS != 'D' && $_SESSION['position'] == 'STO' ? "visibility: hidden;" : "");?>">
-                                                
+                                            <a href='edit_reservation.php?reservation_id=<?= $row->INT_RES_ID ?>' class="btn btn-primary btn-icon-split btn-sm keychainify-checked" target="_blank" style="<?php echo ($row->STATUS != 'D' && $_SESSION['position'] == 'STO' ? "visibility: hidden;" : ""); ?>">
+
                                                 <span class="icon text-white-50">
                                                     <i class="fas fa-edit"></i>
                                                 </span>
@@ -191,31 +188,14 @@ include 'settings/topbar.php';
                         <script>
                             $(document).ready(function() {
                                 var orderByVal = $(this).val();
-                                    var statusVal = $("#filterByStatus").val();
-                                    var venueVal = $("#filterByVenue").val();
-                                    var programVal = $("#filterByProgram").val();
-                                    var searchVal = $("#filterSearch").val();
-                                    var userTypeVal = $("#filterByUserType").val();
+                                var statusVal = $("#filterByStatus").val();
+                                var venueVal = $("#filterByVenue").val();
+                                var programVal = $("#filterByProgram").val();
+                                var searchVal = $("#filterSearch").val();
+                                var userTypeVal = $("#filterByUserType").val();
 
-                                    $.ajax({
-                                        url: "fetch_filtered_reservations.php",
-                                        type: "POST",
-                                        data: {
-                                            status: statusVal,
-                                            venue: venueVal,
-                                            program: programVal,
-                                            userType: userTypeVal,
-                                            search: searchVal,
-                                            orderBy: orderByVal
-                                        },
-                                        beforeSend: function() {
+                               
 
-                                        },
-                                        success: function(data) {
-                                            $(".table-responsive").html(data);
-                                        }
-                                    });
-                                    
                                 $("#orderBy").on("change", function() {
                                     var orderByVal = $(this).val();
                                     var statusVal = $("#filterByStatus").val();
