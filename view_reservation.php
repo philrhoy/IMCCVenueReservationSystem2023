@@ -53,7 +53,7 @@ include 'settings/topbar.php';
                             $end_date =  $data->date_end;
                             $end_time = $data->time_end;
                             $notes = $data->notes;
-                            $material = $data->material;
+                            $material = $data->others_material;
                             $act_form_file = $data->act_form_file;
                             $letter_approve_file = $data->letter_approve_file;
                             $contact = $data->contact;
