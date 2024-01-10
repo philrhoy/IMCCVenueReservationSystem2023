@@ -88,7 +88,7 @@ include 'settings/topbar.php';
                             <option value="0">All</option>
                             <option value="D">Drafts</option>
                             <option value="P">Pending</option>
-                            <option value="A"  <?php echo ((($_SESSION["position"] == "PTC") ? "selected" : "")) ?>>Approved</option>
+                            <option value="A" <?php echo ((($_SESSION["position"] == "PTC") ? "selected" : "")) ?>>Approved</option>
                             <option value="R">Rejected</option>
                             <!-- <option value="AA"<?php //echo ($_SESSION["position"] != "DSA" ? "hidden disabled" : "") 
                                                     ?>>Approved by Admin</option>
@@ -144,7 +144,7 @@ include 'settings/topbar.php';
                                     $fetchReservations .= " WHERE `schedules`.status = 'A'";
                                 }
 
-                                $fetchReservations .= " ORDER BY `schedules`.date_added DESC";
+                                $fetchReservations .= "ORDER BY `schedules`.`date_added` DESC";
                                 $reservations = $db->query($fetchReservations);
                                 // WHERE `schedules`.date_start BETWEEN '$filterStart' AND '$filterEnd'
                                 $row_reservations = $reservations->fetchAll(PDO::FETCH_OBJ);
@@ -193,13 +193,18 @@ include 'settings/topbar.php';
                         <script>
                             $(document).ready(function() {
                                 var orderByVal = $(this).val();
-                                var statusVal = $(this).val();//$("#filterByStatus").val();
+                                var statusVal = $("#filterByStatus").val();
                                 var venueVal = $("#filterByVenue").val();
                                 var programVal = $("#filterByProgram").val();
                                 var searchVal = $("#filterSearch").val();
                                 var userTypeVal = $("#filterByUserType").val();
 
-                               
+                                $('#dataTable').DataTable({
+                                    order: [
+                                        [0, 'desc']
+                                    ]
+                                });
+
                                 $("#orderBy").on("change", function() {
                                     var orderByVal = $(this).val();
                                     var statusVal = $("#filterByStatus").val();
