@@ -484,7 +484,7 @@ if (!isset($_GET['queryStatus'])) {
                                         <select class="form-control" id="performAction" name="action">
                                             <option value='UPDATE' selected>Update Record Only</option>
                                             <?php if ($statusID == "D") { ?>
-                                                <option value='SUBMIT'>Submit to Property Custodian</option>
+                                                <option value='SUBMIT'>Submit for Approval</option>
                                             <?php }
                                             if ($statusID == "P" && $_SESSION["position"] == "DSA") { ?>
                                                 <option value='APPROVE'>Approve</option>
